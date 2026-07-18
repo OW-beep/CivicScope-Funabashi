@@ -41,6 +41,18 @@ export default function Terms() {
                 </a>
                 ）に掲載の各種データ
               </li>
+              <li>
+                町丁目ごとの分布マップの位置情報には、
+                <a
+                  href="https://github.com/geolonia/japanese-addresses"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline hover:text-brass-dark"
+                >
+                  Geolonia 住所データ
+                </a>
+                （株式会社 Geolonia／CC BY 4.0）を利用しています。
+              </li>
             </ul>
             <p className="mt-4">
               これらのデータは{siteConfig.bodik.license}のもとで公開されており、出典を明記することで自由に利用・改変・再配布が可能です。

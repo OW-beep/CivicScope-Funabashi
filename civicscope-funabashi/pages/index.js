@@ -15,6 +15,29 @@ import {
   getOrgDatasetCount
 } from "../lib/bodik";
 
+const DASHBOARD_LINKS = [
+  {
+    href: "/dashboard",
+    title: "人口ダッシュボード",
+    description: "常住人口の月次推移と前月比・前年同月比を自動集計。"
+  },
+  {
+    href: "/chokai",
+    title: "町会・自治会ダッシュボード",
+    description: "町丁目別の分布マップとランキングで地域のつながりを可視化。"
+  },
+  {
+    href: "/food-businesses",
+    title: "食品営業施設ダッシュボード",
+    description: "飲食店・食品取扱施設の分布マップと業種別ランキング。"
+  },
+  {
+    href: "/dog-registration",
+    title: "犬の登録・予防注射ダッシュボード",
+    description: "登録頭数と予防注射実施頭数の推移、接種割合の目安を可視化。"
+  }
+];
+
 const FUN_FACTS = [
   "日本梨の一大産地として知られ、「船橋のなし」は市を代表する特産品。",
   "南船橋の「ららぽーとTOKYO-BAY」は、日本における大型ショッピングセンターの先駆けとして1981年に開業した。",
@@ -101,13 +124,13 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
               href="/chokai"
               className="border border-ink/30 px-5 py-3 text-sm text-ink transition-colors hover:border-brass hover:text-brass-dark"
             >
-              町会・自治会を検索
+              町会・自治会の分布を見る
             </Link>
             <Link
               href="/food-businesses"
               className="border border-ink/30 px-5 py-3 text-sm text-ink transition-colors hover:border-brass hover:text-brass-dark"
             >
-              飲食店・食品施設を検索
+              食品営業施設の分布を見る
             </Link>
           </div>
         </div>
@@ -151,10 +174,27 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
         <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME} className="h-24" />
       </section>
 
+      {/* --- ダッシュボード一覧 ------------------------------------------ */}
+      <section className="mx-auto max-w-5xl px-5 py-14">
+        <SectionLabel code="02">ダッシュボード一覧</SectionLabel>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {DASHBOARD_LINKS.map((d) => (
+            <Link
+              key={d.href}
+              href={d.href}
+              className="group border border-ink/10 bg-white/50 p-5 transition-colors hover:border-brass"
+            >
+              <h3 className="font-display text-lg text-ink group-hover:text-brass-dark">{d.title}</h3>
+              <p className="mt-2 text-sm text-ink-soft">{d.description}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* --- 船橋豆知識（オープンデータだけではない、まちの魅力） -------- */}
       <section className="border-t border-ink/10 bg-white/40">
         <div className="mx-auto max-w-5xl px-5 py-14">
-          <SectionLabel code="02">船橋、知ってる？</SectionLabel>
+          <SectionLabel code="03">船橋、知ってる？</SectionLabel>
           <p className="max-w-2xl text-sm leading-relaxed text-ink-soft">
             CivicScope船橋はデータだけでなく、まちの魅力もあわせて発信していきます。まずは船橋にまつわる豆知識から。
           </p>
@@ -171,7 +211,7 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
 
       {/* --- 解説記事 ---------------------------------------------------- */}
       <section className="mx-auto max-w-5xl px-5 py-14">
-        <SectionLabel code="03">解説記事</SectionLabel>
+        <SectionLabel code="04">解説記事</SectionLabel>
         <div className="grid gap-6 md:grid-cols-3">
           {articles.map((a) => (
             <Link
@@ -193,7 +233,7 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
       {/* --- 使い方 --------------------------------------------------- */}
       <section className="border-t border-ink/10 bg-white/40">
         <div className="mx-auto max-w-5xl px-5 py-14">
-          <SectionLabel code="04">CivicScope 船橋のしくみ</SectionLabel>
+          <SectionLabel code="05">CivicScope 船橋のしくみ</SectionLabel>
           <div className="grid gap-8 md:grid-cols-3">
             <div>
               <p className="font-mono text-xs text-brass-dark">STEP 1</p>

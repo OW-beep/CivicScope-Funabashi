@@ -4,9 +4,10 @@ import ScopeMark from "./ScopeMark";
 import { siteConfig } from "../data/siteConfig";
 
 const NAV = [
-  { href: "/dashboard", label: "ダッシュボード" },
+  { href: "/dashboard", label: "人口" },
   { href: "/chokai", label: "町会・自治会" },
-  { href: "/food-businesses", label: "飲食店・食品施設" },
+  { href: "/food-businesses", label: "食品営業施設" },
+  { href: "/dog-registration", label: "犬の登録" },
   { href: "/articles", label: "解説記事" },
   { href: "/about", label: "About" }
 ];
@@ -25,7 +26,7 @@ export default function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex">
+        <nav className="hidden flex-wrap items-center gap-x-5 gap-y-1 md:flex">
           {NAV.map((item) => (
             <Link
               key={item.href}

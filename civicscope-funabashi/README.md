@@ -44,6 +44,14 @@
 
 新しいデータを使ったページを増やしたい場合は、`pages/chokai.js` を参考に、`getDatasetRecords("データセットID")` を`getStaticProps`内で呼び出してください。
 
+### 町丁目別の分布マップについて
+
+`pages/chokai.js` と `pages/food-businesses.js` は、住所らしき列（`所在地`・`住所`など）を自動検出し、
+[Geolonia 住所データ](https://github.com/geolonia/japanese-addresses)（無料・CC BY 4.0）を使って町丁目名から緯度経度を引き当て、
+`lib/geo.js` の関数でバブルマップとランキングに集計しています。住所列が見つからない、またはマッチ率が低い場合は
+自動的にマップ表示を省略し、一覧表のみを表示するようにフォールバックします。実際の行政境界データではなく、
+相対的な位置関係を示す簡易プロットである点にご注意ください。
+
 ---
 
 ## 3. Google AdSense審査に向けたチェックリスト

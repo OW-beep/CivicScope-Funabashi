@@ -176,3 +176,51 @@ export function buildPopulationInsights(normalized) {
     rangeEnd: latest
   };
 }
+
+// --- 犬の登録・狂犬病予防注射データの正規化 ----------------------------
+const REG_FIELD_PATTERNS = [/登録頭数/, /登録.*数/, /登録/];
+const VAX_FIELD_PATTERNS = [/予防注射.*頭数/, /予防注射/, /接種.*数/, /注射/];
+
+export function normalizeDogSeries({ fields, records }) {
+  if (!fields.length || !records.length) return null;
+
+  const dateField = findField(fields, DATE_FIELD_PATTERNS) || fields[0];
+  const regField = findField(fields, REG_FIELD_PATTERNS);
+  const vaxField = findField(fields, VAX_FIELD_PATTERNS);
+
+  if (!regField || !vaxField || regField === vaxField) return null;
+
+  const series = records
+    .map((r) => ({
+      label: String(r[dateField] ?? ""),
+      registered: toNumber(r[regField]),
+      vaccinated: toNumber(r[vaxField])
+    }))
+    .filter((row) => row.registered !== null && row.vaccinated !== null && row.label);
+
+  series.sort((a, b) => (a.label > b.label ? 1 : a.label < b.label ? -1 : 0));
+
+  if (!series.length) return null;
+
+  const withRate = series.map((row) => ({
+    ...row,
+    rate: row.registered ? (row.vaccinated / row.registered) * 100 : null
+  }));
+
+  return { series: withRate, dateField, regField, vaxField };
+}
+
+export function buildDogInsights(normalized) {
+  if (!normalized || normalized.series.length === 0) return null;
+  const { series } = normalized;
+  const latest = series[series.length - 1];
+  const previous = series.length > 1 ? series[series.length - 2] : null;
+
+  return {
+    latest,
+    previous,
+    rateDiff: previous && previous.rate !== null ? latest.rate - previous.rate : null,
+    seriesLength: series.length
+  };
+}
+

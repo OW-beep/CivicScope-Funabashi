@@ -21,8 +21,9 @@ export default function Footer() {
             <p className="mb-3 text-xs uppercase tracking-widest text-paper/50">サイト内</p>
             <ul className="space-y-2 text-sm text-paper/80">
               <li><Link href="/dashboard" className="hover:text-brass-light">ダッシュボード</Link></li>
-              <li><Link href="/chokai" className="hover:text-brass-light">町会・自治会一覧</Link></li>
-              <li><Link href="/food-businesses" className="hover:text-brass-light">食品営業施設一覧</Link></li>
+              <li><Link href="/chokai" className="hover:text-brass-light">町会・自治会ダッシュボード</Link></li>
+              <li><Link href="/food-businesses" className="hover:text-brass-light">食品営業施設ダッシュボード</Link></li>
+              <li><Link href="/dog-registration" className="hover:text-brass-light">犬の登録ダッシュボード</Link></li>
               <li><Link href="/articles" className="hover:text-brass-light">解説記事</Link></li>
               <li><Link href="/about" className="hover:text-brass-light">About / データについて</Link></li>
             </ul>
