@@ -4,6 +4,8 @@ import ScopeMark from "../components/ScopeMark";
 import StatCard from "../components/StatCard";
 import SectionLabel from "../components/SectionLabel";
 import AdSlot from "../components/AdSlot";
+import FunabashiMapMotif from "../components/FunabashiMapMotif";
+import PearIcon from "../components/PearIcon";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { articles } from "../data/articles";
 import {
@@ -12,6 +14,15 @@ import {
   buildPopulationInsights,
   getOrgDatasetCount
 } from "../lib/bodik";
+
+const FUN_FACTS = [
+  "日本梨の一大産地として知られ、「船橋のなし」は市を代表する特産品。",
+  "南船橋の「ららぽーとTOKYO-BAY」は、日本における大型ショッピングセンターの先駆けとして1981年に開業した。",
+  "家具量販店IKEAが日本第1号店を出店したのも船橋市（2006年、南船橋）。",
+  "中央競馬の「船橋競馬場」があり、ナイター開催の「トゥインクルレース」でも知られる。",
+  "「ふなばし三番瀬海浜公園」は東京湾に残る貴重な干潟で、潮干狩りや野鳥観察の名所。",
+  "船橋大神宮（意富比神社）には、かつて灯台の役割も果たした「灯明台」が今も残る。"
+];
 
 export async function getStaticProps() {
   let populationLatest = null;
@@ -59,8 +70,9 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
       </Head>
 
       {/* --- Hero ------------------------------------------------------ */}
-      <section className="ledger-grid border-b border-ink/10">
-        <div className="mx-auto max-w-5xl px-5 py-20 md:py-28">
+      <section className="ledger-grid relative overflow-hidden border-b border-ink/10">
+        <FunabashiMapMotif className="pointer-events-none absolute inset-0 h-full w-full text-ink opacity-[0.06]" />
+        <div className="relative mx-auto max-w-5xl px-5 py-20 md:py-28">
           <div className="mb-6 flex items-center gap-2 text-brass-dark">
             <ScopeMark className="h-5 w-5" />
             <span className="font-mono text-xs uppercase tracking-[0.2em]">
@@ -139,9 +151,27 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
         <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME} className="h-24" />
       </section>
 
+      {/* --- 船橋豆知識（オープンデータだけではない、まちの魅力） -------- */}
+      <section className="border-t border-ink/10 bg-white/40">
+        <div className="mx-auto max-w-5xl px-5 py-14">
+          <SectionLabel code="02">船橋、知ってる？</SectionLabel>
+          <p className="max-w-2xl text-sm leading-relaxed text-ink-soft">
+            CivicScope船橋はデータだけでなく、まちの魅力もあわせて発信していきます。まずは船橋にまつわる豆知識から。
+          </p>
+          <ul className="mt-6 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+            {FUN_FACTS.map((fact) => (
+              <li key={fact} className="flex items-start gap-2.5 text-sm leading-relaxed text-ink-soft">
+                <PearIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-brass-dark" />
+                <span>{fact}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* --- 解説記事 ---------------------------------------------------- */}
       <section className="mx-auto max-w-5xl px-5 py-14">
-        <SectionLabel code="02">解説記事</SectionLabel>
+        <SectionLabel code="03">解説記事</SectionLabel>
         <div className="grid gap-6 md:grid-cols-3">
           {articles.map((a) => (
             <Link
@@ -163,7 +193,7 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
       {/* --- 使い方 --------------------------------------------------- */}
       <section className="border-t border-ink/10 bg-white/40">
         <div className="mx-auto max-w-5xl px-5 py-14">
-          <SectionLabel code="03">CivicScope 船橋のしくみ</SectionLabel>
+          <SectionLabel code="04">CivicScope 船橋のしくみ</SectionLabel>
           <div className="grid gap-8 md:grid-cols-3">
             <div>
               <p className="font-mono text-xs text-brass-dark">STEP 1</p>

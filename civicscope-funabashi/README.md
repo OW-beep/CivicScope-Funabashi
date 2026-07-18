@@ -33,8 +33,8 @@
 5. 「Environment Variables」の欄は、最初は空のままでOKです（下記3章参照）。
 6. 「Deploy」をクリック。数分でビルドが完了し、`https://（プロジェクト名）.vercel.app` のURLでサイトが公開されます。
 
-### Step 4: サイト内のURLを実際のドメインに合わせる
-`data/siteConfig.js` の `url` と、`public/robots.txt` の `Sitemap:` 行を、実際に発行されたVercelのURL（または独自ドメイン）に書き換えて、GitHub上でファイルを編集（鉛筆アイコン）→ Commitしてください。Vercelは自動的に再ビルド・再デプロイします。
+### Step 4: 独自ドメインを取るとき（あとで／任意）
+サイトURLは `https://civic-scope-funabashi.vercel.app` で確定済みです（`data/siteConfig.js`の`url`と`public/robots.txt`にすでに反映済み）。検索流入などが見込めるようになったタイミングで独自ドメインを取得したら、この2箇所を書き換えてGitHub上でCommitしてください。Vercelは自動的に再ビルド・再デプロイします。
 
 ---
 
@@ -53,16 +53,16 @@
 - [x] プライバシーポリシー（`/privacy`）: 広告配信・Cookieについて明記済み
 - [x] 利用規約・データ出典（`/terms`）
 - [x] 運営者情報・お問い合わせ（`/about`, `/contact`）
-- [x] オリジナルの解説記事（`/articles` 配下に3本。今後増やすほど有利です）
-- [ ] **独自ドメインの用意を推奨**（`.vercel.app`のままでも審査自体は可能ですが、独自ドメインの方が信頼性の面で有利です）
+- [x] オリジナルの解説記事（`/articles` 配下に5本。今後増やすほど有利です）
+- [x] AdSenseクライアントID（`ca-pub-4630812027939211`）を`data/siteConfig.js`にデフォルト設定済み。`pages/_app.js`で自動的に読み込まれます
+- [x] Google Search Console用の`google-site-verification`メタタグを`pages/_document.js`に設定済み
+- [x] `public/ads.txt`にpublisher ID（`pub-4630812027939211`）を設定済み
+- [ ] **独自ドメインの用意を推奨**（`.vercel.app`のままでも審査自体は可能ですが、独自ドメインの方が信頼性の面で有利です。検索流入が見込めると判断した時点で取得し、`data/siteConfig.js`の`url`と`public/robots.txt`のSitemap行を書き換えてください）
 - [ ] **公開後、ある程度の期間・記事数を積み上げてから申請**するのが一般的です（Googleは低品質・薄いコンテンツを理由に却下することが多いため、記事を10本前後に増やしてからの申請をおすすめします）
-- [ ] AdSenseに登録し、審査用の広告コードを取得したら、Vercelの Project Settings → Environment Variables で
-      `NEXT_PUBLIC_ADSENSE_CLIENT` に `ca-pub-xxxxxxxxxxxxxxxx` を設定 → Redeploy
-- [ ] 審査通過後、AdSense管理画面に表示される`ads.txt`の内容を確認し、`public/ads.txt` を実際のpublisher IDに書き換える
-- [ ] 各広告枠（`AdSlot`コンポーネント）に、AdSense管理画面で発行した実際のスロットIDを
-      環境変数（`NEXT_PUBLIC_ADSENSE_SLOT_HOME` など、`pages/*.js`内で参照している変数名）として設定する
+- [ ] 各広告枠（`AdSlot`コンポーネント）の表示位置をAdSense管理画面の自動広告設定に任せるか、
+      個別のスロットIDを環境変数（`NEXT_PUBLIC_ADSENSE_SLOT_HOME` など、`pages/*.js`内で参照している変数名）として設定する
 
-`NEXT_PUBLIC_ADSENSE_CLIENT` が未設定の間は、広告タグ自体が出力されず、代わりにグレーのプレースホルダー枠が表示されるだけなので、審査前の段階でも安全に運用できます。
+別のAdSenseアカウント・クライアントIDに差し替えたい場合は、環境変数`NEXT_PUBLIC_ADSENSE_CLIENT`を設定すればそちらが優先されます（`data/siteConfig.js`のデフォルト値より優先）。
 
 ---
 

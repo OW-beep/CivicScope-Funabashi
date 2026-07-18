@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://civicscope-funabashi.vercel.app/sitemap.xml
+Sitemap: https://civic-scope-funabashi.vercel.app/sitemap.xml

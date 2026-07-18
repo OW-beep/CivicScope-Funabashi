@@ -6,8 +6,10 @@ export const siteConfig = {
   shortName: "CivicScope",
   tagline: "船橋市のオープンデータを、暮らしの解像度に変える。",
   description:
-    "船橋市が公開するオープンデータ（BODIK ODCS）をもとに、人口動向や地域情報を独自に整理・分析して発信する非公式の市民向けデータメディアです。",
-  url: "https://civicscope-funabashi.vercel.app", // Vercelにデプロイ後、実際のドメインに書き換えてください
+    "船橋市が公開するオープンデータ（BODIK ODCS）をもとに人口動向や地域情報を独自に整理・分析しつつ、まちの魅力も合わせて発信する非公式の市民向けメディアです。",
+  url: "https://civic-scope-funabashi.vercel.app", // 独自ドメイン取得時はここを書き換えてください
+  adsensePublisherId: "pub-4630812027939211",
+  googleSiteVerification: "KYZp6leIoJkmXQipodIUtUhXTopgEfgqFiQ7eJZuRZA",
   contactEmail: "civicscope.funabashi@gmail.com",
   locale: "ja_JP",
   twitter: "", // 運用するなら @xxxx を入れる
@@ -47,5 +49,11 @@ export const datasets = {
     description:
       "食品衛生法に基づき船橋市内で営業許可を取得している飲食店・食品取扱施設の一覧（令和3年5月31日までに許可を取得し、公開時点で営業中の施設）。",
     sourceUrl: "https://data.bodik.jp/dataset/122041_shokuhineigyoukyokasisetu"
+  },
+  dogRegistration: {
+    id: "122041_inutourokukyoukenbyou",
+    label: "犬の登録・狂犬病予防注射実施数",
+    description: "船橋市内における犬の登録頭数と狂犬病予防注射の実施頭数の統計。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_inutourokukyoukenbyou"
   }
 };
