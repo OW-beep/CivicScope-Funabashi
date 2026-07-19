@@ -8,9 +8,9 @@ export default function CategoryBarChart({ data, unit = "件", topN = 12 }) {
   }
 
   return (
-    <div style={{ height: Math.max(240, top.length * 34) }}>
+    <div style={{ height: Math.max(260, top.length * 34) }}>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={top} layout="vertical" margin={{ top: 4, right: 24, left: 8, bottom: 4 }}>
+        <BarChart data={top} layout="vertical" margin={{ top: 4, right: 24, left: 8, bottom: 20 }}>
           <CartesianGrid stroke="#1B2430" strokeOpacity={0.08} horizontal={false} />
           <XAxis
             type="number"
@@ -18,6 +18,13 @@ export default function CategoryBarChart({ data, unit = "件", topN = 12 }) {
             tick={{ fontSize: 11, fill: "#3E4B5C" }}
             axisLine={false}
             tickLine={false}
+            label={{
+              value: `（${unit}）`,
+              position: "insideBottom",
+              offset: -12,
+              fontSize: 10,
+              fill: "#3E4B5C"
+            }}
           />
           <YAxis
             type="category"

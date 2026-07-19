@@ -9,7 +9,8 @@ import {
   normalizePopulationSeries,
   buildAnnualSeriesInsights,
   normalizeAgeDistribution,
-  buildAgeDistributionInsights
+  buildAgeDistributionInsights,
+  buildLifeStageBreakdown
 } from "../lib/bodik";
 
 const PopulationChart = dynamic(() => import("../components/PopulationChart"), { ssr: false });
@@ -23,6 +24,8 @@ export async function getStaticProps() {
   let ageDistribution = [];
   let ageInsights = null;
   let ageLatestPeriod = null;
+  let ageYearlyTotals = [];
+  let lifeStageBreakdown = [];
   let ageError = null;
 
   try {
@@ -44,7 +47,9 @@ export async function getStaticProps() {
     if (normalized) {
       ageDistribution = normalized.distribution;
       ageLatestPeriod = normalized.latestPeriodLabel;
+      ageYearlyTotals = normalized.yearlyTotals || [];
       ageInsights = buildAgeDistributionInsights(normalized);
+      lifeStageBreakdown = buildLifeStageBreakdown(ageDistribution);
     } else {
       ageError = "データの列構成を自動認識できませんでした。原典データセットをご確認ください。";
     }
@@ -60,6 +65,8 @@ export async function getStaticProps() {
       ageDistribution,
       ageInsights,
       ageLatestPeriod,
+      ageYearlyTotals,
+      lifeStageBreakdown,
       ageError
     },
     revalidate: 60 * 60 * 24
@@ -73,9 +80,12 @@ export default function Children({
   ageDistribution,
   ageInsights,
   ageLatestPeriod,
+  ageYearlyTotals,
+  lifeStageBreakdown,
   ageError
 }) {
   const ageChartData = ageDistribution.map((d) => ({ label: `${d.label}歳`, count: d.value }));
+  const yearlyTotalsChartData = ageYearlyTotals.map((d) => ({ label: d.label, count: d.total }));
 
   return (
     <>
@@ -83,7 +93,7 @@ export default function Children({
         <title>{`子ども・子育て ダッシュボード｜${siteConfig.name}`}</title>
         <meta
           name="description"
-          content="船橋市の乳児数の年度別推移と、児童の年齢別人口を可視化したダッシュボードです。"
+          content="船橋市の乳児数の年度別推移と、児童の年齢別人口・ライフステージ別の内訳を可視化したダッシュボードです。"
         />
       </Head>
 
@@ -137,7 +147,7 @@ export default function Children({
               ) : null}
 
               <div className="mt-6 border border-ink/10 bg-white/60 p-5">
-                <PopulationChart data={infantSeries} seriesLabel="乳児数" unit="人" />
+                <PopulationChart data={infantSeries} seriesLabel="乳児数" unit="人" periodLabel="年度" />
               </div>
 
               {infantInsights ? (
@@ -185,21 +195,42 @@ export default function Children({
                     delta={`${ageInsights.top.value.toLocaleString("ja-JP")}人`}
                     deltaLabel={`全体の${ageInsights.topShare.toFixed(1)}%`}
                   />
-                  <StatCard label="集計している年齢の数" value={ageInsights.count.toLocaleString("ja-JP")} unit="学年・歳" />
+                  <StatCard label="集計している年齢の数" value={ageInsights.count.toLocaleString("ja-JP")} unit="歳分" />
                 </div>
               ) : null}
 
               <div className="border border-ink/10 bg-white/60 p-5">
+                <p className="mb-3 text-xs text-ink-soft">年齢1歳ごとの人口（{ageLatestPeriod || "最新年度"}）</p>
                 <CategoryBarChart data={ageChartData} unit="人" topN={20} />
               </div>
 
+              {lifeStageBreakdown.length ? (
+                <div className="mt-8 border border-ink/10 bg-white/60 p-5">
+                  <SectionLabel code="FIG.3">ライフステージ別の内訳</SectionLabel>
+                  <p className="mb-3 text-xs text-ink-soft">
+                    未就学児・小学生・中学生といった生活・就学段階でまとめ直した内訳です（{ageLatestPeriod || "最新年度"}）。
+                  </p>
+                  <CategoryBarChart data={lifeStageBreakdown} unit="人" topN={10} />
+                </div>
+              ) : null}
+
+              {yearlyTotalsChartData.length > 1 ? (
+                <div className="mt-8 border border-ink/10 bg-white/60 p-5">
+                  <SectionLabel code="FIG.4">児童人口（合計）の年度推移</SectionLabel>
+                  <PopulationChart data={yearlyTotalsChartData} seriesLabel="児童人口" unit="人" periodLabel="年度" />
+                </div>
+              ) : null}
+
               {ageInsights ? (
-                <div className="mt-6 border-l-2 border-brass/60 bg-white/40 p-5 text-sm leading-relaxed text-ink-soft">
+                <div className="mt-8 border-l-2 border-brass/60 bg-white/40 p-5 text-sm leading-relaxed text-ink-soft">
                   <p className="font-display text-base text-ink">読み解きメモ</p>
                   <p className="mt-2">
+                    {ageLatestPeriod ? `${ageLatestPeriod}時点で、` : ""}
                     児童の年齢別人口を見ると、最も人数が多いのは{ageInsights.top.label}歳で
                     {ageInsights.top.value.toLocaleString("ja-JP")}人（全体の{ageInsights.topShare.toFixed(1)}%）でした。
-                    保育・教育施設の定員計画などを考える際の参考になります。
+                    {lifeStageBreakdown.length
+                      ? "ライフステージ別に見ることで、保育・小学校・中学校それぞれの定員計画を考える際の参考になります。"
+                      : ""}
                   </p>
                 </div>
               ) : null}

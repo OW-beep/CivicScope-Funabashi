@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
+import { siteConfig } from "../data/siteConfig";
 
-// AdSense審査前でも安全に置いておける広告枠。
-// NEXT_PUBLIC_ADSENSE_CLIENT が未設定の間は、レイアウト確認用の
-// プレースホルダーが表示されるだけで、実際の広告リクエストは発生しません。
+// AdSenseの広告枠。data/siteConfig.js の adsensePublisherId をデフォルトのクライアントIDとして使う
+// （環境変数 NEXT_PUBLIC_ADSENSE_CLIENT を設定すればそちらを優先）。
+// slotIdが未設定の間（実際の広告ユニットをまだAdSense管理画面で作成していない間）は、
+// レイアウト確認用のプレースホルダーを表示するだけで、実際の広告リクエストは発生しません。
 export default function AdSlot({ slotId, format = "auto", className = "" }) {
   const insRef = useRef(null);
-  const client = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+  const client = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || `ca-${siteConfig.adsensePublisherId}`;
 
   useEffect(() => {
     if (!client || !slotId) return;
@@ -22,7 +24,7 @@ export default function AdSlot({ slotId, format = "auto", className = "" }) {
         className={`flex min-h-[90px] items-center justify-center border border-dashed border-ink/20 bg-ink/5 text-xs text-ink-soft ${className}`}
         aria-hidden="true"
       >
-        広告枠（AdSense審査通過後にここへ表示されます）
+        広告枠（AdSense管理画面で広告ユニットのスロットIDを発行後、環境変数に設定するとここに表示されます）
       </div>
     );
   }

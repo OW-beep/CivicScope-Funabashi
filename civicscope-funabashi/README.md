@@ -65,7 +65,7 @@
 - [x] 利用規約・データ出典（`/terms`）
 - [x] 運営者情報・お問い合わせ（`/about`, `/contact`）
 - [x] オリジナルの解説記事（`/articles` 配下に5本。今後増やすほど有利です）
-- [x] AdSenseクライアントID（`ca-pub-4630812027939211`）を`data/siteConfig.js`にデフォルト設定済み。`pages/_app.js`で自動的に読み込まれます
+- [x] AdSenseクライアントID（`ca-pub-4630812027939211`）を`data/siteConfig.js`に設定し、`pages/_document.js`のHead内に静的な`<script>`タグとして直接埋め込み済み（すべてのページの初期HTMLに含まれます）
 - [x] Google Search Console用の`google-site-verification`メタタグを`pages/_document.js`に設定済み
 - [x] `public/ads.txt`にpublisher ID（`pub-4630812027939211`）を設定済み
 - [ ] **独自ドメインの用意を推奨**（`.vercel.app`のままでも審査自体は可能ですが、独自ドメインの方が信頼性の面で有利です。検索流入が見込めると判断した時点で取得し、`data/siteConfig.js`の`url`と`public/robots.txt`のSitemap行を書き換えてください）
@@ -73,7 +73,7 @@
 - [ ] 各広告枠（`AdSlot`コンポーネント）の表示位置をAdSense管理画面の自動広告設定に任せるか、
       個別のスロットIDを環境変数（`NEXT_PUBLIC_ADSENSE_SLOT_HOME` など、`pages/*.js`内で参照している変数名）として設定する
 
-別のAdSenseアカウント・クライアントIDに差し替えたい場合は、環境変数`NEXT_PUBLIC_ADSENSE_CLIENT`を設定すればそちらが優先されます（`data/siteConfig.js`のデフォルト値より優先）。
+別のAdSenseアカウント・クライアントIDに差し替えたい場合は、`data/siteConfig.js`の`adsensePublisherId`を書き換えてください（`pages/_document.js`が自動的にこの値を使います）。
 
 ---
 

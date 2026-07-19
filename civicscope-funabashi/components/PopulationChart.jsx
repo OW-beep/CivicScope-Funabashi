@@ -1,6 +1,6 @@
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-export default function PopulationChart({ data, seriesLabel = "常住人口", unit = "人" }) {
+export default function PopulationChart({ data, seriesLabel = "常住人口", unit = "人", periodLabel = "年月" }) {
   if (!data || data.length === 0) {
     return <p className="text-sm text-ink-soft">表示できるデータがありません。</p>;
   }
@@ -11,7 +11,7 @@ export default function PopulationChart({ data, seriesLabel = "常住人口", un
   return (
     <div className="h-72 w-full md:h-96">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 10, right: 16, left: 0, bottom: 0 }}>
+        <LineChart data={data} margin={{ top: 10, right: 16, left: 4, bottom: 18 }}>
           <CartesianGrid stroke="#1B2430" strokeOpacity={0.08} vertical={false} />
           <XAxis
             dataKey="label"
@@ -19,6 +19,13 @@ export default function PopulationChart({ data, seriesLabel = "常住人口", un
             tick={{ fontSize: 11, fill: "#3E4B5C" }}
             axisLine={{ stroke: "#1B2430", strokeOpacity: 0.15 }}
             tickLine={false}
+            label={{
+              value: `（${periodLabel}）`,
+              position: "insideBottom",
+              offset: -12,
+              fontSize: 10,
+              fill: "#3E4B5C"
+            }}
           />
           <YAxis
             width={64}
@@ -27,6 +34,14 @@ export default function PopulationChart({ data, seriesLabel = "常住人口", un
             tickLine={false}
             domain={["auto", "auto"]}
             tickFormatter={(v) => v.toLocaleString("ja-JP")}
+            label={{
+              value: `（${unit}）`,
+              angle: -90,
+              position: "insideLeft",
+              offset: 10,
+              fontSize: 10,
+              fill: "#3E4B5C"
+            }}
           />
           <Tooltip
             formatter={(value) => [`${Number(value).toLocaleString("ja-JP")} ${unit}`, seriesLabel]}

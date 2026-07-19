@@ -1,6 +1,6 @@
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-export default function DualBarChart({ data }) {
+export default function DualBarChart({ data, periodLabel = "年度" }) {
   if (!data || data.length === 0) {
     return <p className="text-sm text-ink-soft">表示できるデータがありません。</p>;
   }
@@ -10,7 +10,7 @@ export default function DualBarChart({ data }) {
   return (
     <div className="h-72 w-full md:h-96">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 10, right: 16, left: 0, bottom: 0 }}>
+        <BarChart data={data} margin={{ top: 10, right: 16, left: 4, bottom: 18 }}>
           <CartesianGrid stroke="#1B2430" strokeOpacity={0.08} vertical={false} />
           <XAxis
             dataKey="label"
@@ -18,6 +18,13 @@ export default function DualBarChart({ data }) {
             tick={{ fontSize: 11, fill: "#3E4B5C" }}
             axisLine={{ stroke: "#1B2430", strokeOpacity: 0.15 }}
             tickLine={false}
+            label={{
+              value: `（${periodLabel}）`,
+              position: "insideBottom",
+              offset: -12,
+              fontSize: 10,
+              fill: "#3E4B5C"
+            }}
           />
           <YAxis
             width={56}
@@ -25,6 +32,14 @@ export default function DualBarChart({ data }) {
             axisLine={false}
             tickLine={false}
             tickFormatter={(v) => v.toLocaleString("ja-JP")}
+            label={{
+              value: "（頭）",
+              angle: -90,
+              position: "insideLeft",
+              offset: 10,
+              fontSize: 10,
+              fill: "#3E4B5C"
+            }}
           />
           <Tooltip
             formatter={(value, name) => [`${Number(value).toLocaleString("ja-JP")} 頭`, name]}
