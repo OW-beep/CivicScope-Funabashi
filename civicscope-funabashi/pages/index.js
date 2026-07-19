@@ -37,6 +37,11 @@ const DASHBOARD_LINKS = [
     description: "飲食店・食品取扱施設の分布マップと業種別ランキング。"
   },
   {
+    href: "/disaster-prevention",
+    title: "防災ダッシュボード",
+    description: "避難場所・避難所の位置を地図と種別ランキングで可視化。"
+  },
+  {
     href: "/dog-registration",
     title: "犬の登録・予防注射ダッシュボード",
     description: "登録頭数と予防注射実施頭数の推移、接種割合の目安を可視化。"

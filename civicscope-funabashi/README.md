@@ -55,6 +55,15 @@
 ランキング表示に自動でフォールバックします（`pages/chokai.js`はこの二段構えになっており、
 どちらも使えない場合のみ一覧表だけの表示になります）。
 
+### 防災ダッシュボード（施設単位の地点プロット）について
+
+`pages/disaster-prevention.js`（避難場所・避難所）は、データセットに緯度経度の列
+（`緯度`・`経度`など）が含まれていればそれを最優先で使い、施設1件＝地図上の1点として
+正確な位置にプロットします（`lib/geo.js`の`guessLatLngFields`/`extractPointsFromLatLng`、
+描画は`components/FacilityMap.jsx`）。緯度経度が無い場合のみ、他のダッシュボードと同様に
+住所からの町丁目集計にフォールバックします。同じ仕組みは、緯度経度を持つ他の施設データ
+（AED設置場所など）を追加する際にも再利用できます。
+
 ---
 
 ## 3. Google AdSense審査に向けたチェックリスト
@@ -68,9 +77,10 @@
 - [x] AdSenseクライアントID（`ca-pub-4630812027939211`）を`data/siteConfig.js`に設定し、`pages/_document.js`のHead内に静的な`<script>`タグとして直接埋め込み済み（すべてのページの初期HTMLに含まれます）
 - [x] Google Search Console用の`google-site-verification`メタタグを`pages/_document.js`に設定済み
 - [x] `public/ads.txt`にpublisher ID（`pub-4630812027939211`）を設定済み
+- [ ] **審査に通るまでは広告枠は非表示**にしてあります（`data/siteConfig.js`の`adsEnabled: false`）。審査確認用の`<script>`タグ（`_document.js`）自体は常に出力されますが、`AdSlot`コンポーネントは`adsEnabled`が`false`の間は何も描画しません。**審査に通ったら`adsEnabled`を`true`に書き換えてください。**
 - [ ] **独自ドメインの用意を推奨**（`.vercel.app`のままでも審査自体は可能ですが、独自ドメインの方が信頼性の面で有利です。検索流入が見込めると判断した時点で取得し、`data/siteConfig.js`の`url`と`public/robots.txt`のSitemap行を書き換えてください）
 - [ ] **公開後、ある程度の期間・記事数を積み上げてから申請**するのが一般的です（Googleは低品質・薄いコンテンツを理由に却下することが多いため、記事を10本前後に増やしてからの申請をおすすめします）
-- [ ] 各広告枠（`AdSlot`コンポーネント）の表示位置をAdSense管理画面の自動広告設定に任せるか、
+- [ ] 審査通過後、各広告枠（`AdSlot`コンポーネント）の表示位置をAdSense管理画面の自動広告設定に任せるか、
       個別のスロットIDを環境変数（`NEXT_PUBLIC_ADSENSE_SLOT_HOME` など、`pages/*.js`内で参照している変数名）として設定する
 
 別のAdSenseアカウント・クライアントIDに差し替えたい場合は、`data/siteConfig.js`の`adsensePublisherId`を書き換えてください（`pages/_document.js`が自動的にこの値を使います）。

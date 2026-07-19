@@ -8,6 +8,7 @@ const NAV = [
   { href: "/children", label: "子ども・子育て" },
   { href: "/chokai", label: "町会・自治会" },
   { href: "/food-businesses", label: "食品営業施設" },
+  { href: "/disaster-prevention", label: "防災" },
   { href: "/dog-registration", label: "犬の登録" },
   { href: "/articles", label: "解説記事" },
   { href: "/about", label: "About" }

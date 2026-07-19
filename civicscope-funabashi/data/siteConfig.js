@@ -9,6 +9,8 @@ export const siteConfig = {
     "船橋市が公開するオープンデータ（BODIK ODCS）をもとに人口動向や地域情報を独自に整理・分析しつつ、まちの魅力も合わせて発信する非公式の市民向けメディアです。",
   url: "https://civic-scope-funabashi.vercel.app", // 独自ドメイン取得時はここを書き換えてください
   adsensePublisherId: "pub-4630812027939211",
+  // AdSenseの審査に通るまでは広告枠自体を非表示にする。審査通過後にtrueへ。
+  adsEnabled: false,
   googleSiteVerification: "KYZp6leIoJkmXQipodIUtUhXTopgEfgqFiQ7eJZuRZA",
   contactEmail: "civicscope.funabashi@gmail.com",
   locale: "ja_JP",
@@ -67,5 +69,18 @@ export const datasets = {
     label: "児童の年齢別人口",
     description: "船橋市内における児童（子ども）の年齢別人口の内訳。",
     sourceUrl: "https://data.bodik.jp/dataset/122041_jidounenreibetujinkou"
+  },
+  evacuationPlaces: {
+    id: "122041_hinanbasyo",
+    label: "避難場所データ",
+    description:
+      "一時的な避難が可能な一時・広域避難場所と、津波警報発表時などに緊急で身の安全を確保するための津波一時避難施設のデータ。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_hinanbasyo"
+  },
+  evacuationShelters: {
+    id: "122041_hinanjyo",
+    label: "避難所データ",
+    description: "被災者が一時的に宿泊滞在できる宿泊可能避難所と、要配慮者を受け入れる福祉避難所のデータ。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_hinanjyo"
   }
 };

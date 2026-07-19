@@ -1,22 +1,26 @@
 import { useEffect, useRef } from "react";
 import { siteConfig } from "../data/siteConfig";
 
-// AdSenseの広告枠。data/siteConfig.js の adsensePublisherId をデフォルトのクライアントIDとして使う
-// （環境変数 NEXT_PUBLIC_ADSENSE_CLIENT を設定すればそちらを優先）。
-// slotIdが未設定の間（実際の広告ユニットをまだAdSense管理画面で作成していない間）は、
-// レイアウト確認用のプレースホルダーを表示するだけで、実際の広告リクエストは発生しません。
+// AdSenseの広告枠。data/siteConfig.js の adsEnabled が false の間は
+// 何も描画しない（審査通過前は広告枠自体を出さないため）。
+// 審査に通ったら data/siteConfig.js の adsEnabled を true にしてください。
 export default function AdSlot({ slotId, format = "auto", className = "" }) {
   const insRef = useRef(null);
   const client = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || `ca-${siteConfig.adsensePublisherId}`;
+  const enabled = siteConfig.adsEnabled;
 
   useEffect(() => {
-    if (!client || !slotId) return;
+    if (!enabled || !client || !slotId) return;
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (e) {
       // 広告ブロッカー等で失敗しても本文表示には影響させない
     }
-  }, [client, slotId]);
+  }, [enabled, client, slotId]);
+
+  if (!enabled) {
+    return null;
+  }
 
   if (!client || !slotId) {
     return (

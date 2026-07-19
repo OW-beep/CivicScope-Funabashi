@@ -90,16 +90,27 @@ export function lookupTownCoordinates(townName, index) {
   return null;
 }
 
-// 住所らしき列をフィールド一覧からヒューリスティックに推測する
-const ADDRESS_FIELD_PATTERNS = [/所在地/, /住所/, /^address$/i, /町丁目/, /町名/];
+// 「〜コード」「〜番号」「ID」のような識別子列は、名称ではなく符号なので
+// 住所・カテゴリ列の推測候補からは除外する。
+const CODE_LIKE_RE = /コード|code|番号|^id$|id$/i;
+
+function excludeCodeLikeFields(fields) {
+  return fields.filter((f) => !CODE_LIKE_RE.test(f));
+}
+
+// 住所らしき列をフィールド一覧からヒューリスティックに推測する。
+// 「地区名」のような名称列を、「地区コード」のような識別子列より優先する。
+const ADDRESS_FIELD_PATTERNS = [/所在地/, /住所/, /^address$/i, /町丁目/, /町名/, /地区名/, /地区/];
 
 export function guessAddressField(fields, records) {
+  const nameFields = excludeCodeLikeFields(fields);
+
   for (const pattern of ADDRESS_FIELD_PATTERNS) {
-    const hit = fields.find((f) => pattern.test(f));
+    const hit = nameFields.find((f) => pattern.test(f));
     if (hit) return hit;
   }
   const sample = records?.[0] || {};
-  const candidate = fields.find((f) => typeof sample[f] === "string" && sample[f].includes("船橋市"));
+  const candidate = nameFields.find((f) => typeof sample[f] === "string" && sample[f].includes("船橋市"));
   return candidate || null;
 }
 
@@ -137,8 +148,16 @@ export function aggregateByField(records, field) {
     .sort((a, b) => b.count - a.count);
 }
 
-// カテゴリ列をフィールド一覧からヒューリスティックに推測する（業種・種別など）
+// カテゴリ列をフィールド一覧からヒューリスティックに推測する（業種・地区など）。
+// 「〜コード」列は名称ではないため、それ以外の列を優先して探す。
 export function guessCategoryField(fields, patterns) {
+  const nameFields = excludeCodeLikeFields(fields);
+
+  for (const pattern of patterns) {
+    const hit = nameFields.find((f) => pattern.test(f));
+    if (hit) return hit;
+  }
+  // 名称らしき列がひとつも見つからない場合のみ、コード列も含めて再度探す
   for (const pattern of patterns) {
     const hit = fields.find((f) => pattern.test(f));
     if (hit) return hit;
@@ -160,4 +179,47 @@ export function buildDistributionInsights(points, total) {
     top3Share: (top3Sum / total) * 100,
     areaCount: points.length
   };
+}
+
+// --- 緯度経度を直接持つ施設データ（避難所・避難場所など）向けのユーティリティ ------
+// 町丁目単位の集計（aggregateByTown）よりも、施設が個別に緯度経度を持っている場合は
+// そちらを使ったほうが正確な位置を示せるため、優先して利用する。
+
+const LAT_FIELD_PATTERNS = [/緯度/, /^lat(itude)?$/i];
+const LNG_FIELD_PATTERNS = [/経度/, /^lng$/i, /^lon(gitude)?$/i];
+const NAME_FIELD_PATTERNS = [/施設名称/, /施設名/, /名称/, /^name$/i];
+
+export function guessLatLngFields(fields) {
+  const latField = fields.find((f) => LAT_FIELD_PATTERNS.some((p) => p.test(f)));
+  const lngField = fields.find((f) => LNG_FIELD_PATTERNS.some((p) => p.test(f)));
+  return latField && lngField ? { latField, lngField } : null;
+}
+
+export function guessNameField(fields) {
+  const nameFields = excludeCodeLikeFields(fields);
+  for (const pattern of NAME_FIELD_PATTERNS) {
+    const hit = nameFields.find((f) => pattern.test(f));
+    if (hit) return hit;
+  }
+  return nameFields[0] || fields[0] || null;
+}
+
+// レコードから緯度経度つきの地点データを作る（施設1件=地図上の1点）
+export function extractPointsFromLatLng(records, { latField, lngField, nameField, categoryField }) {
+  const points = [];
+  for (const r of records) {
+    const lat = parseFloat(r[latField]);
+    const lng = parseFloat(r[lngField]);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
+    // 船橋市の大まかな範囲から外れる明らかな異常値（単位間違いなど）は除外する
+    if (lat < 30 || lat > 40 || lng < 135 || lng > 145) continue;
+
+    points.push({
+      label: nameField ? String(r[nameField] ?? "").trim() : "",
+      category: categoryField ? String(r[categoryField] ?? "").trim() : null,
+      lat,
+      lng
+    });
+  }
+  return points;
 }
