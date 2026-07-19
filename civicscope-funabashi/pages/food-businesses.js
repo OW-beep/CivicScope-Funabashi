@@ -14,6 +14,7 @@ import {
   aggregateByField,
   buildDistributionInsights
 } from "../lib/geo";
+import { getFunabashiBoundaryRings } from "../lib/geoBoundary";
 
 const TownBubbleMap = dynamic(() => import("../components/TownBubbleMap"), { ssr: false });
 const CategoryBarChart = dynamic(() => import("../components/CategoryBarChart"), { ssr: false });
@@ -26,6 +27,7 @@ export async function getStaticProps() {
   let records = [];
   let error = null;
   let points = [];
+  let boundary = [];
   let insights = null;
   let mapAvailable = false;
   let categoryData = [];
@@ -47,6 +49,11 @@ export async function getStaticProps() {
           points = agg.points;
           mapAvailable = true;
           insights = buildDistributionInsights(points, records.length);
+          try {
+            boundary = await getFunabashiBoundaryRings();
+          } catch (e) {
+            boundary = [];
+          }
         }
       }
 
@@ -61,7 +68,7 @@ export async function getStaticProps() {
   }
 
   return {
-    props: { fields, records, error, points, insights, mapAvailable, categoryData, categoryFieldLabel },
+    props: { fields, records, error, points, boundary, insights, mapAvailable, categoryData, categoryFieldLabel },
     revalidate: 60 * 60 * 24
   };
 }
@@ -71,6 +78,7 @@ export default function FoodBusinesses({
   records,
   error,
   points,
+  boundary,
   insights,
   mapAvailable,
   categoryData,
@@ -138,7 +146,7 @@ export default function FoodBusinesses({
               <>
                 <div className="mt-10 border border-ink/10 bg-white/60 p-5">
                   <SectionLabel code="FIG.1">町丁目別分布マップ</SectionLabel>
-                  <TownBubbleMap points={points} unit="件" />
+                  <TownBubbleMap points={points} boundary={boundary} unit="件" />
                 </div>
 
                 <div className="mt-8 border border-ink/10 bg-white/60 p-5">

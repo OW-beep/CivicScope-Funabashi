@@ -53,6 +53,27 @@ export default function Terms() {
                 </a>
                 （株式会社 Geolonia／CC BY 4.0）を利用しています。
               </li>
+              <li>
+                分布マップの背景（船橋市の行政境界）には、
+                <a
+                  href="https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-v3_1.html"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline hover:text-brass-dark"
+                >
+                  国土数値情報（行政区域データ）
+                </a>
+                （国土交通省）を
+                <a
+                  href="https://github.com/geolonia/japanese-admins"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline hover:text-brass-dark"
+                >
+                  Geoloniaが加工・公開したデータ
+                </a>
+                を利用しています。
+              </li>
             </ul>
             <p className="mt-4">
               これらのデータは{siteConfig.bodik.license}のもとで公開されており、出典を明記することで自由に利用・改変・再配布が可能です。

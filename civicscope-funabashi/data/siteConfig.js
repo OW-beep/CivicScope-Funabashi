@@ -55,5 +55,17 @@ export const datasets = {
     label: "犬の登録・狂犬病予防注射実施数",
     description: "船橋市内における犬の登録頭数と狂犬病予防注射の実施頭数の統計。",
     sourceUrl: "https://data.bodik.jp/dataset/122041_inutourokukyoukenbyou"
+  },
+  infantCount: {
+    id: "122041_nendobetunyuujisuu",
+    label: "年度別乳児数",
+    description: "船橋市内における乳児（0歳児）数の年度別推移。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_nendobetunyuujisuu"
+  },
+  childrenByAge: {
+    id: "122041_jidounenreibetujinkou",
+    label: "児童の年齢別人口",
+    description: "船橋市内における児童（子ども）の年齢別人口の内訳。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_jidounenreibetujinkou"
   }
 };

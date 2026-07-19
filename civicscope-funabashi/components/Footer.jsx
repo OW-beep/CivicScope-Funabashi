@@ -20,7 +20,8 @@ export default function Footer() {
           <div>
             <p className="mb-3 text-xs uppercase tracking-widest text-paper/50">サイト内</p>
             <ul className="space-y-2 text-sm text-paper/80">
-              <li><Link href="/dashboard" className="hover:text-brass-light">ダッシュボード</Link></li>
+              <li><Link href="/dashboard" className="hover:text-brass-light">人口ダッシュボード</Link></li>
+              <li><Link href="/children" className="hover:text-brass-light">子ども・子育てダッシュボード</Link></li>
               <li><Link href="/chokai" className="hover:text-brass-light">町会・自治会ダッシュボード</Link></li>
               <li><Link href="/food-businesses" className="hover:text-brass-light">食品営業施設ダッシュボード</Link></li>
               <li><Link href="/dog-registration" className="hover:text-brass-light">犬の登録ダッシュボード</Link></li>

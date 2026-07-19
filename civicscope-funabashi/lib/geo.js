@@ -67,16 +67,31 @@ export function extractTownName(address) {
   return plainMatch ? plainMatch[1].trim() : null;
 }
 
+// 「〜自治会」「〜町会」「〜地区」のような接尾辞を除去してから再照合するための候補
+const ORG_SUFFIX_RE = /(自治会|町会|地区|睦会|町内会)$/;
+
 export function lookupTownCoordinates(townName, index) {
   if (!townName || !index) return null;
   if (index.exact.has(townName)) return index.exact.get(townName);
+
   const base = stripChome(townName);
   if (index.base.has(base)) return index.base.get(base);
+
+  // 「◯◯町会」「◯◯自治会」のような組織名から接尾辞を外して再挑戦する
+  if (ORG_SUFFIX_RE.test(townName)) {
+    const stripped = townName.replace(ORG_SUFFIX_RE, "").trim();
+    if (stripped) {
+      if (index.exact.has(stripped)) return index.exact.get(stripped);
+      const strippedBase = stripChome(stripped);
+      if (index.base.has(strippedBase)) return index.base.get(strippedBase);
+    }
+  }
+
   return null;
 }
 
 // 住所らしき列をフィールド一覧からヒューリスティックに推測する
-const ADDRESS_FIELD_PATTERNS = [/所在地/, /住所/, /^address$/i];
+const ADDRESS_FIELD_PATTERNS = [/所在地/, /住所/, /^address$/i, /町丁目/, /町名/];
 
 export function guessAddressField(fields, records) {
   for (const pattern of ADDRESS_FIELD_PATTERNS) {

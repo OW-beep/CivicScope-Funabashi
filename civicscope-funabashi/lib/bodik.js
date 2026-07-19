@@ -224,3 +224,80 @@ export function buildDogInsights(normalized) {
   };
 }
 
+// --- 年次データ向けの汎用インサイト（年度別乳児数など、1行=1年のデータ用） -------
+// normalizePopulationSeriesは月次データを前提に「13行前」を前年同月として比較するため、
+// 年次データ（1行=1年度）には使えない。こちらは単純に「直前の行」を前期間として比較する。
+export function buildAnnualSeriesInsights(series, valueKey = "total") {
+  if (!series || series.length < 2) return null;
+  const latest = series[series.length - 1];
+  const previous = series[series.length - 2];
+  const diff = latest[valueKey] - previous[valueKey];
+  const rate = previous[valueKey] ? (diff / previous[valueKey]) * 100 : null;
+  return { latest, previous, diff, rate };
+}
+
+// --- 年齢別人口データの正規化 -------------------------------------------
+// 「児童の年齢別人口」のような、1行=1年齢のカテゴリ別データを扱う。
+// 年度のような日付列がある場合は、最新年度のデータだけを抜き出してスナップショットにする。
+const AGE_FIELD_PATTERNS = [/年齢/, /^age$/i];
+const AGE_VALUE_PATTERNS = [/人数/, /人口/, /数$/, /^count$/i];
+
+export function normalizeAgeDistribution({ fields, records }) {
+  if (!fields.length || !records.length) return null;
+
+  const ageField = findField(fields, AGE_FIELD_PATTERNS);
+  if (!ageField) return null;
+
+  const dateField = findField(
+    fields.filter((f) => f !== ageField),
+    DATE_FIELD_PATTERNS
+  );
+
+  const candidateValueFields = fields.filter((f) => f !== ageField && f !== dateField);
+  const valueField = findField(candidateValueFields, AGE_VALUE_PATTERNS) || candidateValueFields[0];
+  if (!valueField) return null;
+
+  let rows = records;
+  let latestPeriodLabel = null;
+
+  if (dateField) {
+    const values = records.map((r) => String(r[dateField] ?? "")).filter(Boolean);
+    const latest = [...values].sort().slice(-1)[0];
+    latestPeriodLabel = latest || null;
+    if (latest) {
+      rows = records.filter((r) => String(r[dateField] ?? "") === latest);
+    }
+  }
+
+  const distribution = rows
+    .map((r) => ({
+      label: String(r[ageField] ?? ""),
+      value: toNumber(r[valueField])
+    }))
+    .filter((row) => row.value !== null && row.label);
+
+  distribution.sort((a, b) => {
+    const an = parseInt(a.label, 10);
+    const bn = parseInt(b.label, 10);
+    if (!Number.isNaN(an) && !Number.isNaN(bn)) return an - bn;
+    return a.label.localeCompare(b.label, "ja");
+  });
+
+  if (!distribution.length) return null;
+
+  return { distribution, ageField, valueField, dateField, latestPeriodLabel };
+}
+
+export function buildAgeDistributionInsights(normalized) {
+  if (!normalized || !normalized.distribution.length) return null;
+  const { distribution } = normalized;
+  const total = distribution.reduce((s, r) => s + r.value, 0);
+  const top = distribution.reduce((max, r) => (r.value > max.value ? r : max), distribution[0]);
+  return {
+    total,
+    top,
+    topShare: total ? (top.value / total) * 100 : null,
+    count: distribution.length
+  };
+}
+

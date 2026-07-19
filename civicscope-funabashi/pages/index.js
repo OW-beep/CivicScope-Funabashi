@@ -22,6 +22,11 @@ const DASHBOARD_LINKS = [
     description: "常住人口の月次推移と前月比・前年同月比を自動集計。"
   },
   {
+    href: "/children",
+    title: "子ども・子育てダッシュボード",
+    description: "年度別乳児数の推移と、児童の年齢別人口の内訳を可視化。"
+  },
+  {
     href: "/chokai",
     title: "町会・自治会ダッシュボード",
     description: "町丁目別の分布マップとランキングで地域のつながりを可視化。"

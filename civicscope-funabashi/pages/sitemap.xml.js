@@ -4,6 +4,7 @@ import { articles } from "../data/articles";
 const STATIC_PATHS = [
   "",
   "/dashboard",
+  "/children",
   "/chokai",
   "/food-businesses",
   "/dog-registration",

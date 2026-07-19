@@ -1,6 +1,6 @@
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-export default function PopulationChart({ data }) {
+export default function PopulationChart({ data, seriesLabel = "常住人口", unit = "人" }) {
   if (!data || data.length === 0) {
     return <p className="text-sm text-ink-soft">表示できるデータがありません。</p>;
   }
@@ -29,7 +29,7 @@ export default function PopulationChart({ data }) {
             tickFormatter={(v) => v.toLocaleString("ja-JP")}
           />
           <Tooltip
-            formatter={(value) => [`${Number(value).toLocaleString("ja-JP")} 人`, "常住人口"]}
+            formatter={(value) => [`${Number(value).toLocaleString("ja-JP")} ${unit}`, seriesLabel]}
             labelStyle={{ color: "#1B2430" }}
             contentStyle={{ border: "1px solid rgba(27,36,48,0.15)", fontSize: 12 }}
           />
