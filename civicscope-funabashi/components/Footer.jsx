@@ -22,6 +22,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm text-paper/80">
               <li><Link href="/dashboard" className="hover:text-brass-light">人口ダッシュボード</Link></li>
               <li><Link href="/children" className="hover:text-brass-light">子ども・子育てダッシュボード</Link></li>
+              <li><Link href="/schools" className="hover:text-brass-light">学校ダッシュボード</Link></li>
               <li><Link href="/chokai" className="hover:text-brass-light">町会・自治会ダッシュボード</Link></li>
               <li><Link href="/food-businesses" className="hover:text-brass-light">食品営業施設ダッシュボード</Link></li>
               <li><Link href="/disaster-prevention" className="hover:text-brass-light">防災ダッシュボード</Link></li>

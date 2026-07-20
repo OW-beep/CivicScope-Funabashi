@@ -6,6 +6,7 @@ import { siteConfig } from "../data/siteConfig";
 const NAV = [
   { href: "/dashboard", label: "人口" },
   { href: "/children", label: "子ども・子育て" },
+  { href: "/schools", label: "学校" },
   { href: "/chokai", label: "町会・自治会" },
   { href: "/food-businesses", label: "食品営業施設" },
   { href: "/disaster-prevention", label: "防災" },
