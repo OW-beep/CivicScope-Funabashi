@@ -109,5 +109,11 @@ export const datasets = {
     label: "市立中学校生徒数一覧",
     description: "船橋市立中学校の学校別生徒数一覧（平成30年5月1日時点）。",
     sourceUrl: "https://data.bodik.jp/dataset/122041_h300501_chugakkouseitosu"
+  },
+  lifeSanitationFacilities: {
+    id: "122041_seikatsueisei0407",
+    label: "生活衛生関係営業施設一覧",
+    description: "美容所・理容所・クリーニング所・旅館・ホテル・簡易宿所・公衆浴場・興行場など、生活衛生関係の営業許可施設の一覧。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_seikatsueisei0407"
   }
 };

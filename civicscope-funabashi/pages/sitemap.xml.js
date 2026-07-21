@@ -8,6 +8,7 @@ const STATIC_PATHS = [
   "/schools",
   "/chokai",
   "/food-businesses",
+  "/life-sanitation",
   "/disaster-prevention",
   "/dog-registration",
   "/articles",

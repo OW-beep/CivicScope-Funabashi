@@ -41,3 +41,12 @@ input:focus-visible {
     linear-gradient(90deg, rgba(27, 36, 48, 0.07) 1px, transparent 1px);
   background-size: 28px 28px;
 }
+
+/* ヘッダーのダッシュボード・ドロップダウン（<details>）のデフォルトの三角マーカーを消す */
+summary {
+  list-style: none;
+}
+summary::-webkit-details-marker,
+summary::marker {
+  display: none;
+}

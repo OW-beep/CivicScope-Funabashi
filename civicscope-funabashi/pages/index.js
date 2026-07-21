@@ -42,6 +42,11 @@ const DASHBOARD_LINKS = [
     description: "飲食店・食品取扱施設の分布マップと業種別ランキング。"
   },
   {
+    href: "/life-sanitation",
+    title: "生活衛生施設ダッシュボード",
+    description: "美容所・クリーニング所・旅館・公衆浴場などの分布マップと業種別ランキング。"
+  },
+  {
     href: "/disaster-prevention",
     title: "防災ダッシュボード",
     description: "避難場所・避難所・帰宅困難者支援施設の位置を地図に重ねて可視化。"
