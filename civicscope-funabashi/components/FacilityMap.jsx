@@ -31,6 +31,25 @@ function toXY(lat, lng, t) {
   return { x: t.offsetX + xKm * t.scale, y: t.offsetY + (t.drawH - yKm * t.scale) };
 }
 
+// 緯度経度として妥当な有限の数値かどうかを確認する（想定外のデータ形式を防ぐ）
+function isValidLatLng(lat, lng) {
+  return Number.isFinite(lat) && Number.isFinite(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
+}
+
+// boundaryは [ [ [lng,lat], [lng,lat], ... ], ... ] という形を想定するが、
+// 出典データの形が想定と異なる場合に備えて、不正な点・リングは取り除く。
+function sanitizeBoundary(boundary) {
+  if (!Array.isArray(boundary)) return [];
+  return boundary
+    .filter((ring) => Array.isArray(ring))
+    .map((ring) =>
+      ring.filter(
+        (point) => Array.isArray(point) && point.length >= 2 && isValidLatLng(Number(point[1]), Number(point[0]))
+      )
+    )
+    .filter((ring) => ring.length >= 3);
+}
+
 function boundsFromRings(rings) {
   let latMin = Infinity;
   let latMax = -Infinity;
@@ -44,10 +63,11 @@ function boundsFromRings(rings) {
       if (lng > lngMax) lngMax = lng;
     }
   }
-  return Number.isFinite(latMin) ? { latMin, latMax, lngMin, lngMax } : null;
+  return Number.isFinite(latMin) && Number.isFinite(lngMin) ? { latMin, latMax, lngMin, lngMax } : null;
 }
 
 function boundsFromPoints(points) {
+  if (!points.length) return null;
   const lats = points.map((p) => p.lat);
   const lngs = points.map((p) => p.lng);
   return {
@@ -61,32 +81,42 @@ function boundsFromPoints(points) {
 // 複数のレイヤー（避難所・避難場所・AEDなど）を、それぞれ表示/非表示を切り替えながら
 // 同じ地図の上に重ねて表示できる地点マップ。
 // layers: [{ key, label, color, points: [{label, lat, lng}, ...] }, ...]
-export default function FacilityMap({ layers, boundary }) {
-  const [visible, setVisible] = useState(() => Object.fromEntries(layers.map((l) => [l.key, true])));
+export default function FacilityMap({ layers = [], boundary = [] }) {
+  const safeLayers = useMemo(
+    () =>
+      (Array.isArray(layers) ? layers : []).map((l) => ({
+        ...l,
+        points: (Array.isArray(l.points) ? l.points : []).filter((p) => isValidLatLng(p?.lat, p?.lng))
+      })),
+    [layers]
+  );
+
+  const [visible, setVisible] = useState(() => Object.fromEntries(safeLayers.map((l) => [l.key, true])));
   const [selected, setSelected] = useState(null);
 
-  const hasBoundary = Array.isArray(boundary) && boundary.length > 0;
-  const allPoints = useMemo(() => layers.flatMap((l) => l.points), [layers]);
+  const safeBoundary = useMemo(() => sanitizeBoundary(boundary), [boundary]);
+  const hasBoundary = safeBoundary.length > 0;
+  const allPoints = useMemo(() => safeLayers.flatMap((l) => l.points), [safeLayers]);
 
   const transform = useMemo(() => {
-    const bounds = hasBoundary ? boundsFromRings(boundary) : boundsFromPoints(allPoints);
+    const bounds = hasBoundary ? boundsFromRings(safeBoundary) : boundsFromPoints(allPoints);
     return bounds ? computeTransform(bounds) : null;
-  }, [boundary, allPoints, hasBoundary]);
+  }, [safeBoundary, allPoints, hasBoundary]);
 
   const projectedRings = useMemo(() => {
     if (!hasBoundary || !transform) return [];
-    return boundary.map((ring) => ring.map(([lng, lat]) => toXY(lat, lng, transform)));
-  }, [boundary, transform, hasBoundary]);
+    return safeBoundary.map((ring) => ring.map(([lng, lat]) => toXY(Number(lat), Number(lng), transform)));
+  }, [safeBoundary, transform, hasBoundary]);
 
   const projectedLayers = useMemo(() => {
     if (!transform) return [];
-    return layers.map((l) => ({
+    return safeLayers.map((l) => ({
       ...l,
       points: l.points.map((p) => ({ ...p, ...toXY(p.lat, p.lng, transform) }))
     }));
-  }, [layers, transform]);
+  }, [safeLayers, transform]);
 
-  if (!transform) {
+  if (!safeLayers.length || !transform) {
     return <p className="text-sm text-ink-soft">表示できる位置情報がありません。</p>;
   }
 
@@ -95,11 +125,11 @@ export default function FacilityMap({ layers, boundary }) {
   return (
     <div>
       <div className="mb-3 flex flex-wrap gap-x-4 gap-y-2 text-xs">
-        {layers.map((l) => (
+        {safeLayers.map((l) => (
           <label key={l.key} className="flex cursor-pointer items-center gap-1.5 text-ink-soft">
             <input
               type="checkbox"
-              checked={visible[l.key]}
+              checked={!!visible[l.key]}
               onChange={() => toggle(l.key)}
               className="accent-brass"
             />
@@ -145,7 +175,7 @@ export default function FacilityMap({ layers, boundary }) {
                       strokeOpacity={isActive ? 0.6 : 0.2}
                       strokeWidth={isActive ? 1.2 : 0.6}
                       className="cursor-pointer"
-                      onClick={() => setSelected({ ...p, layerKey: l.key, layerLabel: l.label })}
+                      onClick={() => setSelected({ label: p.label, layerKey: l.key, layerLabel: l.label })}
                     >
                       <title>{`${p.label}（${l.label}）`}</title>
                     </circle>
@@ -166,7 +196,10 @@ export default function FacilityMap({ layers, boundary }) {
       )}
 
       <p className="mt-2 text-xs text-ink-soft">
-        背景の輪郭は国土数値情報（国土交通省）をもとにした船橋市の実際の行政境界です。チェックボックスでレイヤーの表示・非表示を切り替えられます。
+        {hasBoundary
+          ? "背景の輪郭は国土数値情報（国土交通省）をもとにした船橋市の実際の行政境界です。"
+          : "行政境界データを取得できなかったため、地点の相対位置のみで表示しています。"}
+        チェックボックスでレイヤーの表示・非表示を切り替えられます。
       </p>
     </div>
   );

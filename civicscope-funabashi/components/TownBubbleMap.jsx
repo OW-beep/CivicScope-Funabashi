@@ -34,6 +34,24 @@ function toXY(lat, lng, t) {
   return { x: t.offsetX + xKm * t.scale, y: t.offsetY + (t.drawH - yKm * t.scale) };
 }
 
+function isValidLatLng(lat, lng) {
+  return Number.isFinite(lat) && Number.isFinite(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
+}
+
+// boundaryは [ [ [lng,lat], [lng,lat], ... ], ... ] という形を想定するが、
+// 出典データの形が想定と異なる場合に備えて、不正な点・リングは取り除く。
+function sanitizeBoundary(boundary) {
+  if (!Array.isArray(boundary)) return [];
+  return boundary
+    .filter((ring) => Array.isArray(ring))
+    .map((ring) =>
+      ring.filter(
+        (point) => Array.isArray(point) && point.length >= 2 && isValidLatLng(Number(point[1]), Number(point[0]))
+      )
+    )
+    .filter((ring) => ring.length >= 3);
+}
+
 function boundsFromRings(rings) {
   let latMin = Infinity;
   let latMax = -Infinity;
@@ -47,10 +65,11 @@ function boundsFromRings(rings) {
       if (lng > lngMax) lngMax = lng;
     }
   }
-  return Number.isFinite(latMin) ? { latMin, latMax, lngMin, lngMax } : null;
+  return Number.isFinite(latMin) && Number.isFinite(lngMin) ? { latMin, latMax, lngMin, lngMax } : null;
 }
 
 function boundsFromPoints(points) {
+  if (!points.length) return null;
   const lats = points.map((p) => p.lat);
   const lngs = points.map((p) => p.lng);
   return {
@@ -61,37 +80,42 @@ function boundsFromPoints(points) {
   };
 }
 
-export default function TownBubbleMap({ points, boundary, unit = "件" }) {
+export default function TownBubbleMap({ points = [], boundary = [], unit = "件" }) {
   const [selected, setSelected] = useState(null);
 
-  const hasBoundary = Array.isArray(boundary) && boundary.length > 0;
+  const safePoints = useMemo(
+    () => (Array.isArray(points) ? points : []).filter((p) => isValidLatLng(p?.lat, p?.lng)),
+    [points]
+  );
+  const safeBoundary = useMemo(() => sanitizeBoundary(boundary), [boundary]);
+  const hasBoundary = safeBoundary.length > 0;
 
   const transform = useMemo(() => {
-    const bounds = hasBoundary ? boundsFromRings(boundary) : boundsFromPoints(points);
+    const bounds = hasBoundary ? boundsFromRings(safeBoundary) : boundsFromPoints(safePoints);
     return bounds ? computeTransform(bounds) : null;
-  }, [boundary, points, hasBoundary]);
+  }, [safeBoundary, safePoints, hasBoundary]);
 
   const projectedRings = useMemo(() => {
     if (!hasBoundary || !transform) return [];
-    return boundary.map((ring) => ring.map(([lng, lat]) => toXY(lat, lng, transform)));
-  }, [boundary, transform, hasBoundary]);
+    return safeBoundary.map((ring) => ring.map(([lng, lat]) => toXY(Number(lat), Number(lng), transform)));
+  }, [safeBoundary, transform, hasBoundary]);
 
   const projectedPoints = useMemo(() => {
     if (!transform) return [];
-    return points.map((p) => ({ ...p, ...toXY(p.lat, p.lng, transform) }));
-  }, [points, transform]);
+    return safePoints.map((p) => ({ ...p, ...toXY(p.lat, p.lng, transform) }));
+  }, [safePoints, transform]);
 
-  const maxCount = Math.max(...points.map((p) => p.count), 1);
+  const maxCount = Math.max(...safePoints.map((p) => p.count || 0), 1);
 
   function radiusFor(count) {
     const min = 5;
     const max = 30;
-    return min + (max - min) * Math.sqrt(count / maxCount);
+    return min + (max - min) * Math.sqrt((count || 0) / maxCount);
   }
 
   const active = selected || projectedPoints[0];
 
-  if (!transform) {
+  if (!safePoints.length || !transform) {
     return <p className="text-sm text-ink-soft">表示できる位置情報がありません。</p>;
   }
 
@@ -116,11 +140,11 @@ export default function TownBubbleMap({ points, boundary, unit = "件" }) {
             />
           ))}
 
-          {projectedPoints.map((p) => {
+          {projectedPoints.map((p, i) => {
             const isActive = active && active.label === p.label;
             return (
               <circle
-                key={p.label}
+                key={`${p.label}-${i}`}
                 cx={p.x}
                 cy={p.y}
                 r={radiusFor(p.count)}
@@ -131,7 +155,7 @@ export default function TownBubbleMap({ points, boundary, unit = "件" }) {
                 className="cursor-pointer transition-opacity"
                 onClick={() => setSelected(p)}
               >
-                <title>{`${p.label}：${p.count.toLocaleString("ja-JP")}${unit}`}</title>
+                <title>{`${p.label}：${(p.count || 0).toLocaleString("ja-JP")}${unit}`}</title>
               </circle>
             );
           })}
@@ -142,7 +166,7 @@ export default function TownBubbleMap({ points, boundary, unit = "件" }) {
         <div className="mt-3 flex items-center justify-between border-b border-ink/10 pb-3 text-sm">
           <span className="font-display text-ink">{active.label}</span>
           <span className="font-mono text-brass-dark">
-            {active.count.toLocaleString("ja-JP")} {unit}
+            {(active.count || 0).toLocaleString("ja-JP")} {unit}
           </span>
         </div>
       ) : null}

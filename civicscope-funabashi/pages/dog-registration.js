@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
 import AdSlot from "../components/AdSlot";
+import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords, normalizeDogSeries, buildDogInsights } from "../lib/bodik";
 
@@ -86,7 +87,9 @@ export default function DogRegistration({ series, insights, error }) {
 
             <div className="mt-10 border border-ink/10 bg-white/60 p-5">
               <SectionLabel code="FIG.1">登録頭数と予防注射実施頭数の推移</SectionLabel>
-              <DualBarChart data={series} />
+              <ChartErrorBoundary>
+                <DualBarChart data={series} />
+              </ChartErrorBoundary>
             </div>
 
             {insights ? (

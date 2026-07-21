@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
 import AdSlot from "../components/AdSlot";
+import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords, normalizePopulationSeries, buildPopulationInsights } from "../lib/bodik";
 
@@ -95,7 +96,9 @@ export default function Dashboard({ series, insights, error }) {
 
             <div className="mt-10 border border-ink/10 bg-white/60 p-5">
               <SectionLabel code="FIG.1">常住人口の推移</SectionLabel>
-              <PopulationChart data={series} />
+              <ChartErrorBoundary>
+                <PopulationChart data={series} />
+              </ChartErrorBoundary>
             </div>
 
             {insights ? (

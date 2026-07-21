@@ -26,14 +26,16 @@ export default function Terms() {
           <div>
             <SectionLabel code="§2">掲載データの出典一覧</SectionLabel>
             <ul className="list-disc space-y-3 pl-5">
-              {Object.values(datasets).map((d) => (
-                <li key={d.id}>
-                  <a href={d.sourceUrl} target="_blank" rel="noreferrer" className="underline hover:text-brass-dark">
-                    {d.label}
-                  </a>
-                  （船橋市／{siteConfig.bodik.license}）
-                </li>
-              ))}
+              {Object.values(datasets)
+                .filter((d) => d.id)
+                .map((d) => (
+                  <li key={d.id}>
+                    <a href={d.sourceUrl} target="_blank" rel="noreferrer" className="underline hover:text-brass-dark">
+                      {d.label}
+                    </a>
+                    （船橋市／{siteConfig.bodik.license}）
+                  </li>
+                ))}
               <li>
                 その他、船橋市オープンデータカタログ（
                 <a href={siteConfig.bodik.orgCatalogUrl} target="_blank" rel="noreferrer" className="underline hover:text-brass-dark">

@@ -149,20 +149,70 @@ export function aggregateByField(records, field) {
 }
 
 // カテゴリ列をフィールド一覧からヒューリスティックに推測する（業種・地区など）。
-// 「〜コード」列は名称ではないため、それ以外の列を優先して探す。
-export function guessCategoryField(fields, patterns) {
-  const nameFields = excludeCodeLikeFields(fields);
+// 「〜コード」列は名称ではないため避け、さらに実際の値を見て、
+// 値が単純な数字（1, 2, 不明 など）ばかりの列は「コードらしき列」とみなして後回しにする。
+// records を渡すと値の検証を行い、渡さない場合は列名だけで判定する。
+function isMostlyNumericOrEmpty(records, field) {
+  const samples = records
+    .slice(0, 50)
+    .map((r) => String(r[field] ?? "").trim())
+    .filter(Boolean);
+  if (!samples.length) return true;
+  const numericCount = samples.filter((v) => /^[0-9０-９]+$/.test(v) || v === "不明").length;
+  return numericCount / samples.length > 0.5;
+}
 
+export function guessCategoryField(fields, patterns, records = []) {
+  const nameFields = excludeCodeLikeFields(fields);
+  const orderedCandidates = [];
   for (const pattern of patterns) {
-    const hit = nameFields.find((f) => pattern.test(f));
-    if (hit) return hit;
+    for (const f of nameFields) {
+      if (pattern.test(f) && !orderedCandidates.includes(f)) orderedCandidates.push(f);
+    }
   }
-  // 名称らしき列がひとつも見つからない場合のみ、コード列も含めて再度探す
   for (const pattern of patterns) {
-    const hit = fields.find((f) => pattern.test(f));
-    if (hit) return hit;
+    for (const f of fields) {
+      if (pattern.test(f) && !orderedCandidates.includes(f)) orderedCandidates.push(f);
+    }
   }
-  return null;
+
+  if (!orderedCandidates.length) return null;
+  if (!records.length) return orderedCandidates[0];
+
+  // 値が実際にテキストらしい（数字コードだけではない）列を優先する
+  const textualField = orderedCandidates.find((f) => !isMostlyNumericOrEmpty(records, f));
+  return textualField || orderedCandidates[0];
+}
+
+// 「洪水」「地震」「津波」のような、災害種別ごとの対応可否フラグ列を持つデータ
+// （避難場所・避難所などでよく使われる標準的な形式）から、種別ごとの該当件数を集計する。
+// 単一の「区分」列がコード化されていて読み取りにくい場合の、より有用な代替の切り口。
+const HAZARD_KEYWORDS = [
+  "洪水",
+  "崖崩れ",
+  "土石流",
+  "地滑り",
+  "高潮",
+  "地震",
+  "津波",
+  "大規模な火事",
+  "内水氾濫",
+  "火山現象"
+];
+
+function isTruthyFlag(value) {
+  const v = String(value ?? "").trim();
+  return v === "1" || v === "○" || v === "◯" || v === "該当" || v === "有" || v.toLowerCase() === "true";
+}
+
+export function buildHazardBreakdown(fields, records) {
+  const hazardFields = fields.filter((f) => HAZARD_KEYWORDS.some((h) => f.includes(h)));
+  if (!hazardFields.length || !records.length) return [];
+
+  return hazardFields
+    .map((f) => ({ label: f, count: records.filter((r) => isTruthyFlag(r[f])).length }))
+    .filter((d) => d.count > 0)
+    .sort((a, b) => b.count - a.count);
 }
 
 // 分布の自動コメント生成（独自性のある付加価値部分）

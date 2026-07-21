@@ -82,5 +82,32 @@ export const datasets = {
     label: "避難所データ",
     description: "被災者が一時的に宿泊滞在できる宿泊可能避難所と、要配慮者を受け入れる福祉避難所のデータ。",
     sourceUrl: "https://data.bodik.jp/dataset/122041_hinanjyo"
+  },
+  strandedCommuterSupport: {
+    id: "122041_kitakukonnannsya",
+    label: "帰宅困難者支援施設データ",
+    description: "災害時に帰宅困難者へ水やトイレ、休憩場所、情報提供を行う帰宅困難者支援施設のデータ（令和5年10月26日時点）。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_kitakukonnannsya"
+  },
+  // AED設置施設データは船橋市の場合、BODIK ODCS（data.bodik.jp）ではなく
+  // 別カタログ「G空間情報センター（geospatial.jp）」に「AED設置施設一覧（市の公共施設等）」
+  // 「AED設置施設一覧（コンビニエンスストア）」として掲載されています。
+  // このカタログはロボット除け（robots.txt）で自動巡回できず、正確なデータセットID（URLの末尾）を
+  // 確認できなかったため、id は空にしてあります。
+  // 船橋市AEDマップ（案内ページ）: https://www.city.funabashi.lg.jp/kurashi/shoubou/010/p053170.html
+  // 上記ページや https://www.geospatial.jp/ckan/organization/chiba-122041 から
+  // データセットのURL末尾（例: chiba-122041_aed_xxxx）を確認し、id と apiBase を設定してください。
+  aed: {
+    id: "", // 例: "chiba-122041_aed_koukyoushisetsu"（要確認・要設定）
+    apiBase: "https://www.geospatial.jp/ckan", // G空間情報センターのCKAN API（要確認）
+    label: "AED設置施設一覧",
+    description: "船橋市内の公共施設・コンビニエンスストア等に設置されているAEDの位置情報。",
+    sourceUrl: "https://www.city.funabashi.lg.jp/kurashi/shoubou/010/p053170.html"
+  },
+  schoolStudents: {
+    id: "122041_h300501_chugakkouseitosu",
+    label: "市立中学校生徒数一覧",
+    description: "船橋市立中学校の学校別生徒数一覧（平成30年5月1日時点）。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_h300501_chugakkouseitosu"
   }
 };

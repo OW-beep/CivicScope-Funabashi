@@ -4,6 +4,7 @@ import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
 import SearchableTable from "../components/SearchableTable";
 import AdSlot from "../components/AdSlot";
+import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords } from "../lib/bodik";
 import {
@@ -60,7 +61,7 @@ export async function getStaticProps() {
       // 地図表示に十分な精度で位置が特定できなかった場合、
       // 「地区」など、より粗いカテゴリ列での集計・ランキング表示にフォールバックする。
       if (!mapAvailable) {
-        const categoryField = guessCategoryField(fields, CATEGORY_FIELD_PATTERNS);
+        const categoryField = guessCategoryField(fields, CATEGORY_FIELD_PATTERNS, records);
         if (categoryField) {
           categoryData = aggregateByField(records, categoryField);
           categoryFieldLabel = categoryField;
@@ -151,18 +152,24 @@ export default function Chokai({
               <>
                 <div className="mt-10 border border-ink/10 bg-white/60 p-5">
                   <SectionLabel code="FIG.1">町丁目別分布マップ</SectionLabel>
-                  <TownBubbleMap points={points} boundary={boundary} unit="件" />
+                  <ChartErrorBoundary>
+                    <TownBubbleMap points={points} boundary={boundary} unit="件" />
+                  </ChartErrorBoundary>
                 </div>
 
                 <div className="mt-8 border border-ink/10 bg-white/60 p-5">
                   <SectionLabel code="FIG.2">町丁目別 件数ランキング</SectionLabel>
-                  <CategoryBarChart data={points} unit="件" />
+                  <ChartErrorBoundary>
+                    <CategoryBarChart data={points} unit="件" />
+                  </ChartErrorBoundary>
                 </div>
               </>
             ) : hasCategoryFallback ? (
               <div className="mt-10 border border-ink/10 bg-white/60 p-5">
                 <SectionLabel code="FIG.1">{`エリア別 件数ランキング（${categoryFieldLabel}）`}</SectionLabel>
-                <CategoryBarChart data={categoryData} unit="件" />
+                <ChartErrorBoundary>
+                  <CategoryBarChart data={categoryData} unit="件" />
+                </ChartErrorBoundary>
               </div>
             ) : (
               <p className="mt-8 text-sm text-ink-soft">

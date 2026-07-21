@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
 import AdSlot from "../components/AdSlot";
+import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import { siteConfig, datasets } from "../data/siteConfig";
 import {
   getDatasetRecords,
@@ -147,7 +148,9 @@ export default function Children({
               ) : null}
 
               <div className="mt-6 border border-ink/10 bg-white/60 p-5">
-                <PopulationChart data={infantSeries} seriesLabel="乳児数" unit="人" periodLabel="年度" />
+                <ChartErrorBoundary>
+                  <PopulationChart data={infantSeries} seriesLabel="乳児数" unit="人" periodLabel="年度" />
+                </ChartErrorBoundary>
               </div>
 
               {infantInsights ? (
@@ -201,7 +204,9 @@ export default function Children({
 
               <div className="border border-ink/10 bg-white/60 p-5">
                 <p className="mb-3 text-xs text-ink-soft">年齢1歳ごとの人口（{ageLatestPeriod || "最新年度"}）</p>
-                <CategoryBarChart data={ageChartData} unit="人" topN={20} />
+                <ChartErrorBoundary>
+                  <CategoryBarChart data={ageChartData} unit="人" topN={20} />
+                </ChartErrorBoundary>
               </div>
 
               {lifeStageBreakdown.length ? (
@@ -210,14 +215,18 @@ export default function Children({
                   <p className="mb-3 text-xs text-ink-soft">
                     未就学児・小学生・中学生といった生活・就学段階でまとめ直した内訳です（{ageLatestPeriod || "最新年度"}）。
                   </p>
-                  <CategoryBarChart data={lifeStageBreakdown} unit="人" topN={10} />
+                  <ChartErrorBoundary>
+                    <CategoryBarChart data={lifeStageBreakdown} unit="人" topN={10} />
+                  </ChartErrorBoundary>
                 </div>
               ) : null}
 
               {yearlyTotalsChartData.length > 1 ? (
                 <div className="mt-8 border border-ink/10 bg-white/60 p-5">
                   <SectionLabel code="FIG.4">児童人口（合計）の年度推移</SectionLabel>
-                  <PopulationChart data={yearlyTotalsChartData} seriesLabel="児童人口" unit="人" periodLabel="年度" />
+                  <ChartErrorBoundary>
+                    <PopulationChart data={yearlyTotalsChartData} seriesLabel="児童人口" unit="人" periodLabel="年度" />
+                  </ChartErrorBoundary>
                 </div>
               ) : null}
 

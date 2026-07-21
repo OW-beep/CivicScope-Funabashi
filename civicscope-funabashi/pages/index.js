@@ -27,6 +27,11 @@ const DASHBOARD_LINKS = [
     description: "年度別乳児数の推移と、児童の年齢別人口の内訳を可視化。"
   },
   {
+    href: "/schools",
+    title: "学校ダッシュボード",
+    description: "船橋市立中学校の学校別生徒数をランキングで可視化。"
+  },
+  {
     href: "/chokai",
     title: "町会・自治会ダッシュボード",
     description: "町丁目別の分布マップとランキングで地域のつながりを可視化。"
@@ -39,7 +44,7 @@ const DASHBOARD_LINKS = [
   {
     href: "/disaster-prevention",
     title: "防災ダッシュボード",
-    description: "避難場所・避難所の位置を地図と種別ランキングで可視化。"
+    description: "避難場所・避難所・帰宅困難者支援施設の位置を地図に重ねて可視化。"
   },
   {
     href: "/dog-registration",

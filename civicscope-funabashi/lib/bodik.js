@@ -1,14 +1,17 @@
 // BODIK ODCS（船橋市のオープンデータカタログ、CKANベース）からデータを取得するための
 // 薄いクライアント。CSVの列名が将来変わっても壊れにくいよう、CKANの構造化データAPI
 // （DataStore）をJSON経由で読み、列名はヒューリスティックに推測する設計にしています。
+//
+// BODIK以外のCKANサイト（例：AEDデータが載っている別カタログ）にも対応できるよう、
+// 各関数は第2引数で apiBase を上書きできます。省略時は船橋市のBODIK ODCSを使います。
 
 import { siteConfig } from "../data/siteConfig";
 
-const API_BASE = siteConfig.bodik.apiBase;
+const DEFAULT_API_BASE = siteConfig.bodik.apiBase;
 
-async function ckanAction(action, params = {}) {
+async function ckanAction(action, params = {}, apiBase = DEFAULT_API_BASE) {
   const query = new URLSearchParams(params).toString();
-  const url = `${API_BASE}/api/3/action/${action}${query ? `?${query}` : ""}`;
+  const url = `${apiBase}/api/3/action/${action}${query ? `?${query}` : ""}`;
 
   const res = await fetch(url, {
     // Vercel/Next.jsのISR。オープンデータは頻繁には変わらないため1日キャッシュ。
@@ -16,27 +19,24 @@ async function ckanAction(action, params = {}) {
   });
 
   if (!res.ok) {
-    throw new Error(`BODIK API request failed: ${action} (${res.status})`);
+    throw new Error(`CKAN API request failed: ${action} (${res.status})`);
   }
 
   const json = await res.json();
   if (!json.success) {
-    throw new Error(`BODIK API returned an error for action: ${action}`);
+    throw new Error(`CKAN API returned an error for action: ${action}`);
   }
   return json.result;
 }
 
 // パッケージ（データセット）のメタ情報とリソース一覧を取得
-export async function getPackage(packageId) {
-  return ckanAction("package_show", { id: packageId });
+export async function getPackage(packageId, apiBase = DEFAULT_API_BASE) {
+  return ckanAction("package_show", { id: packageId }, apiBase);
 }
 
 // DataStoreが有効なリソースから構造化レコードを取得
-export async function getDatastoreRecords(resourceId, { limit = 2000 } = {}) {
-  const result = await ckanAction("datastore_search", {
-    resource_id: resourceId,
-    limit
-  });
+export async function getDatastoreRecords(resourceId, { limit = 2000, apiBase = DEFAULT_API_BASE } = {}) {
+  const result = await ckanAction("datastore_search", { resource_id: resourceId, limit }, apiBase);
   return {
     fields: (result.fields || []).map((f) => f.id).filter((id) => id !== "_id"),
     records: result.records || []
@@ -46,7 +46,8 @@ export async function getDatastoreRecords(resourceId, { limit = 2000 } = {}) {
 // パッケージIDから「DataStoreが有効な最初のリソース」を見つけてレコードを取得する
 // 高レベルのヘルパー。個別データセットのresource_idを直書きしなくて済むようにする。
 export async function getDatasetRecords(packageId, opts = {}) {
-  const pkg = await getPackage(packageId);
+  const apiBase = opts.apiBase || DEFAULT_API_BASE;
+  const pkg = await getPackage(packageId, apiBase);
   const resource = (pkg.resources || []).find((r) => r.datastore_active) || pkg.resources?.[0];
 
   if (!resource) {
@@ -64,7 +65,7 @@ export async function getDatasetRecords(packageId, opts = {}) {
     };
   }
 
-  const { fields, records } = await getDatastoreRecords(resource.id, opts);
+  const { fields, records } = await getDatastoreRecords(resource.id, { ...opts, apiBase });
   return {
     fields,
     records,
@@ -383,5 +384,45 @@ export function buildLifeStageBreakdown(distribution) {
       .reduce((s, r) => s + r.value, 0);
     return { label: stage.label, count };
   }).filter((stage) => stage.count > 0);
+}
+
+// --- 「名称＋数値」の一覧データ向けの汎用正規化 ---------------------------
+// 「市立中学校生徒数一覧」のように、1行=1施設・1カテゴリの名称と数値のペアになっている
+// データセットを、ランキング表示できる {label, value} の配列に変換する。
+export function normalizeNameValueList({ fields, records }, { namePatterns, valuePatterns }) {
+  if (!fields.length || !records.length) return null;
+
+  const nameField = findField(fields, namePatterns);
+  if (!nameField) return null;
+
+  const candidateValueFields = fields.filter((f) => f !== nameField);
+  const valueField = findField(candidateValueFields, valuePatterns) || candidateValueFields[0];
+  if (!valueField) return null;
+
+  const list = records
+    .map((r) => ({
+      label: String(r[nameField] ?? "").trim(),
+      value: toNumber(r[valueField])
+    }))
+    .filter((row) => row.value !== null && row.label && !AGGREGATE_LABEL_RE.test(row.label));
+
+  list.sort((a, b) => b.value - a.value);
+
+  if (!list.length) return null;
+
+  return { list, nameField, valueField };
+}
+
+export function buildNameValueInsights(normalized) {
+  if (!normalized || !normalized.list.length) return null;
+  const { list } = normalized;
+  const total = list.reduce((s, r) => s + r.value, 0);
+  const top = list[0];
+  return {
+    total,
+    top,
+    topShare: total ? (top.value / total) * 100 : null,
+    count: list.length
+  };
 }
 
