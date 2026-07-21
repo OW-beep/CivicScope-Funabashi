@@ -179,9 +179,11 @@ export function guessCategoryField(fields, patterns, records = []) {
   if (!orderedCandidates.length) return null;
   if (!records.length) return orderedCandidates[0];
 
-  // 値が実際にテキストらしい（数字コードだけではない）列を優先する
+  // 値が実際にテキストらしい（数字コードだけではない）列を優先する。
+  // 名称らしき列が一つも無く、コード列しか見つからない場合は、
+  // 「1」「2」のような読めない値を表示するくらいならグラフ自体を出さない方がよいため null を返す。
   const textualField = orderedCandidates.find((f) => !isMostlyNumericOrEmpty(records, f));
-  return textualField || orderedCandidates[0];
+  return textualField || null;
 }
 
 // 「洪水」「地震」「津波」のような、災害種別ごとの対応可否フラグ列を持つデータ
@@ -205,14 +207,28 @@ function isTruthyFlag(value) {
   return v === "1" || v === "○" || v === "◯" || v === "該当" || v === "有" || v.toLowerCase() === "true";
 }
 
+// 列名から、実際にマッチした災害種別キーワードだけを取り出す
+// （例：「災害種別_津波」「対応_津波フラグ」→「津波」）。列名をそのまま表示すると
+// 「災害種別_津波」のように読みにくくなるため、キーワード部分だけに整形する。
+function extractHazardLabel(fieldName) {
+  return HAZARD_KEYWORDS.find((h) => fieldName.includes(h)) || fieldName;
+}
+
 export function buildHazardBreakdown(fields, records) {
   const hazardFields = fields.filter((f) => HAZARD_KEYWORDS.some((h) => f.includes(h)));
   if (!hazardFields.length || !records.length) return [];
 
   return hazardFields
-    .map((f) => ({ label: f, count: records.filter((r) => isTruthyFlag(r[f])).length }))
+    .map((f) => ({ label: extractHazardLabel(f), count: records.filter((r) => isTruthyFlag(r[f])).length }))
     .filter((d) => d.count > 0)
     .sort((a, b) => b.count - a.count);
+}
+
+// 施設（1レコード）ごとに、対応している災害種別キーワードの一覧を取り出す。
+// 地図上で「この災害種別に対応している施設だけを表示する」ような絞り込みに使う。
+export function extractHazardTags(record, fields) {
+  const hazardFields = fields.filter((f) => HAZARD_KEYWORDS.some((h) => f.includes(h)));
+  return hazardFields.filter((f) => isTruthyFlag(record[f])).map((f) => extractHazardLabel(f));
 }
 
 // 分布の自動コメント生成（独自性のある付加価値部分）
@@ -255,7 +271,7 @@ export function guessNameField(fields) {
 }
 
 // レコードから緯度経度つきの地点データを作る（施設1件=地図上の1点）
-export function extractPointsFromLatLng(records, { latField, lngField, nameField, categoryField }) {
+export function extractPointsFromLatLng(records, { latField, lngField, nameField, categoryField, fields }) {
   const points = [];
   for (const r of records) {
     const lat = parseFloat(r[latField]);
@@ -267,6 +283,7 @@ export function extractPointsFromLatLng(records, { latField, lngField, nameField
     points.push({
       label: nameField ? String(r[nameField] ?? "").trim() : "",
       category: categoryField ? String(r[categoryField] ?? "").trim() : null,
+      hazards: fields ? extractHazardTags(r, fields) : [],
       lat,
       lng
     });

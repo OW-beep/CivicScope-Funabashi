@@ -46,10 +46,11 @@ async function loadFacilityDataset(datasetConfig, layerKey) {
   const categoryField = guessCategoryField(fields, CATEGORY_FIELD_PATTERNS, records);
 
   const points = latLng
-    ? extractPointsFromLatLng(records, { ...latLng, nameField, categoryField }).map((p) => ({
+    ? extractPointsFromLatLng(records, { ...latLng, nameField, categoryField, fields }).map((p) => ({
         label: p.label,
         lat: p.lat,
-        lng: p.lng
+        lng: p.lng,
+        hazards: p.hazards
       }))
     : [];
 
@@ -197,7 +198,11 @@ export default function DisasterPrevention({
               <div className="mt-10 border border-ink/10 bg-white/60 p-5">
                 <SectionLabel code="FIG.1">避難場所・避難所マップ</SectionLabel>
                 <ChartErrorBoundary>
-                  <FacilityMap layers={layers} boundary={boundary} />
+                  <FacilityMap
+                    layers={layers}
+                    boundary={boundary}
+                    hazardOptions={hazardBreakdown.map((d) => d.label)}
+                  />
                 </ChartErrorBoundary>
               </div>
             ) : (

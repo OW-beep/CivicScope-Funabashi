@@ -283,7 +283,14 @@ export function buildAnnualSeriesInsights(series, valueKey = "total") {
 const AGE_FIELD_PATTERNS = [/年齢/, /^age$/i];
 const AGE_VALUE_PATTERNS = [/人数/, /人口/, /数$/, /^count$/i];
 // 「合計」「総数」など、個別の年齢ではなく集計行を示すラベルは年齢分布から除外する
-const AGGREGATE_LABEL_RE = /^(合計|総数|計|小計|不詳|総計)$/;
+const AGGREGATE_LABEL_RE = /(合計|総数|総計|小計|不詳)/;
+
+// 「計」単体は完全一致のときだけ集計行とみなす（学校名などに「計」が
+// 部分文字列として含まれる可能性を避けるため、部分一致にはしない）。
+function isAggregateLabel(label) {
+  const trimmed = String(label ?? "").trim();
+  return trimmed === "計" || AGGREGATE_LABEL_RE.test(trimmed);
+}
 
 export function normalizeAgeDistribution({ fields, records }) {
   if (!fields.length || !records.length) return null;
@@ -301,7 +308,7 @@ export function normalizeAgeDistribution({ fields, records }) {
   if (!valueField) return null;
 
   // 年齢の「合計」行を除いた実レコードのみを対象にする
-  const cleanedRecords = records.filter((r) => !AGGREGATE_LABEL_RE.test(String(r[ageField] ?? "").trim()));
+  const cleanedRecords = records.filter((r) => !isAggregateLabel(r[ageField]));
 
   let rows = cleanedRecords;
   let latestPeriodLabel = null;
@@ -404,7 +411,7 @@ export function normalizeNameValueList({ fields, records }, { namePatterns, valu
       label: String(r[nameField] ?? "").trim(),
       value: toNumber(r[valueField])
     }))
-    .filter((row) => row.value !== null && row.label && !AGGREGATE_LABEL_RE.test(row.label));
+    .filter((row) => row.value !== null && row.label && !isAggregateLabel(row.label));
 
   list.sort((a, b) => b.value - a.value);
 
