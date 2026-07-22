@@ -9,6 +9,7 @@ const DASHBOARDS = [
   { href: "/dashboard", label: "人口" },
   { href: "/children", label: "子ども・子育て" },
   { href: "/schools", label: "学校" },
+  { href: "/senior-housing", label: "高齢者向け住宅" },
   { href: "/chokai", label: "町会・自治会" },
   { href: "/food-businesses", label: "食品営業施設" },
   { href: "/life-sanitation", label: "生活衛生施設" },

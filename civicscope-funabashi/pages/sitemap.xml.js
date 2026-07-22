@@ -6,6 +6,7 @@ const STATIC_PATHS = [
   "/dashboard",
   "/children",
   "/schools",
+  "/senior-housing",
   "/chokai",
   "/food-businesses",
   "/life-sanitation",

@@ -283,13 +283,16 @@ export function buildAnnualSeriesInsights(series, valueKey = "total") {
 const AGE_FIELD_PATTERNS = [/年齢/, /^age$/i];
 const AGE_VALUE_PATTERNS = [/人数/, /人口/, /数$/, /^count$/i];
 // 「合計」「総数」など、個別の年齢ではなく集計行を示すラベルは年齢分布から除外する
-const AGGREGATE_LABEL_RE = /(合計|総数|総計|小計|不詳)/;
+const AGGREGATE_LABEL_RE = /(合計|総数|総計|小計|不詳|全体|全市)/;
 
-// 「計」単体は完全一致のときだけ集計行とみなす（学校名などに「計」が
-// 部分文字列として含まれる可能性を避けるため、部分一致にはしない）。
+// 「◯◯計」（例：「学校計」「中学校計」）のように、末尾が「計」で終わる行は
+// 個別の名称ではなく集計行であることが多いため、部分一致ではなく
+// 「末尾が計で終わるか」で広めに判定する。空欄の行も集計・見出し行とみなして除外する。
 function isAggregateLabel(label) {
   const trimmed = String(label ?? "").trim();
-  return trimmed === "計" || AGGREGATE_LABEL_RE.test(trimmed);
+  if (!trimmed) return true;
+  if (trimmed.endsWith("計")) return true;
+  return AGGREGATE_LABEL_RE.test(trimmed);
 }
 
 export function normalizeAgeDistribution({ fields, records }) {
@@ -406,7 +409,7 @@ export function normalizeNameValueList({ fields, records }, { namePatterns, valu
   const valueField = findField(candidateValueFields, valuePatterns) || candidateValueFields[0];
   if (!valueField) return null;
 
-  const list = records
+  let list = records
     .map((r) => ({
       label: String(r[nameField] ?? "").trim(),
       value: toNumber(r[valueField])
@@ -414,6 +417,16 @@ export function normalizeNameValueList({ fields, records }, { namePatterns, valu
     .filter((row) => row.value !== null && row.label && !isAggregateLabel(row.label));
 
   list.sort((a, b) => b.value - a.value);
+
+  // 名称だけでは合計行かどうか判別できないケースへの保険。
+  // 最大値の行が、それ以外の全行の合計とほぼ一致する（＝内訳の総和になっている）場合は、
+  // 個別の項目ではなく合計行とみなして取り除く。
+  if (list.length > 2) {
+    const restSum = list.slice(1).reduce((s, r) => s + r.value, 0);
+    if (restSum > 0 && list[0].value >= restSum * 0.9 && list[0].value <= restSum * 1.1) {
+      list = list.slice(1);
+    }
+  }
 
   if (!list.length) return null;
 

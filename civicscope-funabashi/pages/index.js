@@ -32,6 +32,11 @@ const DASHBOARD_LINKS = [
     description: "船橋市立中学校の学校別生徒数をランキングで可視化。"
   },
   {
+    href: "/senior-housing",
+    title: "高齢者向け住宅ダッシュボード",
+    description: "サービス付き高齢者向け住宅の入居者数の推移と施設の分布を可視化。"
+  },
+  {
     href: "/chokai",
     title: "町会・自治会ダッシュボード",
     description: "町丁目別の分布マップとランキングで地域のつながりを可視化。"

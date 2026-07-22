@@ -115,5 +115,17 @@ export const datasets = {
     label: "生活衛生関係営業施設一覧",
     description: "美容所・理容所・クリーニング所・旅館・ホテル・簡易宿所・公衆浴場・興行場など、生活衛生関係の営業許可施設の一覧。",
     sourceUrl: "https://data.bodik.jp/dataset/122041_seikatsueisei0407"
+  },
+  seniorHousingStats: {
+    id: "122041_koureijuutakutoukei",
+    label: "サービス付き高齢者向け住宅入居者別統計データ",
+    description: "サービス付き高齢者向け住宅の毎年（平成25年～）10月1日時点の入居者別統計データ。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_koureijuutakutoukei"
+  },
+  seniorHousingList: {
+    id: "122041_koureijuutakuichiran",
+    label: "サービス付き高齢者向け住宅一覧",
+    description: "船橋市内のサービス付き高齢者向け住宅の一覧（平成30年7月1日時点）。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_koureijuutakuichiran"
   }
 };
