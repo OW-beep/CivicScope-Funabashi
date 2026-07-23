@@ -89,28 +89,31 @@ export const datasets = {
     description: "災害時に帰宅困難者へ水やトイレ、休憩場所、情報提供を行う帰宅困難者支援施設のデータ（令和5年10月26日時点）。",
     sourceUrl: "https://data.bodik.jp/dataset/122041_kitakukonnannsya"
   },
-  // AED設置施設データは船橋市の場合、BODIK ODCS（data.bodik.jp）ではなく
-  // 別カタログ「G空間情報センター（geospatial.jp）」に「AED設置施設一覧（市の公共施設等）」
-  // 「AED設置施設一覧（コンビニエンスストア）」として掲載されています。
-  // このカタログはロボット除け（robots.txt）で自動巡回できず、正確なデータセットID（URLの末尾）を
-  // 確認できなかったため、id は空にしてあります。
-  // 船橋市AEDマップ（案内ページ）: https://www.city.funabashi.lg.jp/kurashi/shoubou/010/p053170.html
-  // 上記ページや https://www.geospatial.jp/ckan/organization/chiba-122041 から
-  // データセットのURL末尾（例: chiba-122041_aed_xxxx）を確認し、id と apiBase を設定してください。
+  // AED設置施設データ：以前は「BODIK ODCSには無く、G空間情報センターに掲載されているが
+  // ロボット除け設定で確認できない」としていましたが、実際には船橋市のBODIK ODCS上に
+  // 「AED設置施設一覧」として存在することが確認できたため、正しいIDに差し替えました。
   aed: {
-    id: "", // 例: "chiba-122041_aed_koukyoushisetsu"（要確認・要設定）
-    apiBase: "https://www.geospatial.jp/ckan", // G空間情報センターのCKAN API（要確認）
+    id: "122041_aed_sikoukyousisetsu",
     label: "AED設置施設一覧",
-    description: "船橋市内の公共施設・コンビニエンスストア等に設置されているAEDの位置情報。",
-    sourceUrl: "https://www.city.funabashi.lg.jp/kurashi/shoubou/010/p053170.html"
+    description: "船橋市が設置しているAED（自動体外式除細動器）の設置施設一覧。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_aed_sikoukyousisetsu"
+  },
+  publicWirelessLan: {
+    id: "122041_public_wireless_lan",
+    label: "公衆無線LANアクセスポイント一覧",
+    description:
+      "市が設置している公衆無線LAN（Wi-Fi）のアクセスポイント一覧。施設名称・住所・設置箇所（緯度経度）・SSIDを収録。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_public_wireless_lan"
   },
   schoolStudents: {
     // 旧ID「122041_h300501_chugakkouseitosu」は現在のカタログには存在せず、
     // package_show APIが404を返してダッシュボードがエラー表示になっていました。
     // 現在の正しいデータセットID「122041_chugakkouseitosuu」に修正済みです。
+    // なお、このデータセットは学校別の内訳ではなく、市内の中学校生徒数の合計を
+    // 年度ごとに集計した時系列データ（1980年度〜2019年度）です。
     id: "122041_chugakkouseitosuu",
-    label: "市立中学校生徒数一覧",
-    description: "船橋市立中学校の学校別生徒数一覧。",
+    label: "中学校生徒数",
+    description: "船橋市立中学校の生徒数（市内合計）の年度別推移。",
     sourceUrl: "https://data.bodik.jp/dataset/122041_chugakkouseitosuu"
   },
   lifeSanitationFacilities: {

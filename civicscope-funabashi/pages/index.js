@@ -29,7 +29,7 @@ const DASHBOARD_LINKS = [
   {
     href: "/schools",
     title: "学校ダッシュボード",
-    description: "船橋市立中学校の学校別生徒数をランキングで可視化。"
+    description: "船橋市立中学校の生徒数（市内合計）の年度推移を可視化。"
   },
   {
     href: "/senior-housing",
@@ -59,7 +59,7 @@ const DASHBOARD_LINKS = [
   {
     href: "/disaster-prevention",
     title: "防災ダッシュボード",
-    description: "避難場所・避難所・帰宅困難者支援施設の位置を地図に重ねて可視化。"
+    description: "避難場所・避難所・帰宅困難者支援施設・AED・公衆無線LANの位置を地図に重ねて可視化。"
   },
   {
     href: "/dog-registration",

@@ -25,7 +25,8 @@ const LAYER_COLORS = {
   evacuationPlaces: "#2F6F6E",
   evacuationShelters: "#B8862F",
   strandedCommuterSupport: "#8F6A22",
-  aed: "#C0392B"
+  aed: "#C0392B",
+  publicWirelessLan: "#3B6FA0"
 };
 
 // 1つのデータセットから、地図用の地点データ・災害種別フラグの内訳・件数を取り出す
@@ -81,23 +82,24 @@ export async function getStaticProps() {
   let layers = [];
   let hazardBreakdown = [];
   let totalCount = 0;
-  let aedAvailable = false;
   let boundary = [];
   let error = null;
 
   try {
-    const [places, shelters, stranded, aed] = await Promise.all([
+    const [places, shelters, stranded, aed, wifi] = await Promise.all([
       loadFacilityDataset(datasets.evacuationPlaces, "evacuationPlaces"),
       loadFacilityDataset(datasets.evacuationShelters, "evacuationShelters"),
       loadFacilityDataset(datasets.strandedCommuterSupport, "strandedCommuterSupport"),
-      loadFacilityDataset(datasets.aed, "aed")
+      loadFacilityDataset(datasets.aed, "aed"),
+      loadFacilityDataset(datasets.publicWirelessLan, "publicWirelessLan")
     ]);
 
     const layerDefs = [
       { key: "evacuationPlaces", label: datasets.evacuationPlaces.label, result: places },
       { key: "evacuationShelters", label: datasets.evacuationShelters.label, result: shelters },
       { key: "strandedCommuterSupport", label: datasets.strandedCommuterSupport.label, result: stranded },
-      { key: "aed", label: datasets.aed.label, result: aed }
+      { key: "aed", label: datasets.aed.label, result: aed },
+      { key: "publicWirelessLan", label: datasets.publicWirelessLan.label, result: wifi }
     ];
 
     layers = layerDefs
@@ -111,7 +113,6 @@ export async function getStaticProps() {
 
     hazardBreakdown = mergeBreakdowns([places.hazardBreakdown, shelters.hazardBreakdown]);
     totalCount = places.count + shelters.count + stranded.count;
-    aedAvailable = aed.available;
 
     if (layers.length) {
       boundary = await getFunabashiBoundaryRings();
@@ -125,7 +126,7 @@ export async function getStaticProps() {
     : null;
 
   return {
-    props: { layers, hazardBreakdown, hazardInsights, totalCount, aedAvailable, boundary, error },
+    props: { layers, hazardBreakdown, hazardInsights, totalCount, boundary, error },
     revalidate: 60 * 60 * 24
   };
 }
@@ -135,7 +136,6 @@ export default function DisasterPrevention({
   hazardBreakdown,
   hazardInsights,
   totalCount,
-  aedAvailable,
   boundary,
   error
 }) {
@@ -145,7 +145,7 @@ export default function DisasterPrevention({
         <title>{`防災 ダッシュボード｜${siteConfig.name}`}</title>
         <meta
           name="description"
-          content="船橋市内の避難場所・避難所・帰宅困難者支援施設の位置を地図で重ねて可視化した防災ダッシュボードです。"
+          content="船橋市内の避難場所・避難所・帰宅困難者支援施設・AED設置施設・公衆無線LANの位置を地図で重ねて可視化した防災ダッシュボードです。"
         />
       </Head>
 
@@ -153,27 +153,13 @@ export default function DisasterPrevention({
         <p className="font-mono text-xs uppercase tracking-widest text-brass-dark">Dashboard</p>
         <h1 className="mt-2 font-display text-3xl text-ink md:text-4xl">防災 ダッシュボード</h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft">
-          船橋市オープンデータカタログの避難場所・避難所・帰宅困難者支援施設のデータを、
+          船橋市オープンデータカタログの避難場所・避難所・帰宅困難者支援施設・AED設置施設・公衆無線LANのデータを、
           1つの地図にレイヤーとして重ねて可視化しています。チェックボックスで表示するレイヤーを切り替えられます。
         </p>
-
-        {!aedAvailable ? (
-          <div className="mt-4 max-w-2xl border border-brass/40 bg-brass/10 p-4 text-xs text-brass-dark">
-            <p>
-              AEDのデータは、船橋市の場合BODIK ODCSとは別のカタログ（G空間情報センター）に掲載されており、
-              データセットIDを確認できなかったため、このダッシュボードには未反映です。
-              <a
-                href="https://www.city.funabashi.lg.jp/kurashi/shoubou/010/p053170.html"
-                target="_blank"
-                rel="noreferrer"
-                className="ml-1 underline"
-              >
-                船橋市AEDマップ（公式）
-              </a>
-              をご利用いただくか、データセットのURLが分かればお知らせください。反映します。
-            </p>
-          </div>
-        ) : null}
+        <p className="mt-3 max-w-2xl text-xs text-ink-soft">
+          ※ 公衆無線LANは平時の利便性だけでなく、災害時に携帯電話回線が混雑・停波した際の通信手段としても役立ちます。
+          あわせて確認しておくと安心です。
+        </p>
 
         {error ? (
           <p className="mt-8 border border-brass/40 bg-brass/10 p-4 text-sm text-brass-dark">{error}</p>
@@ -196,7 +182,7 @@ export default function DisasterPrevention({
 
             {layers.length ? (
               <div className="mt-10 border border-ink/10 bg-white/60 p-5">
-                <SectionLabel code="FIG.1">避難場所・避難所マップ</SectionLabel>
+                <SectionLabel code="FIG.1">防災・生活インフラマップ</SectionLabel>
                 <ChartErrorBoundary>
                   <FacilityMap
                     layers={layers}
