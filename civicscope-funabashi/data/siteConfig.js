@@ -105,10 +105,13 @@ export const datasets = {
     sourceUrl: "https://www.city.funabashi.lg.jp/kurashi/shoubou/010/p053170.html"
   },
   schoolStudents: {
-    id: "122041_h300501_chugakkouseitosu",
+    // 旧ID「122041_h300501_chugakkouseitosu」は現在のカタログには存在せず、
+    // package_show APIが404を返してダッシュボードがエラー表示になっていました。
+    // 現在の正しいデータセットID「122041_chugakkouseitosuu」に修正済みです。
+    id: "122041_chugakkouseitosuu",
     label: "市立中学校生徒数一覧",
-    description: "船橋市立中学校の学校別生徒数一覧（平成30年5月1日時点）。",
-    sourceUrl: "https://data.bodik.jp/dataset/122041_h300501_chugakkouseitosu"
+    description: "船橋市立中学校の学校別生徒数一覧。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_chugakkouseitosuu"
   },
   lifeSanitationFacilities: {
     id: "122041_seikatsueisei0407",
@@ -134,5 +137,47 @@ export const datasets = {
     description: "船橋市の生活保護（被保護世帯）の世帯人員別データ（平成26年度～令和6年度）。",
     sourceUrl:
       "https://data.bodik.jp/dataset/122041_hihogoseitaijinin/resource/461afacf-4128-4bbe-8999-31cfa8873d72"
+  },
+
+  // --- 以下、追加調査で見つかった未実装の候補データセット ---------------------
+  // 「サービス付き高齢者向け住宅」記事執筆時点では「高齢化率データは見当たらなかった」
+  // としていましたが、実際には人口・世帯グループに単独のデータセットとして存在します。
+  // 次のダッシュボード/記事を作る際はこのIDをそのまま使えます。
+  agingRatio: {
+    id: "122041_65saiijyoujinkousuii",
+    label: "65歳以上人口推移",
+    description:
+      "65歳以上人口の年度別推移（年度、総人口、65歳以上人口、総人口比率＝高齢化率）。各年度4月1日現在の住民基本台帳人口を基に作成。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_65saiijyoujinkousuii"
+  },
+  seniorPopulationByAge: {
+    id: "122041_60saiijojinkonenreibetsu",
+    label: "60歳以上人口年齢別推移",
+    description: "60歳以上人口の年齢区分別の年度推移。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_60saiijojinkonenreibetsu"
+  },
+  totalFertilityRate: {
+    id: "122041_goukeitokusyusyusseiritu",
+    label: "出生統計:合計特殊出生率の年次推移",
+    description:
+      "厚生労働省人口動態調査の調査票情報を利用した平成19年から令和2年までの合計特殊出生率の推移。全国・千葉県との比較も含む。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_goukeitokusyusyusseiritu"
+  },
+  futurePopulation: {
+    id: "122041_shoraijinkou",
+    label: "将来人口推計（市全体）",
+    description:
+      "第3次総合計画策定にあたり、平成30年4月時点の住民基本台帳を基準に作成した将来人口推計（市全体）。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_shoraijinkou"
+  },
+  censusHouseholdComposition: {
+    // 【船橋市統計書より】B-2国勢調査（20リソース収録）のうち、世帯構成に関するもの。
+    // 1データセット内に複数リソースがまとまっているため、getDatasetRecordsではなく
+    // getPackage()でresources一覧を取得し、用途に応じたresource_idを指定して使うのが良い。
+    id: "122041_stats_b-2",
+    label: "国勢調査（船橋市統計書 B-2）",
+    description:
+      "年齢別人口、世帯人員別世帯数、高齢単身者数、母子・父子世帯数、昼間人口、産業別就業者数など、国勢調査を集計した20種類のリソースをまとめたデータセット。",
+    sourceUrl: "https://data.bodik.jp/dataset/122041_stats_b-2"
   }
 };

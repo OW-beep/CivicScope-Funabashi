@@ -7,7 +7,7 @@ import AdSlot from "../components/AdSlot";
 import FunabashiMapMotif from "../components/FunabashiMapMotif";
 import PearIcon from "../components/PearIcon";
 import { siteConfig, datasets } from "../data/siteConfig";
-import { articles } from "../data/articles";
+import { getArticlesSortedByDate } from "../data/articles";
 import {
   getDatasetRecords,
   normalizePopulationSeries,
@@ -115,6 +115,7 @@ export async function getStaticProps() {
 }
 
 export default function Home({ populationLatest, populationYoyRate, chokaiCount, orgDatasetCount }) {
+  const latestArticles = getArticlesSortedByDate().slice(0, 3);
   return (
     <>
       <Head>
@@ -241,9 +242,14 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
 
       {/* --- 解説記事 ---------------------------------------------------- */}
       <section className="mx-auto max-w-5xl px-5 py-14">
-        <SectionLabel code="04">解説記事</SectionLabel>
+        <div className="flex items-baseline justify-between">
+          <SectionLabel code="04">解説記事</SectionLabel>
+          <Link href="/articles" className="font-mono text-xs text-brass-dark hover:underline">
+            すべての記事を見る →
+          </Link>
+        </div>
         <div className="grid gap-6 md:grid-cols-3">
-          {articles.map((a) => (
+          {latestArticles.map((a) => (
             <Link
               key={a.slug}
               href={`/articles/${a.slug}`}

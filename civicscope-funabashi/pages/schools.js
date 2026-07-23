@@ -60,7 +60,7 @@ export default function Schools({ list, insights, error }) {
           市立中学校ごとの生徒数をランキングで可視化しています。{datasets.schoolStudents.description}
         </p>
         <p className="mt-3 max-w-2xl text-xs text-ink-soft">
-          ※ このデータセットは特定時点（平成30年5月1日）のスナップショットです。最新の学校別生徒数は船橋市教育委員会にご確認ください。
+          ※ このデータセットは特定時点のスナップショットです。最新の学校別生徒数は船橋市教育委員会にご確認ください。
         </p>
 
         {error ? (

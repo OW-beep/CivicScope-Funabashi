@@ -2,9 +2,11 @@ import Head from "next/head";
 import Link from "next/link";
 import AdSlot from "../../components/AdSlot";
 import { siteConfig } from "../../data/siteConfig";
-import { articles } from "../../data/articles";
+import { getArticlesSortedByDate } from "../../data/articles";
 
 export default function ArticlesIndex() {
+  const articles = getArticlesSortedByDate();
+
   return (
     <>
       <Head>
