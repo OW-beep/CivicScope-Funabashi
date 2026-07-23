@@ -127,5 +127,12 @@ export const datasets = {
     label: "サービス付き高齢者向け住宅一覧",
     description: "船橋市内のサービス付き高齢者向け住宅の一覧（平成30年7月1日時点）。",
     sourceUrl: "https://data.bodik.jp/dataset/122041_koureijuutakuichiran"
+  },
+  welfareHouseholds: {
+    id: "122041_hihogoseitaijinin",
+    label: "被保護世帯人員",
+    description: "船橋市の生活保護（被保護世帯）の世帯人員別データ（平成26年度～令和6年度）。",
+    sourceUrl:
+      "https://data.bodik.jp/dataset/122041_hihogoseitaijinin/resource/461afacf-4128-4bbe-8999-31cfa8873d72"
   }
 };
