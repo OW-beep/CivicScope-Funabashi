@@ -7,7 +7,7 @@ import AdSlot from "../components/AdSlot";
 import FunabashiMapMotif from "../components/FunabashiMapMotif";
 import PearIcon from "../components/PearIcon";
 import { siteConfig, datasets } from "../data/siteConfig";
-import { getArticlesSortedByDate } from "../data/articles";
+import { getArticlesSortedByDate, getFeaturedArticles } from "../data/articles";
 import {
   getDatasetRecords,
   normalizePopulationSeries,
@@ -121,6 +121,7 @@ export async function getStaticProps() {
 
 export default function Home({ populationLatest, populationYoyRate, chokaiCount, orgDatasetCount }) {
   const latestArticles = getArticlesSortedByDate().slice(0, 3);
+  const featuredArticles = getFeaturedArticles(3);
   return (
     <>
       <Head>
@@ -210,45 +211,10 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
         <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME} className="h-24" />
       </section>
 
-      {/* --- ダッシュボード一覧 ------------------------------------------ */}
-      <section className="mx-auto max-w-5xl px-5 py-14">
-        <SectionLabel code="02">ダッシュボード一覧</SectionLabel>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {DASHBOARD_LINKS.map((d) => (
-            <Link
-              key={d.href}
-              href={d.href}
-              className="group border border-ink/10 bg-white/50 p-5 transition-colors hover:border-brass"
-            >
-              <h3 className="font-display text-lg text-ink group-hover:text-brass-dark">{d.title}</h3>
-              <p className="mt-2 text-sm text-ink-soft">{d.description}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* --- 船橋豆知識（オープンデータだけではない、まちの魅力） -------- */}
-      <section className="border-t border-ink/10 bg-white/40">
-        <div className="mx-auto max-w-5xl px-5 py-14">
-          <SectionLabel code="03">船橋、知ってる？</SectionLabel>
-          <p className="max-w-2xl text-sm leading-relaxed text-ink-soft">
-            CivicScope船橋はデータだけでなく、まちの魅力もあわせて発信していきます。まずは船橋にまつわる豆知識から。
-          </p>
-          <ul className="mt-6 grid gap-x-8 gap-y-4 sm:grid-cols-2">
-            {FUN_FACTS.map((fact) => (
-              <li key={fact} className="flex items-start gap-2.5 text-sm leading-relaxed text-ink-soft">
-                <PearIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-brass-dark" />
-                <span>{fact}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* --- 解説記事 ---------------------------------------------------- */}
+      {/* --- 新着記事 ------------------------------------------------- */}
       <section className="mx-auto max-w-5xl px-5 py-14">
         <div className="flex items-baseline justify-between">
-          <SectionLabel code="04">解説記事</SectionLabel>
+          <SectionLabel code="02">新着記事</SectionLabel>
           <Link href="/articles" className="font-mono text-xs text-brass-dark hover:underline">
             すべての記事を見る →
           </Link>
@@ -271,10 +237,73 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
         </div>
       </section>
 
+      {/* --- よく読まれている記事（編集部おすすめ） --------------------- */}
+      {featuredArticles.length ? (
+        <section className="border-t border-ink/10 bg-white/40">
+          <div className="mx-auto max-w-5xl px-5 py-14">
+            <SectionLabel code="03">よく読まれている記事</SectionLabel>
+            <p className="max-w-2xl text-sm leading-relaxed text-ink-soft">
+              編集部が特におすすめする記事です。まずはここから読んでみるのがおすすめです。
+            </p>
+            <div className="mt-6 grid gap-6 md:grid-cols-3">
+              {featuredArticles.map((a) => (
+                <Link
+                  key={a.slug}
+                  href={`/articles/${a.slug}`}
+                  className="group flex flex-col border border-ink/10 bg-paper p-5 transition-colors hover:border-brass"
+                >
+                  <span className="font-mono text-xs text-brass-dark">{a.tag}</span>
+                  <h3 className="mt-2 font-display text-lg leading-snug text-ink group-hover:text-brass-dark">
+                    {a.title}
+                  </h3>
+                  <p className="mt-2 line-clamp-3 text-sm text-ink-soft">{a.excerpt}</p>
+                  <span className="mt-4 text-xs font-mono text-ink-soft">続きを読む →</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* --- ダッシュボード一覧 ------------------------------------------ */}
+      <section id="dashboards" className="mx-auto max-w-5xl px-5 py-14 scroll-mt-20">
+        <SectionLabel code="04">ダッシュボード一覧</SectionLabel>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {DASHBOARD_LINKS.map((d) => (
+            <Link
+              key={d.href}
+              href={d.href}
+              className="group border border-ink/10 bg-white/50 p-5 transition-colors hover:border-brass"
+            >
+              <h3 className="font-display text-lg text-ink group-hover:text-brass-dark">{d.title}</h3>
+              <p className="mt-2 text-sm text-ink-soft">{d.description}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* --- 船橋豆知識（オープンデータだけではない、まちの魅力） -------- */}
+      <section className="border-t border-ink/10 bg-white/40">
+        <div className="mx-auto max-w-5xl px-5 py-14">
+          <SectionLabel code="05">船橋、知ってる？</SectionLabel>
+          <p className="max-w-2xl text-sm leading-relaxed text-ink-soft">
+            CivicScope船橋はデータだけでなく、まちの魅力もあわせて発信していきます。まずは船橋にまつわる豆知識から。
+          </p>
+          <ul className="mt-6 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+            {FUN_FACTS.map((fact) => (
+              <li key={fact} className="flex items-start gap-2.5 text-sm leading-relaxed text-ink-soft">
+                <PearIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-brass-dark" />
+                <span>{fact}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* --- 使い方 --------------------------------------------------- */}
       <section className="border-t border-ink/10 bg-white/40">
         <div className="mx-auto max-w-5xl px-5 py-14">
-          <SectionLabel code="05">CivicScope 船橋のしくみ</SectionLabel>
+          <SectionLabel code="06">CivicScope 船橋のしくみ</SectionLabel>
           <div className="grid gap-8 md:grid-cols-3">
             <div>
               <p className="font-mono text-xs text-brass-dark">STEP 1</p>

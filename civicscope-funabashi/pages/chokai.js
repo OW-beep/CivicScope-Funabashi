@@ -4,6 +4,7 @@ import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
 import SearchableTable from "../components/SearchableTable";
 import AdSlot from "../components/AdSlot";
+import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords } from "../lib/bodik";
@@ -202,8 +203,12 @@ export default function Chokai({
         </p>
 
         <div className="mt-10">
+          <DashboardFooterLinks articleHref="/articles/chokai-directory-guide" articleLabel="町会・自治会の加入状況から見る、地域のつながり" />
+          </div>
+
+          <div className="mt-8">
           <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_CHOKAI} className="h-24" />
-        </div>
+          </div>
       </section>
     </>
   );

@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
 import AdSlot from "../components/AdSlot";
+import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords, normalizePopulationSeries, buildAnnualSeriesInsights } from "../lib/bodik";
@@ -138,8 +139,12 @@ export default function Schools({ series, insights, peak, trough, error }) {
         )}
 
         <div className="mt-10">
+          <DashboardFooterLinks articleHref="/articles/junior-high-school-students-guide" articleLabel="中学校生徒数の推移から見る、まちの人口動態の波" />
+          </div>
+
+          <div className="mt-8">
           <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_SCHOOLS} className="h-24" />
-        </div>
+          </div>
       </section>
     </>
   );

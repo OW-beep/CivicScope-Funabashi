@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
 import AdSlot from "../components/AdSlot";
+import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import { siteConfig, datasets } from "../data/siteConfig";
 import {
@@ -134,8 +135,12 @@ export default function Welfare({ series, composition, shareSeries, insights }) 
         </p>
 
         <div className="mt-10">
+          <DashboardFooterLinks articleHref="/articles/welfare-households-guide" articleLabel="生活保護世帯データから見える、単身世帯という変化" />
+          </div>
+
+          <div className="mt-8">
           <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_WELFARE} className="h-24" />
-        </div>
+          </div>
       </section>
     </>
   );

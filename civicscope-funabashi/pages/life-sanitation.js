@@ -4,6 +4,7 @@ import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
 import SearchableTable from "../components/SearchableTable";
 import AdSlot from "../components/AdSlot";
+import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords } from "../lib/bodik";
@@ -171,8 +172,12 @@ export default function LifeSanitation({
         </p>
 
         <div className="mt-10">
+          <DashboardFooterLinks articleHref="/articles/life-sanitation-facilities-guide" articleLabel="生活衛生関係施設データでわかること" />
+          </div>
+
+          <div className="mt-8">
           <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_LIFE_SANITATION} className="h-24" />
-        </div>
+          </div>
       </section>
     </>
   );

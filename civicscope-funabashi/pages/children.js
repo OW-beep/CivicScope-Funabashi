@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
 import AdSlot from "../components/AdSlot";
+import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import { siteConfig, datasets } from "../data/siteConfig";
 import {
@@ -248,8 +249,12 @@ export default function Children({
         </div>
 
         <div className="mt-10">
+          <DashboardFooterLinks />
+          </div>
+
+          <div className="mt-8">
           <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_CHILDREN} className="h-24" />
-        </div>
+          </div>
       </section>
     </>
   );

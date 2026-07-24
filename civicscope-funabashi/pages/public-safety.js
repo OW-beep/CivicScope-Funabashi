@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
 import AdSlot from "../components/AdSlot";
+import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import { siteConfig } from "../data/siteConfig";
 import {
@@ -166,8 +167,12 @@ export default function PublicSafety({
         </p>
 
         <div className="mt-10">
+          <DashboardFooterLinks articleHref="/articles/public-safety-dashboard-guide" articleLabel="刑法犯認知件数と救急出動件数、この5年の変化" />
+          </div>
+
+          <div className="mt-8">
           <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_PUBLIC_SAFETY} className="h-24" />
-        </div>
+          </div>
       </section>
     </>
   );

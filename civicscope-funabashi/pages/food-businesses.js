@@ -4,6 +4,7 @@ import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
 import SearchableTable from "../components/SearchableTable";
 import AdSlot from "../components/AdSlot";
+import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords } from "../lib/bodik";
@@ -198,8 +199,12 @@ export default function FoodBusinesses({
         </p>
 
         <div className="mt-10">
+          <DashboardFooterLinks articleHref="/articles/food-business-directory-guide" articleLabel="船橋市の食品営業施設データの読み方" />
+          </div>
+
+          <div className="mt-8">
           <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_FOOD} className="h-24" />
-        </div>
+          </div>
       </section>
     </>
   );

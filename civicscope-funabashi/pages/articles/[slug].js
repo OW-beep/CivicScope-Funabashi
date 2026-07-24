@@ -1,8 +1,9 @@
 import Head from "next/head";
 import Link from "next/link";
 import AdSlot from "../../components/AdSlot";
+import DashboardFooterLinks from "../../components/DashboardFooterLinks";
 import { siteConfig } from "../../data/siteConfig";
-import { articles, getArticleBySlug } from "../../data/articles";
+import { articles, getArticleBySlug, getRelatedArticles } from "../../data/articles";
 
 export async function getStaticPaths() {
   return {
@@ -14,7 +15,8 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const article = getArticleBySlug(params.slug);
   if (!article) return { notFound: true };
-  return { props: { article } };
+  const relatedArticles = getRelatedArticles(params.slug, 2);
+  return { props: { article, relatedArticles } };
 }
 
 function renderBody(body) {
@@ -41,7 +43,7 @@ function renderBody(body) {
     });
 }
 
-export default function ArticlePage({ article }) {
+export default function ArticlePage({ article, relatedArticles }) {
   return (
     <>
       <Head>
@@ -59,6 +61,52 @@ export default function ArticlePage({ article }) {
         <p className="mt-3 font-mono text-xs text-ink-soft">{article.date}</p>
 
         <div className="mt-10">{renderBody(article.body)}</div>
+
+        {article.relatedDashboard ? (
+          <div className="mt-10">
+            <DashboardFooterLinks
+              articleHref={article.relatedDashboard.href}
+              articleLabel={`${article.relatedDashboard.label}を見る`}
+            />
+          </div>
+        ) : (
+          <div className="mt-10">
+            <Link
+              href="/#dashboards"
+              className="group flex items-center justify-between border border-ink/10 bg-white/60 px-5 py-4 text-sm text-ink transition-colors hover:border-brass"
+            >
+              <span>
+                <span className="block font-mono text-[11px] uppercase tracking-widest text-ink-soft">
+                  もっと見る
+                </span>
+                <span className="mt-0.5 block font-display text-base text-ink">ダッシュボード一覧を見る</span>
+              </span>
+              <span aria-hidden className="ml-3 transition-transform group-hover:translate-x-1">
+                →
+              </span>
+            </Link>
+          </div>
+        )}
+
+        {relatedArticles && relatedArticles.length ? (
+          <div className="mt-12 border-t border-ink/10 pt-8">
+            <p className="font-mono text-xs uppercase tracking-widest text-brass-dark">あわせて読みたい</p>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              {relatedArticles.map((a) => (
+                <Link
+                  key={a.slug}
+                  href={`/articles/${a.slug}`}
+                  className="group flex flex-col border border-ink/10 bg-white/50 p-4 transition-colors hover:border-brass"
+                >
+                  <span className="font-mono text-[11px] text-brass-dark">{a.tag}</span>
+                  <span className="mt-1.5 font-display text-sm leading-snug text-ink group-hover:text-brass-dark">
+                    {a.title}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        ) : null}
 
         <div className="mt-10">
           <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE} className="h-24" />

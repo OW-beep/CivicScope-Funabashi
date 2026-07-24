@@ -4,6 +4,7 @@ import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
 import SearchableTable from "../components/SearchableTable";
 import AdSlot from "../components/AdSlot";
+import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords, normalizePopulationSeries, buildAnnualSeriesInsights } from "../lib/bodik";
@@ -244,8 +245,12 @@ export default function SeniorHousing({
         </p>
 
         <div className="mt-10">
+          <DashboardFooterLinks articleHref="/articles/senior-housing-guide" articleLabel="サービス付き高齢者向け住宅から読み解く、船橋市の住まい事情" />
+          </div>
+
+          <div className="mt-8">
           <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_SENIOR} className="h-24" />
-        </div>
+          </div>
       </section>
     </>
   );

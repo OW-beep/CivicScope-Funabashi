@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
 import AdSlot from "../components/AdSlot";
+import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords, normalizePopulationSeries, buildPopulationInsights } from "../lib/bodik";
@@ -123,8 +124,12 @@ export default function Dashboard({ series, insights, error }) {
         )}
 
         <div className="mt-10">
+          <DashboardFooterLinks articleHref="/articles/population-data-guide" articleLabel="船橋市の常住人口、実は減っている？増えている？" />
+          </div>
+
+          <div className="mt-8">
           <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_DASHBOARD} className="h-24" />
-        </div>
+          </div>
       </section>
     </>
   );
