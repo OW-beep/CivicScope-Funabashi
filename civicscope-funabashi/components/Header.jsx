@@ -11,6 +11,7 @@ const DASHBOARDS = [
   { href: "/schools", label: "学校" },
   { href: "/senior-housing", label: "高齢者向け住宅" },
   { href: "/welfare", label: "生活保護" },
+  { href: "/public-safety", label: "治安・救急" },
   { href: "/chokai", label: "町会・自治会" },
   { href: "/food-businesses", label: "食品営業施設" },
   { href: "/life-sanitation", label: "生活衛生施設" },

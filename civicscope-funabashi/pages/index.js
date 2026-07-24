@@ -42,6 +42,11 @@ const DASHBOARD_LINKS = [
     description: "被保護世帯数の推移と世帯人員別の内訳を可視化。"
   },
   {
+    href: "/public-safety",
+    title: "治安・救急ダッシュボード",
+    description: "刑法犯認知件数と救急出動件数の推移を可視化。"
+  },
+  {
     href: "/chokai",
     title: "町会・自治会ダッシュボード",
     description: "町丁目別の分布マップとランキングで地域のつながりを可視化。"
