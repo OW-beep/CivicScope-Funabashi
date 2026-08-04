@@ -11,11 +11,10 @@ import { getDatasetRecords, normalizePopulationSeries, buildAnnualSeriesInsights
 import {
   getFunabashiTownIndex,
   guessAddressField,
-  guessNameField,
   aggregateByTown,
   buildDistributionInsights
 } from "../lib/geo";
-import { geocodeRecordsToPoints } from "../lib/geocode";
+import { loadGeocodedPoints } from "../lib/geocodedCache";
 import { getFunabashiBoundaryRings } from "../lib/geoBoundary";
 import { getAgingRatioSeries, buildAgingRatioInsights } from "../data/agingRatio";
 
@@ -77,22 +76,15 @@ export async function getStaticProps() {
             boundary = [];
           }
         }
-
-        // 件数が少なく特定の住所を持つ施設一覧のため、町丁目レベルの集計だけでなく
-        // 国土地理院の住所検索APIで個別施設の座標も求め、実地図上にピンとして表示する。
-        try {
-          const geo = await geocodeRecordsToPoints(records, {
-            addressField,
-            nameField: guessNameField(fields),
-            category: "サ高住"
-          });
-          facilityMapPoints = geo.points;
-          facilityMapStats = { matched: geo.matched, total: geo.total };
-        } catch (e) {
-          facilityMapPoints = [];
-          facilityMapStats = { matched: 0, total: 0 };
-        }
       }
+
+      // 個別施設の座標は、ビルド時にその場で座標化するのではなく、
+      // scripts/geocode-facilities.js を手元で事前実行して作った
+      // data/geocoded/seniorHousingList.json をここで読むだけにしている。
+      // （ビルド時にGSIへ都度アクセスすると、Vercelの静的ページ生成の60秒タイムアウトを
+      // 超えてビルドが失敗するため。詳しい経緯はそのスクリプトのコメントを参照）
+      facilityMapPoints = loadGeocodedPoints("seniorHousingList");
+      facilityMapStats = { matched: facilityMapPoints.length, total: records.length };
     }
   } catch (e) {
     listError = "データの取得に失敗しました。しばらくしてから再度お試しください。";

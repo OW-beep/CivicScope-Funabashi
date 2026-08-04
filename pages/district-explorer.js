@@ -37,6 +37,22 @@ function DistrictDetail({ active }) {
         <span className="font-display text-ink">{active.label}</span>
         <span className="font-mono text-brass-dark">{active.count.toLocaleString("ja-JP")}件（合計）</span>
       </div>
+
+      {(active.population != null || active.households != null) && (
+        <div className="mt-2 flex gap-4 text-xs text-ink-soft">
+          {active.population != null && (
+            <span>
+              人口 <span className="font-mono text-ink">{active.population.toLocaleString("ja-JP")}</span>人
+            </span>
+          )}
+          {active.households != null && (
+            <span>
+              世帯数 <span className="font-mono text-ink">{active.households.toLocaleString("ja-JP")}</span>世帯
+            </span>
+          )}
+        </div>
+      )}
+
       <div className="mt-3 space-y-1.5">
         {active.breakdown.map((b) => (
           <div key={b.key} className="flex items-center gap-2">
@@ -69,9 +85,10 @@ export default function DistrictExplorer({ districts, boundary, error }) {
           件数内訳がパネルに表示されます。円の大きさは合計件数に比例します。
         </p>
         <p className="mt-3 max-w-2xl text-xs text-ink-soft">
-          ※ 現時点では、人口・世帯数・高齢化率などの町丁目単位データは本サイトが参照している統計に
-          含まれていないため未収録です。ここで示しているのはあくまで施設の分布のみです。また、住所の
-          書き方のゆれにより、実際より少なく数えられている施設がある可能性があります。
+          ※ 人口・世帯数はe-Stat（政府統計の総合窓口）の国勢調査・小地域集計から取得しています
+          （5年に1度の調査のため、市の毎月人口統計より更新頻度は落ちます。また、人口・世帯数が
+          少ない町丁目は秘匿されており、表示されない場合があります）。施設については、住所の
+          書き方のゆれにより、実際より少なく数えられている可能性があります。
         </p>
 
         {error ? (

@@ -14,8 +14,7 @@ import {
   normalizePopulationSeries,
   buildAnnualSeriesInsights
 } from "../lib/bodik";
-import { guessNameField } from "../lib/geo";
-import { geocodeRecordsToPoints, geocodeRecordsByNameOnly } from "../lib/geocode";
+import { loadGeocodedPoints } from "../lib/geocodedCache";
 
 const PopulationChart = dynamic(() => import("../components/PopulationChart"), { ssr: false });
 const CategoryBarChart = dynamic(() => import("../components/CategoryBarChart"), { ssr: false });
@@ -86,36 +85,16 @@ export async function getStaticProps() {
     facilityError = "データの取得に失敗しました。しばらくしてから再度お試しください。";
   }
 
-  // 公立保育所には住所欄が無く、施設名（例:「宮本第一保育園」）にも地名の手がかりが無いため、
-  // 国土地理院の住所検索（住所専用）では座標化できない。代わりに、施設名でOpenStreetMapの
-  // POIを検索できるNominatimを使う（詳細はlib/geocode.jsのコメント参照）。
-  // GSIより一致率は下がりうるため、正直な内訳をmapStats/mapDebugに残す。
-  const facilityNameField = guessNameField(facilityFields);
-
-  let facilityMapPoints = [];
-  let facilityMapStats = { matched: 0, total: 0 };
-  let facilityMapDebug = null;
-  try {
-    const geo = await geocodeRecordsByNameOnly(facilityRecords, {
-      nameField: facilityNameField,
-      category: "公立保育所"
-    });
-    facilityMapPoints = geo.points;
-    facilityMapStats = { matched: geo.matched, total: geo.total };
-    // 一時的なデバッグ情報。地図に何も表示されない原因を切り分けるためのもの。
-    facilityMapDebug = {
-      note: "住所欄・地名の手がかりが無いため、施設名でNominatim(OSM)検索している",
-      nameField: facilityNameField,
-      fieldList: facilityFields,
-      sampleRecord: facilityRecords[0] || null,
-      unmatchedSample: geo.unmatchedAddresses.slice(0, 5),
-      nominatimDebugSample: geo.debugSample
-    };
-  } catch (e) {
-    facilityMapPoints = [];
-    facilityMapStats = { matched: 0, total: 0 };
-    facilityMapDebug = { error: String(e) };
-  }
+  // 公立保育所の座標は、ビルド時にその場で座標化するのではなく、
+  // scripts/geocode-facilities.js を手元で事前実行して作った
+  // data/geocoded/publicNurseryFacilities.json をここで読むだけにしている。
+  // （ビルド時にNominatimへ都度アクセスすると、Vercelの静的ページ生成の60秒タイムアウトを
+  // 超えてビルドが失敗するため。詳しい経緯はそのスクリプトのコメントを参照）
+  const facilityMapPoints = loadGeocodedPoints("publicNurseryFacilities");
+  const facilityMapStats = {
+    matched: facilityMapPoints.length,
+    total: facilityRecords.length
+  };
 
   return {
     props: {
@@ -132,8 +111,7 @@ export async function getStaticProps() {
       facilityRecords,
       facilityError,
       facilityMapPoints,
-      facilityMapStats,
-      facilityMapDebug
+      facilityMapStats
     },
     revalidate: 60 * 60 * 24
   };
@@ -157,8 +135,7 @@ export default function Childcare({
   facilityRecords,
   facilityError,
   facilityMapPoints,
-  facilityMapStats,
-  facilityMapDebug
+  facilityMapStats
 }) {
   const capacitySeries = series.map((s) => ({ label: s.label, total: s.total.capacity, enrolled: s.total.enrolled }));
   const enrolledSeries = series.map((s) => ({ label: s.label, total: s.total.enrolled }));
@@ -392,12 +369,9 @@ export default function Childcare({
         </div>
 
         {/* --- 公立保育所マップ ------------------------------------------- */}
-        {facilityMapPoints.length === 0 && facilityMapDebug && (
-          <div className="mt-14 border border-dashed border-brass/50 bg-brass/5 p-4 text-xs text-ink-soft">
-            <p className="font-mono text-brass-dark">
-              [DEBUG] 地図に表示できる座標が見つかりませんでした。以下の情報を貼ってもらえれば原因を切り分けられます（見つかったら、この枠は削除します）。
-            </p>
-            <pre className="mt-2 overflow-x-auto whitespace-pre-wrap break-all">{JSON.stringify(facilityMapDebug, null, 2)}</pre>
+        {facilityMapPoints.length === 0 && (
+          <div className="mt-14 border border-ink/10 bg-white/60 p-5 text-sm text-ink-soft">
+            まだ地図データがありません。<code>node scripts/geocode-facilities.js</code> を実行して座標化してください。
           </div>
         )}
 

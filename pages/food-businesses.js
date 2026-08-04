@@ -70,7 +70,21 @@ export async function getStaticProps() {
   }
 
   return {
-    props: { fields, records, error, points, boundary, insights, mapAvailable, categoryData, categoryFieldLabel },
+    props: {
+      fields,
+      // ページの初期データ量を抑えるため、テーブルには少数のプレビューだけを埋め込み、
+      // 検索が実際に使われたときだけ全件をAPI経由で取得する（components/SearchableTable.jsx
+      // のlazyDatasetKeyの仕組み。詳しくは pages/api/dataset-records.js のコメント参照）。
+      records: records.slice(0, 50),
+      recordsTotal: records.length,
+      error,
+      points,
+      boundary,
+      insights,
+      mapAvailable,
+      categoryData,
+      categoryFieldLabel
+    },
     revalidate: 60 * 60 * 24
   };
 }
@@ -78,6 +92,7 @@ export async function getStaticProps() {
 export default function FoodBusinesses({
   fields,
   records,
+  recordsTotal,
   error,
   points,
   boundary,
@@ -120,7 +135,7 @@ export default function FoodBusinesses({
         ) : (
           <>
             <div className="mt-10 grid gap-4 sm:grid-cols-3">
-              <StatCard label="登録件数" value={records.length.toLocaleString("ja-JP")} unit="件" />
+              <StatCard label="登録件数" value={recordsTotal.toLocaleString("ja-JP")} unit="件" />
               {insights ? (
                 <>
                   <StatCard
@@ -183,7 +198,13 @@ export default function FoodBusinesses({
 
             <div className="mt-10">
               <SectionLabel code="TABLE">詳細一覧（補助・全件検索）</SectionLabel>
-              <SearchableTable fields={fields} records={records} searchPlaceholder="施設名・住所・業種で検索" />
+              <SearchableTable
+                fields={fields}
+                records={records}
+                searchPlaceholder="施設名・住所・業種で検索"
+                lazyDatasetKey="foodBusiness"
+                lazyTotal={recordsTotal}
+              />
             </div>
           </>
         )}

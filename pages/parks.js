@@ -7,8 +7,7 @@ import AdSlot from "../components/AdSlot";
 import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords } from "../lib/bodik";
-import { guessNameField, extractTownName } from "../lib/geo";
-import { geocodeRecordsToPoints, geocodeRecordsByNameOnly } from "../lib/geocode";
+import { loadGeocodedPoints } from "../lib/geocodedCache";
 import { plazaSummary } from "../data/parks";
 
 const InteractiveMap = dynamic(() => import("../components/InteractiveMap"), { ssr: false });
@@ -46,60 +45,19 @@ export async function getStaticProps() {
     parkError = "データの取得に失敗しました。しばらくしてから再度お試しください。";
   }
 
-  // 【広場】このデータセットには住所欄が無い。ただし施設名称の先頭に
-  //「三咲８丁目１号広場」のように町丁目名が埋め込まれているため、そこから抽出して
-  // 座標化する（＝広場そのものの正確な位置ではなく、町丁目レベルのおおよその位置になる）。
-  //
-  // 【公園（特色のある公園）】施設名称に地名の手がかりも住所欄も無いため、GSIの住所検索
-  // は使えない。代わりに、保育所と同じくOpenStreetMapのPOIを施設名で検索できる
-  // Nominatimを使う（公園はOSM上にleisure=parkとして登録されていることが多く、
-  // 保育所より見つかりやすい傾向がある）。ただし住所検索より一致率・精度は落ちうる。
-  const plazaNameField = guessNameField(plazaFields);
-  const parkNameField = guessNameField(parkFields);
-
-  let mapPoints = [];
-  let mapStats = { matched: 0, total: 0 };
-  let mapDebug = null;
-  try {
-    const [plazaGeo, parkGeo] = await Promise.all([
-      geocodeRecordsToPoints(plazaRecords, {
-        deriveAddress: (r) => extractTownName(r[plazaNameField]),
-        nameField: plazaNameField,
-        category: "広場"
-      }),
-      geocodeRecordsByNameOnly(parkRecords, {
-        nameField: parkNameField,
-        category: "公園"
-      })
-    ]);
-    mapPoints = [...plazaGeo.points, ...parkGeo.points];
-    mapStats = {
-      matched: plazaGeo.matched + parkGeo.matched,
-      total: plazaGeo.total + parkGeo.total
-    };
-    // 一時的なデバッグ情報。地図に何も表示されない原因を切り分けるためのもの。
-    // 原因が分かったら、この mapDebug の生成・表示部分は削除して問題ない。
-    mapDebug = {
-      plaza: {
-        note: "施設名称から町丁目名を抽出して座標化（住所欄なしのため）",
-        fieldList: plazaFields,
-        sampleRecord: plazaRecords[0] || null,
-        unmatchedSample: plazaGeo.unmatchedAddresses.slice(0, 5)
-      },
-      park: {
-        note: "住所欄・地名の手がかりが無いため、施設名でNominatim(OSM)検索している",
-        nameField: parkNameField,
-        fieldList: parkFields,
-        sampleRecord: parkRecords[0] || null,
-        unmatchedSample: parkGeo.unmatchedAddresses.slice(0, 5),
-        nominatimDebugSample: parkGeo.debugSample
-      }
-    };
-  } catch (e) {
-    mapPoints = [];
-    mapStats = { matched: 0, total: 0 };
-    mapDebug = { error: String(e) };
-  }
+  // 広場・公園の座標は、ビルド時にその場で座標化するのではなく、
+  // scripts/geocode-facilities.js を手元で事前実行して作った
+  // data/geocoded/*.json をここで読むだけにしている。
+  // （ビルド時にGSI/Nominatimへ都度アクセスすると、Vercelの静的ページ生成の
+  // 60秒タイムアウトを超えてビルドが失敗するため。詳しい経緯はそのスクリプトの
+  // コメントを参照）
+  const plazaPoints = loadGeocodedPoints("plazas");
+  const parkPoints = loadGeocodedPoints("featuredParks");
+  const mapPoints = [...plazaPoints, ...parkPoints];
+  const mapStats = {
+    matched: mapPoints.length,
+    total: plazaRecords.length + parkRecords.length
+  };
 
   return {
     props: {
@@ -110,8 +68,7 @@ export async function getStaticProps() {
       parkRecords,
       parkError,
       mapPoints,
-      mapStats,
-      mapDebug
+      mapStats
     },
     revalidate: 60 * 60 * 24
   };
@@ -125,8 +82,7 @@ export default function Parks({
   parkRecords,
   parkError,
   mapPoints,
-  mapStats,
-  mapDebug
+  mapStats
 }) {
   return (
     <>
@@ -193,12 +149,9 @@ export default function Parks({
           </p>
         </div>
 
-        {mapPoints.length === 0 && mapDebug && (
-          <div className="mt-10 border border-dashed border-brass/50 bg-brass/5 p-4 text-xs text-ink-soft">
-            <p className="font-mono text-brass-dark">
-              [DEBUG] 地図に表示できる座標が見つかりませんでした。以下の情報を貼ってもらえれば原因を切り分けられます（見つかったら、この枠は削除します）。
-            </p>
-            <pre className="mt-2 overflow-x-auto whitespace-pre-wrap break-all">{JSON.stringify(mapDebug, null, 2)}</pre>
+        {mapPoints.length === 0 && (
+          <div className="mt-10 border border-ink/10 bg-white/60 p-5 text-sm text-ink-soft">
+            まだ地図データがありません。<code>node scripts/geocode-facilities.js</code> を実行して座標化してください。
           </div>
         )}
 
