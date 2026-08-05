@@ -11,6 +11,19 @@ const nextConfig = {
       { protocol: "https", hostname: "data.bodik.jp" },
       { protocol: "https", hostname: "odcs.bodik.jp" }
     ]
+  },
+  webpack: (config, { isServer }) => {
+    // lib/geocodedCache.js はNode.jsの fs/path を使う（事前生成した座標JSONを読むため）。
+    // getStaticProps経由でしかfs部分は実行されない（サーバー専用）が、
+    // lib/districtStats.js のように「間に別のlibファイルを1つ挟んで」importしていると、
+    // Next.jsが「クライアント側では絶対に使われない」と静的解析しきれず、
+    // ブラウザ向けバンドルの生成時にも fs を解決しようとしてビルドが失敗することがある。
+    // ブラウザ向けビルドの時だけ、fs/path の解決失敗を「無いものとして無視してOK」にする
+    // ことで、この失敗を防ぐ（実際にブラウザ側でfsが呼ばれることは無い）。
+    if (!isServer) {
+      config.resolve.fallback = { ...config.resolve.fallback, fs: false, path: false };
+    }
+    return config;
   }
 };
 
