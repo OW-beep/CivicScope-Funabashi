@@ -1,6 +1,32 @@
 import Link from "next/link";
 import { siteConfig } from "../data/siteConfig";
 
+const SITE_LINKS = [
+  { href: "/dashboard", label: "人口ダッシュボード" },
+  { href: "/children", label: "子ども・子育てダッシュボード" },
+  { href: "/schools", label: "学校ダッシュボード" },
+  { href: "/senior-housing", label: "高齢者向け住宅ダッシュボード" },
+  { href: "/welfare", label: "生活保護ダッシュボード" },
+  { href: "/public-safety", label: "治安・救急ダッシュボード" },
+  { href: "/finance", label: "財政ダッシュボード" },
+  { href: "/gender-participation", label: "女性参画ダッシュボード" },
+  { href: "/employment", label: "雇用・求人ダッシュボード" },
+  { href: "/citizen-consultation", label: "市民相談ダッシュボード" },
+  { href: "/parks", label: "公園・広場ダッシュボード" },
+  { href: "/area-map", label: "エリアマップ" },
+  { href: "/district-explorer", label: "地区マップ" },
+  { href: "/rail-ridership", label: "鉄道駅別乗車人員ダッシュボード" },
+  { href: "/bus-ridership", label: "市内バス運輸状況ダッシュボード" },
+  { href: "/childcare", label: "保育園ダッシュボード" },
+  { href: "/chokai", label: "町会・自治会ダッシュボード" },
+  { href: "/food-businesses", label: "食品営業施設ダッシュボード" },
+  { href: "/life-sanitation", label: "生活衛生施設ダッシュボード" },
+  { href: "/disaster-prevention", label: "防災ダッシュボード" },
+  { href: "/dog-registration", label: "犬の登録ダッシュボード" },
+  { href: "/articles", label: "解説記事" },
+  { href: "/about", label: "About / データについて" }
+];
+
 export default function Footer() {
   const year = new Date().getFullYear();
 
@@ -8,7 +34,7 @@ export default function Footer() {
     <footer className="border-t border-ink/10 bg-ink text-paper">
       <div className="mx-auto max-w-5xl px-5 py-12">
         <div className="grid gap-10 md:grid-cols-3">
-          <div>
+          <div className="md:col-span-1">
             <p className="font-display text-lg">
               Civic<span className="text-brass-light">Scope</span> 船橋
             </p>
@@ -17,34 +43,23 @@ export default function Footer() {
             </p>
           </div>
 
-          <div>
+          {/* サイト内リンク：項目数が多いため、縦一列ではなく複数列に折り返して
+              フッター全体の高さを抑える（columns-*でCSS段組みにしている） */}
+          <div className="md:col-span-2">
             <p className="mb-3 text-xs uppercase tracking-widest text-paper/50">サイト内</p>
-            <ul className="space-y-2 text-sm text-paper/80">
-              <li><Link href="/dashboard" className="hover:text-brass-light">人口ダッシュボード</Link></li>
-              <li><Link href="/children" className="hover:text-brass-light">子ども・子育てダッシュボード</Link></li>
-              <li><Link href="/schools" className="hover:text-brass-light">学校ダッシュボード</Link></li>
-              <li><Link href="/senior-housing" className="hover:text-brass-light">高齢者向け住宅ダッシュボード</Link></li>
-              <li><Link href="/welfare" className="hover:text-brass-light">生活保護ダッシュボード</Link></li>
-              <li><Link href="/public-safety" className="hover:text-brass-light">治安・救急ダッシュボード</Link></li>
-              <li><Link href="/finance" className="hover:text-brass-light">財政ダッシュボード</Link></li>
-              <li><Link href="/gender-participation" className="hover:text-brass-light">女性参画ダッシュボード</Link></li>
-              <li><Link href="/employment" className="hover:text-brass-light">雇用・求人ダッシュボード</Link></li>
-              <li><Link href="/citizen-consultation" className="hover:text-brass-light">市民相談ダッシュボード</Link></li>
-              <li><Link href="/parks" className="hover:text-brass-light">公園・広場ダッシュボード</Link></li>
-              <li><Link href="/area-map" className="hover:text-brass-light">エリアマップ</Link></li>
-              <li><Link href="/rail-ridership" className="hover:text-brass-light">鉄道駅別乗車人員ダッシュボード</Link></li>
-              <li><Link href="/bus-ridership" className="hover:text-brass-light">市内バス運輸状況ダッシュボード</Link></li>
-              <li><Link href="/childcare" className="hover:text-brass-light">保育園ダッシュボード</Link></li>
-              <li><Link href="/chokai" className="hover:text-brass-light">町会・自治会ダッシュボード</Link></li>
-              <li><Link href="/food-businesses" className="hover:text-brass-light">食品営業施設ダッシュボード</Link></li>
-              <li><Link href="/life-sanitation" className="hover:text-brass-light">生活衛生施設ダッシュボード</Link></li>
-              <li><Link href="/disaster-prevention" className="hover:text-brass-light">防災ダッシュボード</Link></li>
-              <li><Link href="/dog-registration" className="hover:text-brass-light">犬の登録ダッシュボード</Link></li>
-              <li><Link href="/articles" className="hover:text-brass-light">解説記事</Link></li>
-              <li><Link href="/about" className="hover:text-brass-light">About / データについて</Link></li>
+            <ul className="columns-2 gap-x-6 text-sm text-paper/80 sm:columns-3">
+              {SITE_LINKS.map((link) => (
+                <li key={link.href} className="mb-2 break-inside-avoid">
+                  <Link href={link.href} className="hover:text-brass-light">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
+        </div>
 
+        <div className="mt-8 grid gap-6 border-t border-paper/10 pt-6 sm:grid-cols-2">
           <div>
             <p className="mb-3 text-xs uppercase tracking-widest text-paper/50">運営情報</p>
             <ul className="space-y-2 text-sm text-paper/80">
@@ -58,13 +73,11 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-        </div>
 
-        <div className="mt-10 flex flex-col gap-2 border-t border-paper/10 pt-6 text-xs text-paper/50 md:flex-row md:items-center md:justify-between">
-          <p>© {year} {siteConfig.name}. 本サイトは船橋市の公式サイトではありません。</p>
-          <p>
-            データ出典：船橋市オープンデータカタログ（{siteConfig.bodik.license}）
-          </p>
+          <div className="flex flex-col justify-end gap-2 text-xs text-paper/50 sm:items-end sm:text-right">
+            <p>© {year} {siteConfig.name}. 本サイトは船橋市の公式サイトではありません。</p>
+            <p>データ出典：船橋市オープンデータカタログ（{siteConfig.bodik.license}）</p>
+          </div>
         </div>
       </div>
     </footer>

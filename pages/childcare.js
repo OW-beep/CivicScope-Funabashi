@@ -15,6 +15,8 @@ import {
   buildAnnualSeriesInsights
 } from "../lib/bodik";
 import { loadGeocodedPoints } from "../lib/geocodedCache";
+import { guessLatLngFields, guessNameField, extractPointsFromLatLng } from "../lib/geo";
+import { buildNearbyFacilityCounts } from "../lib/facilityScore";
 
 const PopulationChart = dynamic(() => import("../components/PopulationChart"), { ssr: false });
 const CategoryBarChart = dynamic(() => import("../components/CategoryBarChart"), { ssr: false });
@@ -96,6 +98,43 @@ export async function getStaticProps() {
     total: facilityRecords.length
   };
 
+  // 保育所ごとの「周辺環境」（徒歩10分＝概ね800m圏内の公園・避難所の件数）。
+  // 公園・広場は事前座標化済みのキャッシュを、避難所は元データに緯度経度があるため
+  // その場で（ビルド時に）取り出す。図書館は該当データセットが見つかっていないため、
+  // 今回は対象外（見つかり次第追加する）。
+  let nearbyFacilityCounts = [];
+  try {
+    const plazaPoints = loadGeocodedPoints("plazas");
+    const parkPoints = loadGeocodedPoints("featuredParks");
+
+    let shelterPoints = [];
+    try {
+      const shelterData = await getDatasetRecords(datasets.evacuationShelters.id);
+      if (shelterData.datastoreActive && shelterData.records.length) {
+        const latLng = guessLatLngFields(shelterData.fields);
+        if (latLng) {
+          shelterPoints = extractPointsFromLatLng(shelterData.records, {
+            ...latLng,
+            nameField: guessNameField(shelterData.fields)
+          });
+        }
+      }
+    } catch (e) {
+      shelterPoints = [];
+    }
+
+    nearbyFacilityCounts = buildNearbyFacilityCounts(
+      facilityMapPoints,
+      [
+        { key: "park", label: "公園・広場", points: [...plazaPoints, ...parkPoints] },
+        { key: "shelter", label: "避難所", points: shelterPoints }
+      ],
+      0.8 // 徒歩10分の目安として概ね800m圏内
+    );
+  } catch (e) {
+    nearbyFacilityCounts = [];
+  }
+
   return {
     props: {
       series,
@@ -111,7 +150,8 @@ export async function getStaticProps() {
       facilityRecords,
       facilityError,
       facilityMapPoints,
-      facilityMapStats
+      facilityMapStats,
+      nearbyFacilityCounts
     },
     revalidate: 60 * 60 * 24
   };
@@ -135,7 +175,8 @@ export default function Childcare({
   facilityRecords,
   facilityError,
   facilityMapPoints,
-  facilityMapStats
+  facilityMapStats,
+  nearbyFacilityCounts
 }) {
   const capacitySeries = series.map((s) => ({ label: s.label, total: s.total.capacity, enrolled: s.total.enrolled }));
   const enrolledSeries = series.map((s) => ({ label: s.label, total: s.total.enrolled }));
@@ -390,6 +431,38 @@ export default function Childcare({
             <p className="mt-3 text-xs text-ink-soft">
               {facilityMapStats.total}箇所中{facilityMapStats.matched}箇所を地図に表示（住所から座標を特定できたもののみ）
             </p>
+          </div>
+        )}
+
+        {/* --- 保育所ごとの周辺環境 ----------------------------------------- */}
+        {nearbyFacilityCounts.length > 0 && (
+          <div className="mt-10 border border-ink/10 bg-white/60 p-5">
+            <SectionLabel code="MAP.2">保育所ごとの周辺環境（徒歩10分圏）</SectionLabel>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-soft">
+              各保育所から概ね徒歩10分（直線距離800m）圏内にある公園・広場と避難所の件数です。
+              道なりの実際の徒歩時間ではなく直線距離での概算のため、目安としてご覧ください。
+              図書館は該当データセットが見つかっていないため、現時点では対象外です。
+            </p>
+            <div className="mt-4 overflow-x-auto border border-ink/10">
+              <table className="w-full min-w-[420px] border-collapse text-left text-sm">
+                <thead>
+                  <tr className="bg-ink text-paper">
+                    <th className="whitespace-nowrap px-3 py-2 font-normal">保育所名</th>
+                    <th className="whitespace-nowrap px-3 py-2 font-normal">公園・広場</th>
+                    <th className="whitespace-nowrap px-3 py-2 font-normal">避難所</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {nearbyFacilityCounts.map((row, i) => (
+                    <tr key={`${row.label}-${i}`} className={i % 2 === 0 ? "bg-white/70" : "bg-paper-dark/40"}>
+                      <td className="whitespace-nowrap px-3 py-2 text-ink-soft">{row.label}</td>
+                      <td className="whitespace-nowrap px-3 py-2 text-ink-soft">{row.counts.park}件</td>
+                      <td className="whitespace-nowrap px-3 py-2 text-ink-soft">{row.counts.shelter}件</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 

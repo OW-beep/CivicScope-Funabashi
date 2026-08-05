@@ -172,6 +172,7 @@ export default function Parks({
                 categoryColors={MAP_CATEGORY_COLORS}
                 enable3dBuildings
                 showSidebar
+                enableHeatmap
                 height={460}
               />
             </div>

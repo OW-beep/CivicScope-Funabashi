@@ -31,19 +31,22 @@ function colorForCategory(category, categoryColors, categoryOrder) {
  * height: 地図の高さ（px指定。デフォルト420）
  * enable3dBuildings: OpenStreetMapの建物ポリゴンを3D押し出し表示するか（実験的機能）
  * showSidebar: 地図の左に施設リストを表示し、クリックでその施設へflyTo＋ポップアップを開く
+ * enableHeatmap: 密集度を色の濃淡で示すヒートマップ表示に切り替えるボタンを追加するか
  */
 export default function InteractiveMap({
   points = [],
   categoryColors,
   height = 420,
   enable3dBuildings = false,
-  showSidebar = false
+  showSidebar = false,
+  enableHeatmap = false
 }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);
   const openMarkerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(null);
+  const [heatmapOn, setHeatmapOn] = useState(false);
 
   // サイドバー・地図の両方で同じ並び順を使うため、有効な地点だけを先に確定しておく。
   const safePoints = useMemo(
@@ -131,6 +134,53 @@ export default function InteractiveMap({
         }
       }
 
+      // ヒートマップ用レイヤー（enableHeatmapがtrueの時だけ）。マーカー描画とは
+      // 完全に独立させ、ここで何か失敗してもピン表示には影響させない。
+      if (enableHeatmap && safePoints.length) {
+        try {
+          map.addSource("heat-points", {
+            type: "geojson",
+            data: {
+              type: "FeatureCollection",
+              features: safePoints.map((p) => ({
+                type: "Feature",
+                properties: {},
+                geometry: { type: "Point", coordinates: [p.lng, p.lat] }
+              }))
+            }
+          });
+          map.addLayer({
+            id: "heat-layer",
+            type: "heatmap",
+            source: "heat-points",
+            layout: { visibility: "none" },
+            paint: {
+              "heatmap-weight": 1,
+              "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 0, 1, 15, 3],
+              "heatmap-color": [
+                "interpolate",
+                ["linear"],
+                ["heatmap-density"],
+                0,
+                "rgba(0,0,0,0)",
+                0.2,
+                "#2F6F6E",
+                0.4,
+                "#B8862F",
+                0.7,
+                "#C0392B",
+                1,
+                "#7B4B94"
+              ],
+              "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 0, 8, 15, 34],
+              "heatmap-opacity": 0.8
+            }
+          });
+        } catch (e) {
+          console.warn("Heatmap layer unavailable:", e);
+        }
+      }
+
       safePoints.forEach((p, i) => {
         const el = document.createElement("div");
         el.style.width = "14px";
@@ -170,6 +220,25 @@ export default function InteractiveMap({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // ヒートマップ／ピン表示の切り替え。レイヤーの表示・非表示と、
+  // HTMLマーカー（ピン）の表示・非表示の両方を切り替える。
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !enableHeatmap) return;
+
+    function apply() {
+      if (map.getLayer("heat-layer")) {
+        map.setLayoutProperty("heat-layer", "visibility", heatmapOn ? "visible" : "none");
+      }
+      markersRef.current.forEach((m) => {
+        m.marker.getElement().style.display = heatmapOn ? "none" : "";
+      });
+    }
+
+    if (map.isStyleLoaded()) apply();
+    else map.once("load", apply);
+  }, [heatmapOn, enableHeatmap]);
 
   function flyToIndex(i) {
     const entry = markersRef.current[i];
@@ -234,12 +303,34 @@ export default function InteractiveMap({
           ))}
         </div>
       )}
-      <div
-        ref={containerRef}
-        style={{ height: "100%", flex: 1, minWidth: 0, borderRadius: "2px" }}
-        role="img"
-        aria-label="船橋市内の施設を示すインタラクティブ地図"
-      />
+      <div style={{ position: "relative", flex: 1, minWidth: 0, height: "100%" }}>
+        {enableHeatmap && (
+          <button
+            type="button"
+            onClick={() => setHeatmapOn((v) => !v)}
+            style={{
+              position: "absolute",
+              top: 10,
+              left: 10,
+              zIndex: 1,
+              padding: "6px 10px",
+              fontSize: 12,
+              border: "1px solid rgba(27,36,48,0.2)",
+              borderRadius: 2,
+              background: "rgba(255,255,255,0.9)",
+              cursor: "pointer"
+            }}
+          >
+            {heatmapOn ? "📍 ピン表示に切り替え" : "🔥 ヒートマップ表示に切り替え"}
+          </button>
+        )}
+        <div
+          ref={containerRef}
+          style={{ height: "100%", width: "100%", borderRadius: "2px" }}
+          role="img"
+          aria-label="船橋市内の施設を示すインタラクティブ地図"
+        />
+      </div>
     </div>
   );
 }
