@@ -4,29 +4,60 @@ import ScopeMark from "./ScopeMark";
 import { siteConfig } from "../data/siteConfig";
 
 // ダッシュボードが増えてきたため、トップレベルには出さずドロップダウンにまとめている。
-// 新しいダッシュボードを追加したときは、このリストに1行足すだけでよい。
-const DASHBOARDS = [
-  { href: "/dashboard", label: "人口" },
-  { href: "/children", label: "子ども・子育て" },
-  { href: "/schools", label: "学校" },
-  { href: "/senior-housing", label: "高齢者向け住宅" },
-  { href: "/welfare", label: "生活保護" },
-  { href: "/public-safety", label: "治安・救急" },
-  { href: "/finance", label: "財政" },
-  { href: "/gender-participation", label: "女性参画" },
-  { href: "/employment", label: "雇用・求人" },
-  { href: "/citizen-consultation", label: "市民相談" },
-  { href: "/parks", label: "公園・広場" },
-  { href: "/area-map", label: "エリアマップ" },
-  { href: "/district-explorer", label: "地区マップ" },
-  { href: "/rail-ridership", label: "鉄道駅別乗車人員" },
-  { href: "/bus-ridership", label: "バス運輸状況" },
-  { href: "/childcare", label: "保育園" },
-  { href: "/chokai", label: "町会・自治会" },
-  { href: "/food-businesses", label: "食品営業施設" },
-  { href: "/life-sanitation", label: "生活衛生施設" },
-  { href: "/disaster-prevention", label: "防災" },
-  { href: "/dog-registration", label: "犬の登録" }
+// カテゴリごとにグループ化し、複数列で表示することで、縦に長くなりすぎないようにしている。
+// 新しいダッシュボードを追加したときは、該当するグループのitemsに1行足すだけでよい。
+const DASHBOARD_GROUPS = [
+  {
+    label: "人口・くらし",
+    items: [
+      { href: "/dashboard", label: "人口" },
+      { href: "/senior-housing", label: "高齢者向け住宅" },
+      { href: "/welfare", label: "生活保護" },
+      { href: "/finance", label: "財政" },
+      { href: "/citizen-consultation", label: "市民相談" }
+    ]
+  },
+  {
+    label: "子育て・教育",
+    items: [
+      { href: "/children", label: "子ども・子育て" },
+      { href: "/schools", label: "学校" },
+      { href: "/childcare", label: "保育園" }
+    ]
+  },
+  {
+    label: "まち・環境",
+    items: [
+      { href: "/parks", label: "公園・広場" },
+      { href: "/area-map", label: "エリアマップ" },
+      { href: "/district-explorer", label: "地区マップ" },
+      { href: "/chokai", label: "町会・自治会" },
+      { href: "/dog-registration", label: "犬の登録" }
+    ]
+  },
+  {
+    label: "交通",
+    items: [
+      { href: "/rail-ridership", label: "鉄道駅別乗車人員" },
+      { href: "/bus-ridership", label: "バス運輸状況" }
+    ]
+  },
+  {
+    label: "安全・衛生",
+    items: [
+      { href: "/public-safety", label: "治安・救急" },
+      { href: "/disaster-prevention", label: "防災" },
+      { href: "/food-businesses", label: "食品営業施設" },
+      { href: "/life-sanitation", label: "生活衛生施設" }
+    ]
+  },
+  {
+    label: "社会参画",
+    items: [
+      { href: "/gender-participation", label: "女性参画" },
+      { href: "/employment", label: "雇用・求人" }
+    ]
+  }
 ];
 
 const NAV_SECONDARY = [
@@ -67,17 +98,28 @@ export default function Header() {
               ダッシュボード
               <ChevronIcon className="h-3.5 w-3.5 transition-transform group-open:rotate-180" />
             </summary>
-            <div className="absolute right-0 top-full z-50 mt-2 w-56 border border-ink/10 bg-paper py-2 shadow-lg">
-              {DASHBOARDS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={closeDropdown}
-                  className="block px-4 py-2 text-sm text-ink-soft hover:bg-ink/5 hover:text-brass-dark"
-                >
-                  {item.label}
-                </Link>
+            {/* カテゴリごとに複数列で表示。項目数が増えても縦に間延びしないようにしている */}
+            <div className="absolute right-0 top-full z-50 mt-2 max-h-[75vh] w-[640px] overflow-y-auto border border-ink/10 bg-paper p-5 shadow-lg">
+              <div className="grid grid-cols-3 gap-x-6 gap-y-4">
+              {DASHBOARD_GROUPS.map((group) => (
+                <div key={group.label}>
+                  <p className="mb-1.5 font-mono text-[11px] uppercase tracking-widest text-brass-dark">{group.label}</p>
+                  <ul>
+                    {group.items.map((item) => (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          onClick={closeDropdown}
+                          className="block py-1 text-sm text-ink-soft hover:text-brass-dark"
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
+              </div>
             </div>
           </details>
 
@@ -106,19 +148,23 @@ export default function Header() {
       </div>
 
       {open ? (
-        <nav className="flex flex-col gap-1 border-t border-ink/10 px-5 py-3 md:hidden">
-          <p className="mt-1 px-2 text-xs uppercase tracking-widest text-ink-soft/60">ダッシュボード</p>
-          {DASHBOARDS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded px-2 py-2 text-sm text-ink-soft hover:bg-ink/5"
-              onClick={() => setOpen(false)}
-            >
-              {item.label}
-            </Link>
+        <nav className="flex max-h-[75vh] flex-col gap-1 overflow-y-auto border-t border-ink/10 px-5 py-3 md:hidden">
+          {DASHBOARD_GROUPS.map((group) => (
+            <div key={group.label}>
+              <p className="mt-3 px-2 font-mono text-xs uppercase tracking-widest text-ink-soft/60">{group.label}</p>
+              {group.items.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="block rounded px-2 py-2 text-sm text-ink-soft hover:bg-ink/5"
+                  onClick={() => setOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
           ))}
-          <p className="mt-3 px-2 text-xs uppercase tracking-widest text-ink-soft/60">サイト</p>
+          <p className="mt-3 px-2 font-mono text-xs uppercase tracking-widest text-ink-soft/60">サイト</p>
           {NAV_SECONDARY.map((item) => (
             <Link
               key={item.href}
