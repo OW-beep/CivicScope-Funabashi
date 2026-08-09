@@ -17,6 +17,7 @@ import {
 import { loadGeocodedPoints } from "../lib/geocodedCache";
 import { guessLatLngFields, guessNameField, extractPointsFromLatLng } from "../lib/geo";
 import { buildNearbyFacilityCounts } from "../lib/facilityScore";
+import { birthChildcareSupportGiftSeries, birthChildcareSupportSource } from "../data/birthChildcareSupport";
 
 const PopulationChart = dynamic(() => import("../components/PopulationChart"), { ssr: false });
 const CategoryBarChart = dynamic(() => import("../components/CategoryBarChart"), { ssr: false });
@@ -98,14 +99,15 @@ export async function getStaticProps() {
     total: facilityRecords.length
   };
 
-  // 保育所ごとの「周辺環境」（徒歩10分＝概ね800m圏内の公園・避難所の件数）。
-  // 公園・広場は事前座標化済みのキャッシュを、避難所は元データに緯度経度があるため
-  // その場で（ビルド時に）取り出す。図書館は該当データセットが見つかっていないため、
-  // 今回は対象外（見つかり次第追加する）。
+  // 保育所ごとの「周辺環境」（徒歩10分＝概ね800m圏内の公園・図書館・避難所の件数）。
+  // 公園・広場・図書館は事前座標化済みのキャッシュを、避難所は元データに緯度経度があるため
+  // その場で（ビルド時に）取り出す。図書館は市公式サイトで確認した4館の住所を
+  // scripts/geocode-facilities.js で座標化したもの。
   let nearbyFacilityCounts = [];
   try {
     const plazaPoints = loadGeocodedPoints("plazas");
     const parkPoints = loadGeocodedPoints("featuredParks");
+    const libraryPoints = loadGeocodedPoints("libraries");
 
     let shelterPoints = [];
     try {
@@ -127,6 +129,7 @@ export async function getStaticProps() {
       facilityMapPoints,
       [
         { key: "park", label: "公園・広場", points: [...plazaPoints, ...parkPoints] },
+        { key: "library", label: "図書館", points: libraryPoints },
         { key: "shelter", label: "避難所", points: shelterPoints }
       ],
       0.8 // 徒歩10分の目安として概ね800m圏内
@@ -409,6 +412,30 @@ export default function Childcare({
           )}
         </div>
 
+        {/* --- 出産・子育て応援ギフト給付実績 --------------------------------- */}
+        <div className="mt-14">
+          <SectionLabel code="FIG.7">出産・子育て応援ギフト給付実績</SectionLabel>
+          <p className="max-w-2xl text-sm leading-relaxed text-ink-soft">
+            国の出産・子育て応援交付金にもとづき、船橋市が実施している「出産・子育て応援ギフト」の
+            給付件数です（{birthChildcareSupportSource.description}）。このデータセットは検索可能な
+            形式（DataStore）に対応しておらず件数もごく少ないため、原典CSVを直接確認したうえで
+            転記しています。2025年度の件数は、原典データの最終更新時点でまだ年度途中の可能性が高く、
+            他の年度と単純比較して「大きく減った」と見るのは早計です。
+          </p>
+          <div className="mt-6 border border-ink/10 bg-white/60 p-5">
+            <ChartErrorBoundary>
+              <PopulationChart data={birthChildcareSupportGiftSeries} seriesLabel="給付件数" unit="件" periodLabel="年度" />
+            </ChartErrorBoundary>
+          </div>
+          <p className="mt-3 text-xs text-ink-soft">
+            出典：船橋市オープンデータカタログ「
+            <a href={birthChildcareSupportSource.url} target="_blank" rel="noreferrer" className="underline hover:text-brass-dark">
+              {birthChildcareSupportSource.label}
+            </a>
+            」
+          </p>
+        </div>
+
         {/* --- 公立保育所マップ ------------------------------------------- */}
         {facilityMapPoints.length === 0 && (
           <div className="mt-14 border border-ink/10 bg-white/60 p-5 text-sm text-ink-soft">
@@ -439,16 +466,17 @@ export default function Childcare({
           <div className="mt-10 border border-ink/10 bg-white/60 p-5">
             <SectionLabel code="MAP.2">保育所ごとの周辺環境（徒歩10分圏）</SectionLabel>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-soft">
-              各保育所から概ね徒歩10分（直線距離800m）圏内にある公園・広場と避難所の件数です。
+              各保育所から概ね徒歩10分（直線距離800m）圏内にある公園・広場、図書館、避難所の件数です。
               道なりの実際の徒歩時間ではなく直線距離での概算のため、目安としてご覧ください。
-              図書館は該当データセットが見つかっていないため、現時点では対象外です。
+              図書館は市内4館（中央・東・西・北図書館）の座標を市公式サイトで確認して座標化しています。
             </p>
             <div className="mt-4 overflow-x-auto border border-ink/10">
-              <table className="w-full min-w-[420px] border-collapse text-left text-sm">
+              <table className="w-full min-w-[480px] border-collapse text-left text-sm">
                 <thead>
                   <tr className="bg-ink text-paper">
                     <th className="whitespace-nowrap px-3 py-2 font-normal">保育所名</th>
                     <th className="whitespace-nowrap px-3 py-2 font-normal">公園・広場</th>
+                    <th className="whitespace-nowrap px-3 py-2 font-normal">図書館</th>
                     <th className="whitespace-nowrap px-3 py-2 font-normal">避難所</th>
                   </tr>
                 </thead>
@@ -457,6 +485,7 @@ export default function Childcare({
                     <tr key={`${row.label}-${i}`} className={i % 2 === 0 ? "bg-white/70" : "bg-paper-dark/40"}>
                       <td className="whitespace-nowrap px-3 py-2 text-ink-soft">{row.label}</td>
                       <td className="whitespace-nowrap px-3 py-2 text-ink-soft">{row.counts.park}件</td>
+                      <td className="whitespace-nowrap px-3 py-2 text-ink-soft">{row.counts.library}件</td>
                       <td className="whitespace-nowrap px-3 py-2 text-ink-soft">{row.counts.shelter}件</td>
                     </tr>
                   ))}

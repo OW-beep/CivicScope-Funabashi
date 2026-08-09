@@ -15,6 +15,7 @@ import {
   buildLifeStageBreakdown
 } from "../lib/bodik";
 import { getFertilityRateSeries, buildFertilityRateInsights } from "../data/fertilityRate";
+import { supportiveMedicalCareSeries, supportiveMedicalCareSource, tuberculosisChildApprovals } from "../data/childMedicalSupport";
 
 const PopulationChart = dynamic(() => import("../components/PopulationChart"), { ssr: false });
 const CategoryBarChart = dynamic(() => import("../components/CategoryBarChart"), { ssr: false });
@@ -311,6 +312,47 @@ export default function Children({
             </p>
           </div>
         ) : null}
+
+        {/* --- 子どもの医療的支援に関する実績 ------------------------------- */}
+        <div className="mt-14 border-t border-ink/10 pt-10">
+          <SectionLabel code="FIG.5">子どもの医療的支援に関する実績</SectionLabel>
+          <p className="max-w-2xl text-sm leading-relaxed text-ink-soft">
+            {supportiveMedicalCareSource.description}です。このデータセットは検索可能な形式
+            （DataStore）に対応しておらず件数もごく少ないため、原典CSVを直接確認したうえで
+            転記しています。
+          </p>
+          <div className="mt-6 border border-ink/10 bg-white/60 p-5">
+            <ChartErrorBoundary>
+              <PopulationChart data={supportiveMedicalCareSeries} seriesLabel="給付者数" unit="人" periodLabel="年度" />
+            </ChartErrorBoundary>
+          </div>
+          <p className="mt-3 text-xs text-ink-soft">
+            出典：船橋市オープンデータカタログ「
+            <a href={supportiveMedicalCareSource.url} target="_blank" rel="noreferrer" className="underline hover:text-brass-dark">
+              {supportiveMedicalCareSource.label}
+            </a>
+            」
+          </p>
+
+          <div className="mt-8 border border-ink/10 bg-white/60 p-5">
+            <p className="text-sm text-ink-soft">{tuberculosisChildApprovals.source.description}</p>
+            <p className="mt-2 font-display text-2xl text-ink">
+              {tuberculosisChildApprovals.yearsLabel}、7年連続でゼロ件
+            </p>
+          </div>
+          <p className="mt-3 text-xs text-ink-soft">
+            出典：船橋市オープンデータカタログ「
+            <a
+              href={tuberculosisChildApprovals.source.url}
+              target="_blank"
+              rel="noreferrer"
+              className="underline hover:text-brass-dark"
+            >
+              {tuberculosisChildApprovals.source.label}
+            </a>
+            」
+          </p>
+        </div>
 
         <div className="mt-10">
           <DashboardFooterLinks

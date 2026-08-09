@@ -267,12 +267,34 @@ async function processSeniorHousing() {
   writeOutput("seniorHousingList", points);
 }
 
+// --- 図書館 -------------------------------------------------------------------
+// 船橋市立図書館はBODIKのデータセットが見当たらないため、市公式サイト
+// （https://www.city.funabashi.lg.jp/shisetsu/toshokankominkan/）で確認した
+// 施設名・住所を、ここに直接書いている（4館のみで変更が少ないため）。
+const LIBRARIES = [
+  { name: "中央図書館", address: "千葉県船橋市本町4丁目38番28号" },
+  { name: "東図書館", address: "千葉県船橋市習志野台5丁目1番1号" },
+  { name: "西図書館", address: "千葉県船橋市西船1-20-50" },
+  { name: "北図書館", address: "千葉県船橋市二和東5丁目26番1号" }
+];
+
+async function processLibraries() {
+  console.log("\n[図書館] 市公式サイトで確認した4館の住所をGSIで座標化します...");
+  const coordIndex = await geocodeUniqueAddressesGSI(LIBRARIES.map((l) => l.address));
+  const points = LIBRARIES.map((l) => {
+    const coords = coordIndex.get(l.address.trim());
+    return coords ? { label: l.name, category: "図書館", lat: coords.lat, lng: coords.lng } : null;
+  }).filter(Boolean);
+  writeOutput("libraries", points);
+}
+
 async function main() {
   console.log("施設の座標化を開始します（このスクリプトは手元のPCで実行してください。数分かかります）。\n");
   await processPlazas();
   await processFeaturedParks();
   await processNursery();
   await processSeniorHousing();
+  await processLibraries();
   console.log("\n完了しました。data/geocoded/ 以下の変更をgitにコミットしてください。");
 }
 
