@@ -4,6 +4,7 @@ import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
 import AdSlot from "../components/AdSlot";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
+import DataUnavailableNotice from "../components/DataUnavailableNotice";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords, normalizeDogSeries, buildDogInsights } from "../lib/bodik";
 
@@ -47,7 +48,11 @@ export default function DogRegistration({ series, insights, error }) {
         </p>
 
         {error ? (
-          <p className="mt-8 border border-brass/40 bg-brass/10 p-4 text-sm text-brass-dark">{error}</p>
+          <DataUnavailableNotice
+            message={error}
+            sourceUrl={datasets.dogRegistration.sourceUrl}
+            sourceLabel={datasets.dogRegistration.label}
+          />
         ) : (
           <>
             {insights ? (

@@ -98,7 +98,8 @@ export default function Parks({
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft">
           船橋市オープンデータカタログ「{datasets.plazas.label}」「{datasets.featuredParks.label}」
           （いずれも"いきいきふれあいマップ"掲載データ、作成：公園緑地課）をもとに、市内の身近な
-          広場・公園を検索できるようにしています。
+          広場・公園を検索できるようにしています。お子さんと遊べる公園を探している方や、
+          自宅・引っ越し先の周辺環境を確認したい方にお使いいただけます。
         </p>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

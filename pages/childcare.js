@@ -205,6 +205,8 @@ export default function Childcare({
           船橋市オープンデータカタログの「{datasets.childcareCapacity.label}」をもとに、
           {datasets.childcareCapacity.description}
           保育所（公立・民間）・認定こども園・小規模保育事業・事業所内保育事業の5区分を収録しています。
+          保育園探しで待機状況の傾向を知りたい方や、引っ越し先の子育て環境を確認したい方に
+          お使いいただけます。
         </p>
 
         {error ? (

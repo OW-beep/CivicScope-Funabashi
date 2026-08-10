@@ -82,7 +82,8 @@ export default function DistrictExplorer({ districts, boundary, error }) {
         <h1 className="mt-2 font-display text-3xl text-ink md:text-4xl">地区マップ（試験提供）</h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft">
           町丁目の円をクリックすると、その地区にある広場・公園・保育所・生活衛生施設・食品営業施設の
-          件数内訳がパネルに表示されます。円の大きさは合計件数に比例します。
+          件数内訳がパネルに表示されます。円の大きさは合計件数に比例します。町丁目ごとの暮らしやすさを
+          比べたい方や、引っ越し先の候補エリアを絞り込みたい方にお使いいただけます。
         </p>
         <p className="mt-3 max-w-2xl text-xs text-ink-soft">
           ※ 人口・世帯数はe-Stat（政府統計の総合窓口）の国勢調査・小地域集計から取得しています

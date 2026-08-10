@@ -5,6 +5,7 @@ import StatCard from "../components/StatCard";
 import AdSlot from "../components/AdSlot";
 import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
+import DataUnavailableNotice from "../components/DataUnavailableNotice";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords, normalizePopulationSeries, buildPopulationInsights } from "../lib/bodik";
 import { populationGrowthRankHistory, populationDensityComparison2020 } from "../data/populationComparison";
@@ -58,7 +59,11 @@ export default function Dashboard({ series, insights, error, futureSeries, futur
         </p>
 
         {error ? (
-          <p className="mt-8 border border-brass/40 bg-brass/10 p-4 text-sm text-brass-dark">{error}</p>
+          <DataUnavailableNotice
+            message={error}
+            sourceUrl={datasets.population.sourceUrl}
+            sourceLabel={datasets.population.label}
+          />
         ) : (
           <>
             {insights ? (

@@ -189,6 +189,8 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
             {siteConfig.description} 船橋市オープンデータカタログが公開する
             <span className="font-mono text-brass-dark"> {orgDatasetCount ?? "600"}件超 </span>
             のデータセットの中から、暮らしに近いものを選び、グラフや検索機能を添えてお届けします。
+            引っ越し先を検討中の方が地域の子育て・防災環境を調べたり、今お住まいの方がまちの変化を
+            確認したり、調べ物や記事の裏付けに使ったりと、目的に合わせてご活用ください。
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">

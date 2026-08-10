@@ -5,6 +5,7 @@ import StatCard from "../components/StatCard";
 import AdSlot from "../components/AdSlot";
 import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
+import DataUnavailableNotice from "../components/DataUnavailableNotice";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords, normalizePopulationSeries, buildAnnualSeriesInsights } from "../lib/bodik";
 
@@ -65,7 +66,11 @@ export default function Schools({ series, insights, peak, trough, error }) {
         </p>
 
         {error ? (
-          <p className="mt-8 border border-brass/40 bg-brass/10 p-4 text-sm text-brass-dark">{error}</p>
+          <DataUnavailableNotice
+            message={error}
+            sourceUrl={datasets.schoolStudents.sourceUrl}
+            sourceLabel={datasets.schoolStudents.label}
+          />
         ) : (
           <>
             {insights ? (

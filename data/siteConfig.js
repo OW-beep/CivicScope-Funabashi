@@ -10,7 +10,7 @@ export const siteConfig = {
   url: "https://civic-scope-funabashi.vercel.app", // 独自ドメイン取得時はここを書き換えてください
   adsensePublisherId: "pub-4630812027939211",
   // AdSenseの審査に通るまでは広告枠自体を非表示にする。審査通過後にtrueへ。
-  adsEnabled: false,
+  adsEnabled: true,
   googleSiteVerification: "KYZp6leIoJkmXQipodIUtUhXTopgEfgqFiQ7eJZuRZA",
   contactEmail: "civicscope.funabashi@gmail.com",
   locale: "ja_JP",
