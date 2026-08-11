@@ -25,7 +25,24 @@ export async function getStaticProps() {
     boundary = [];
   }
 
-  return { props: { districts, boundary, error }, revalidate: 60 * 60 * 24 };
+  // 【CivicScope船橋の独自集計】「人口1,000人あたりの施設数」ランキング。
+  // 単純な施設数の合計は、人口が多い町丁目ほど有利になりがちなため、e-Statの人口データで
+  // 割って「人口あたりの施設充実度」に換算している。他のどのサイト・統計にも無い、
+  // 本サイト独自の合成指標であることを明記する（重み付けの根拠：5カテゴリを均等に1件=1点として
+  // 合算しているだけで、カテゴリ間の重要度に差はつけていない）。
+  // 人口データが無い（e-Stat未接続、または秘匿値の）町丁目はランキング対象から除外する
+  // （無理に0人として計算すると、実態と違う極端な数値になってしまうため）。
+  const livabilityRanking = districts
+    .filter((d) => d.population && d.population > 0)
+    .map((d) => ({
+      label: d.label,
+      population: d.population,
+      facilityCount: d.count,
+      perThousand: Math.round((d.count / d.population) * 1000 * 10) / 10
+    }))
+    .sort((a, b) => b.perThousand - a.perThousand);
+
+  return { props: { districts, boundary, error, livabilityRanking }, revalidate: 60 * 60 * 24 };
 }
 
 function DistrictDetail({ active }) {
@@ -68,7 +85,7 @@ function DistrictDetail({ active }) {
   );
 }
 
-export default function DistrictExplorer({ districts, boundary, error }) {
+export default function DistrictExplorer({ districts, boundary, error, livabilityRanking }) {
   return (
     <>
       <Seo
@@ -112,6 +129,45 @@ export default function DistrictExplorer({ districts, boundary, error }) {
         ) : (
           <div className="mt-8 border border-ink/10 bg-white/60 p-5 text-sm text-ink-soft">
             表示できる地区データがありませんでした。
+          </div>
+        )}
+
+        {/* --- CivicScope船橋 独自集計：施設充実度ランキング --------------------- */}
+        {livabilityRanking.length > 0 && (
+          <div className="mt-10 border border-ink/10 bg-white/60 p-5">
+            <SectionLabel code="RANK">町丁目別 施設充実度ランキング（CivicScope船橋 独自集計）</SectionLabel>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-soft">
+              広場・公園・保育所・生活衛生施設・食品営業施設の合計件数を、その町丁目の人口で割り、
+              「人口1,000人あたりの施設数」に換算したランキングです。単純な件数の合計は人口が多い
+              町丁目ほど有利になりやすいため、人口あたりに直すことで、規模の違う町丁目同士でも
+              比較できるようにしています。5カテゴリは重要度を区別せず均等に1件＝1点として
+              合算した、本サイト独自の指標です（他の統計・サイトには無い集計です）。
+            </p>
+            <div className="mt-4 overflow-x-auto border border-ink/10">
+              <table className="w-full min-w-[420px] border-collapse text-left text-sm">
+                <thead>
+                  <tr className="bg-ink text-paper">
+                    <th className="whitespace-nowrap px-3 py-2 font-normal">順位</th>
+                    <th className="whitespace-nowrap px-3 py-2 font-normal">町丁目</th>
+                    <th className="whitespace-nowrap px-3 py-2 font-normal">人口1,000人あたり施設数</th>
+                    <th className="whitespace-nowrap px-3 py-2 font-normal">人口</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {livabilityRanking.slice(0, 10).map((row, i) => (
+                    <tr key={row.label} className={i % 2 === 0 ? "bg-white/70" : "bg-paper-dark/40"}>
+                      <td className="whitespace-nowrap px-3 py-2 font-mono text-ink-soft">{i + 1}</td>
+                      <td className="whitespace-nowrap px-3 py-2 text-ink-soft">{row.label}</td>
+                      <td className="whitespace-nowrap px-3 py-2 text-ink-soft">{row.perThousand}件</td>
+                      <td className="whitespace-nowrap px-3 py-2 text-ink-soft">{row.population.toLocaleString("ja-JP")}人</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-3 text-xs text-ink-soft">
+              対象：人口データが確認できた{livabilityRanking.length}町丁目中の上位10件
+            </p>
           </div>
         )}
 
