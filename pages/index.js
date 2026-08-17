@@ -192,6 +192,13 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
             引っ越し先を検討中の方が地域の子育て・防災環境を調べたり、今お住まいの方がまちの変化を
             確認したり、調べ物や記事の裏付けに使ったりと、目的に合わせてご活用ください。
           </p>
+          <p className="mt-3 max-w-xl font-mono text-xs text-ink-soft">
+            ダッシュボードは原則24時間ごとに自動更新（
+            <Link href="/data-methodology" className="underline hover:text-brass-dark">
+              データの取得・加工方法について
+            </Link>
+            ）
+          </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Link

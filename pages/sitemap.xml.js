@@ -25,6 +25,7 @@ const STATIC_PATHS = [
   "/disaster-prevention",
   "/dog-registration",
   "/articles",
+  "/collections",
   "/guide",
   "/data-methodology",
   "/about",

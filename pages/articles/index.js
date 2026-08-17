@@ -44,7 +44,9 @@ export default function ArticlesIndex() {
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft">
           データの読み方・使い方をテーマに、CivicScope船橋編集部が独自にまとめた記事です。
           引っ越し先を検討している方、今お住まいの地域の変化を知りたい方、船橋のデータを調べ物に
-          使いたい方など、それぞれの目的に合わせて活用してください。
+          使いたい方など、それぞれの目的に合わせて活用してください。目的別にまとめた
+          <Link href="/collections" className="underline hover:text-brass-dark">読み方ガイド</Link>
+          もあわせてご覧いただけます。
         </p>
 
         <div className="mt-6 flex flex-col gap-4">

@@ -97,6 +97,53 @@ function renderBody(body, charts, maps) {
       const lines = block.split("\n").map((l) => l.trim());
       const isList = lines.length > 0 && lines.every((l) => l.startsWith("- "));
 
+      // Markdownテーブル記法（| 見出し | 見出し |\n|---|---|\n| 値 | 値 |）を、
+      // 生のパイプ文字のまま表示せず、きちんとしたHTMLテーブルとして描画する。
+      const isTable =
+        lines.length >= 2 &&
+        lines.every((l) => l.startsWith("|") && l.endsWith("|")) &&
+        lines[1]
+          .slice(1, -1)
+          .split("|")
+          .every((cell) => /^:?-+:?$/.test(cell.trim()));
+
+      if (isTable) {
+        const parseRow = (line) =>
+          line
+            .slice(1, -1)
+            .split("|")
+            .map((cell) => cell.trim());
+        const headerCells = parseRow(lines[0]);
+        const bodyRows = lines.slice(2).map(parseRow);
+
+        return (
+          <div key={i} className="mb-6 overflow-x-auto border border-ink/10">
+            <table className="w-full min-w-[420px] border-collapse text-left text-sm">
+              <thead>
+                <tr className="bg-ink text-paper">
+                  {headerCells.map((cell, ci) => (
+                    <th key={ci} className="whitespace-nowrap px-3 py-2 font-normal">
+                      {renderInline(cell, `${i}-th-${ci}`)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {bodyRows.map((row, ri) => (
+                  <tr key={ri} className={ri % 2 === 0 ? "bg-white/70" : "bg-paper-dark/40"}>
+                    {row.map((cell, ci) => (
+                      <td key={ci} className="whitespace-nowrap px-3 py-2 text-ink-soft">
+                        {renderInline(cell, `${i}-td-${ri}-${ci}`)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      }
+
       if (isList) {
         return (
           <ul key={i} className="mb-5 list-disc space-y-1.5 pl-5 text-[15px] leading-[1.9] text-ink-soft">
@@ -165,14 +212,22 @@ export default function ArticlePage({ article, relatedArticles }) {
         <div className="mt-10">{renderBody(article.body, article.charts, article.maps)}</div>
 
         {article.relatedDashboard ? (
-          <div className="mt-10">
+          <div className="mt-10 border-t border-ink/10 pt-8">
+            <p className="mb-3 font-mono text-xs uppercase tracking-widest text-brass-dark">次にできること</p>
+            <p className="mb-4 text-sm text-ink-soft">
+              この記事で紹介した数字は、実際のダッシュボードでもっと詳しく、最新の状態で確認できます。
+            </p>
             <DashboardFooterLinks
               articleHref={article.relatedDashboard.href}
               articleLabel={`${article.relatedDashboard.label}を見る`}
             />
           </div>
         ) : (
-          <div className="mt-10">
+          <div className="mt-10 border-t border-ink/10 pt-8">
+            <p className="mb-3 font-mono text-xs uppercase tracking-widest text-brass-dark">次にできること</p>
+            <p className="mb-4 text-sm text-ink-soft">
+              船橋市の他のテーマも、ダッシュボードで実際のデータを確認できます。
+            </p>
             <Link
               href="/#dashboards"
               className="group flex items-center justify-between border border-ink/10 bg-white/60 px-5 py-4 text-sm text-ink transition-colors hover:border-brass"
