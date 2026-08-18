@@ -3,6 +3,7 @@ import Seo from "../components/Seo";
 import SectionLabel from "../components/SectionLabel";
 import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import AdSlot from "../components/AdSlot";
+import DataUnavailableNotice from "../components/DataUnavailableNotice";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { buildDistrictStats, DISTRICT_METRICS } from "../lib/districtStats";
 import { getFunabashiBoundaryRings } from "../lib/geoBoundary";
@@ -110,9 +111,7 @@ export default function DistrictExplorer({ districts, boundary, error, livabilit
         </p>
 
         {error ? (
-          <div className="mt-8 border border-brass/40 bg-brass/10 p-4 text-sm text-brass-dark">
-            <p>{error}</p>
-          </div>
+          <DataUnavailableNotice message={error} />
         ) : districts.length ? (
           <div className="mt-10 border border-ink/10 bg-white/60 p-5">
             <SectionLabel code="MAP">町丁目別 施設分布</SectionLabel>

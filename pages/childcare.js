@@ -5,6 +5,7 @@ import StatCard from "../components/StatCard";
 import AdSlot from "../components/AdSlot";
 import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
+import DataUnavailableNotice from "../components/DataUnavailableNotice";
 import SearchableTable from "../components/SearchableTable";
 import { siteConfig, datasets } from "../data/siteConfig";
 import {
@@ -210,17 +211,11 @@ export default function Childcare({
         </p>
 
         {error ? (
-          <div className="mt-8 border border-brass/40 bg-brass/10 p-4 text-sm text-brass-dark">
-            <p>{error}</p>
-            <a
-              href={datasets.childcareCapacity.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-2 inline-block underline"
-            >
-              原典データセットを見る →
-            </a>
-          </div>
+          <DataUnavailableNotice
+            message={error}
+            sourceUrl={datasets.childcareCapacity.sourceUrl}
+            sourceLabel={datasets.childcareCapacity.label}
+          />
         ) : (
           <>
             {insights ? (

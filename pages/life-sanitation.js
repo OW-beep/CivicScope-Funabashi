@@ -6,6 +6,7 @@ import SearchableTable from "../components/SearchableTable";
 import AdSlot from "../components/AdSlot";
 import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
+import DataUnavailableNotice from "../components/DataUnavailableNotice";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords } from "../lib/bodik";
 import {
@@ -100,17 +101,11 @@ export default function LifeSanitation({
         </p>
 
         {error ? (
-          <div className="mt-8 border border-brass/40 bg-brass/10 p-4 text-sm text-brass-dark">
-            <p>{error}</p>
-            <a
-              href={datasets.lifeSanitationFacilities.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-2 inline-block underline"
-            >
-              原典データセットを見る →
-            </a>
-          </div>
+          <DataUnavailableNotice
+            message={error}
+            sourceUrl={datasets.lifeSanitationFacilities.sourceUrl}
+            sourceLabel={datasets.lifeSanitationFacilities.label}
+          />
         ) : (
           <>
             <div className="mt-10 grid gap-4 sm:grid-cols-3">
