@@ -6,6 +6,7 @@ import SectionLabel from "../components/SectionLabel";
 import AdSlot from "../components/AdSlot";
 import FunabashiMapMotif from "../components/FunabashiMapMotif";
 import PearIcon from "../components/PearIcon";
+import ArticleThumbnail from "../components/ArticleThumbnail";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { CATEGORY_LIST, CATEGORY_CLASSES } from "../data/categories";
 import { getArticlesSortedByDate, getFeaturedArticles } from "../data/articles";
@@ -249,7 +250,7 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
               return (
                 <a
                   key={cat.key}
-                  href="#dashboards"
+                  href={`#cat-${cat.key}`}
                   className={`inline-flex items-center gap-1.5 rounded-full ${cls.bgSoft} px-4 py-2 text-sm font-bold ${cls.text} transition-transform hover:-translate-y-0.5`}
                 >
                   <span aria-hidden="true">{cat.emoji}</span>
@@ -333,14 +334,17 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
             <Link
               key={a.slug}
               href={`/articles/${a.slug}`}
-              className="group flex flex-col rounded-2xl bg-white p-5 shadow-pop transition-transform hover:-translate-y-0.5"
+              className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-pop transition-transform hover:-translate-y-0.5"
             >
-              <span className="w-fit rounded-full bg-brass/15 px-3 py-1 font-mono text-xs font-bold text-brass-dark">{a.tag}</span>
-              <h3 className="mt-3 font-display text-lg font-bold leading-snug text-ink group-hover:text-brass-dark">
-                {a.title}
-              </h3>
-              <p className="mt-2 line-clamp-3 text-sm text-ink-soft">{a.excerpt}</p>
-              <span className="mt-4 text-xs font-bold text-brass-dark">続きを読む →</span>
+              <ArticleThumbnail tag={a.tag} slug={a.slug} className="h-32 w-full" />
+              <div className="flex flex-1 flex-col p-5">
+                <span className="w-fit rounded-full bg-brass/15 px-3 py-1 font-mono text-xs font-bold text-brass-dark">{a.tag}</span>
+                <h3 className="mt-3 font-display text-lg font-bold leading-snug text-ink group-hover:text-brass-dark">
+                  {a.title}
+                </h3>
+                <p className="mt-2 line-clamp-3 text-sm text-ink-soft">{a.excerpt}</p>
+                <span className="mt-4 text-xs font-bold text-brass-dark">続きを読む →</span>
+              </div>
             </Link>
           ))}
         </div>
@@ -359,14 +363,17 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
                 <Link
                   key={a.slug}
                   href={`/articles/${a.slug}`}
-                  className="group flex flex-col rounded-2xl bg-white p-5 shadow-pop transition-transform hover:-translate-y-0.5"
+                  className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-pop transition-transform hover:-translate-y-0.5"
                 >
-                  <span className="w-fit rounded-full bg-brass/15 px-3 py-1 font-mono text-xs font-bold text-brass-dark">{a.tag}</span>
-                  <h3 className="mt-3 font-display text-lg font-bold leading-snug text-ink group-hover:text-brass-dark">
-                    {a.title}
-                  </h3>
-                  <p className="mt-2 line-clamp-3 text-sm text-ink-soft">{a.excerpt}</p>
-                  <span className="mt-4 text-xs font-bold text-brass-dark">続きを読む →</span>
+                  <ArticleThumbnail tag={a.tag} slug={a.slug} className="h-32 w-full" />
+                  <div className="flex flex-1 flex-col p-5">
+                    <span className="w-fit rounded-full bg-brass/15 px-3 py-1 font-mono text-xs font-bold text-brass-dark">{a.tag}</span>
+                    <h3 className="mt-3 font-display text-lg font-bold leading-snug text-ink group-hover:text-brass-dark">
+                      {a.title}
+                    </h3>
+                    <p className="mt-2 line-clamp-3 text-sm text-ink-soft">{a.excerpt}</p>
+                    <span className="mt-4 text-xs font-bold text-brass-dark">続きを読む →</span>
+                  </div>
                 </Link>
               ))}
             </div>
@@ -374,24 +381,39 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
         </section>
       ) : null}
 
-      {/* --- ダッシュボード一覧 ------------------------------------------ */}
+      {/* --- ダッシュボード一覧（カテゴリごとにグループ化。サイト全体のタグバーからの
+            アンカーリンク先 #cat-xxx にもなっている） ------------------------------ */}
       <section id="dashboards" className="mx-auto max-w-5xl px-5 py-14 scroll-mt-20">
         <SectionLabel code="04" category="town">ダッシュボード一覧</SectionLabel>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {DASHBOARD_LINKS.map((d) => {
-            const cls = CATEGORY_CLASSES[d.category] || CATEGORY_CLASSES.town;
+        <div className="space-y-10">
+          {CATEGORY_LIST.map((cat) => {
+            const cls = CATEGORY_CLASSES[cat.key];
+            const items = DASHBOARD_LINKS.filter((d) => d.category === cat.key);
+            if (!items.length) return null;
             return (
-              <Link
-                key={d.href}
-                href={d.href}
-                className="group relative overflow-hidden rounded-2xl bg-white p-5 pl-6 shadow-pop transition-transform hover:-translate-y-0.5"
-              >
-                <span className={`absolute inset-y-0 left-0 w-1.5 ${cls.dot}`} aria-hidden="true" />
-                <h3 className={`font-display text-lg font-bold text-ink ${cls.groupHoverText}`}>
-                  {d.title}
+              <div key={cat.key} id={`cat-${cat.key}`} className="scroll-mt-24">
+                <h3 className="mb-3 inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 shadow-pop">
+                  <span className={`h-2.5 w-2.5 rounded-full ${cls.dot}`} aria-hidden="true" />
+                  <span className={`text-sm font-bold ${cls.text}`}>
+                    {cat.emoji} {cat.label}
+                  </span>
                 </h3>
-                <p className="mt-2 text-sm text-ink-soft">{d.description}</p>
-              </Link>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {items.map((d) => (
+                    <Link
+                      key={d.href}
+                      href={d.href}
+                      className="group relative overflow-hidden rounded-2xl bg-white p-5 pl-6 shadow-pop transition-transform hover:-translate-y-0.5"
+                    >
+                      <span className={`absolute inset-y-0 left-0 w-1.5 ${cls.dot}`} aria-hidden="true" />
+                      <h4 className={`font-display text-lg font-bold text-ink ${cls.groupHoverText}`}>
+                        {d.title}
+                      </h4>
+                      <p className="mt-2 text-sm text-ink-soft">{d.description}</p>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             );
           })}
         </div>

@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import Seo from "../../components/Seo";
 import Link from "next/link";
 import AdSlot from "../../components/AdSlot";
+import ArticleThumbnail from "../../components/ArticleThumbnail";
 import { siteConfig } from "../../data/siteConfig";
 import { getArticlesSortedByDate } from "../../data/articles";
 
@@ -89,14 +90,17 @@ export default function ArticlesIndex() {
             <Link
               key={a.slug}
               href={`/articles/${a.slug}`}
-              className="group flex flex-col gap-2 py-6 md:flex-row md:items-baseline md:justify-between"
+              className="group flex flex-col gap-4 py-6 sm:flex-row sm:items-center"
             >
-              <div>
-                <span className="font-mono text-xs text-brass-dark">{a.tag}</span>
-                <h2 className="mt-1 font-display text-xl text-ink group-hover:text-brass-dark">{a.title}</h2>
-                <p className="mt-2 max-w-2xl text-sm text-ink-soft">{a.excerpt}</p>
+              <ArticleThumbnail tag={a.tag} slug={a.slug} className="h-20 w-32 flex-shrink-0 rounded-xl" />
+              <div className="flex flex-1 flex-col gap-2 md:flex-row md:items-baseline md:justify-between">
+                <div>
+                  <span className="font-mono text-xs text-brass-dark">{a.tag}</span>
+                  <h2 className="mt-1 font-display text-xl text-ink group-hover:text-brass-dark">{a.title}</h2>
+                  <p className="mt-2 max-w-2xl text-sm text-ink-soft">{a.excerpt}</p>
+                </div>
+                <span className="whitespace-nowrap font-mono text-xs text-ink-soft">{a.date}</span>
               </div>
-              <span className="whitespace-nowrap font-mono text-xs text-ink-soft">{a.date}</span>
             </Link>
           ))}
           {filtered.length === 0 && (

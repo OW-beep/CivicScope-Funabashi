@@ -3,6 +3,8 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import AdSlot from "../../components/AdSlot";
 import DashboardFooterLinks from "../../components/DashboardFooterLinks";
+import ShareButtons from "../../components/ShareButtons";
+import ArticleThumbnail from "../../components/ArticleThumbnail";
 import { siteConfig } from "../../data/siteConfig";
 import { articles, getArticleBySlug, getRelatedArticles } from "../../data/articles";
 
@@ -209,6 +211,10 @@ export default function ArticlePage({ article, relatedArticles }) {
         <h1 className="mt-2 font-display text-3xl leading-snug text-ink md:text-4xl">{article.title}</h1>
         <p className="mt-3 font-mono text-xs text-ink-soft">{article.date}</p>
 
+        <ArticleThumbnail tag={article.tag} slug={article.slug} className="mt-6 h-48 w-full rounded-2xl shadow-pop" />
+
+        <ShareButtons title={article.title} url={`${siteConfig.url}/articles/${article.slug}`} className="mt-5" />
+
         <div className="mt-10">{renderBody(article.body, article.charts, article.maps)}</div>
 
         {article.relatedDashboard ? (
@@ -253,12 +259,15 @@ export default function ArticlePage({ article, relatedArticles }) {
                 <Link
                   key={a.slug}
                   href={`/articles/${a.slug}`}
-                  className="group flex flex-col border border-ink/10 bg-white/50 p-4 transition-colors hover:border-brass"
+                  className="group flex items-center gap-3 overflow-hidden rounded-xl border border-ink/10 bg-white/50 p-3 transition-colors hover:border-brass"
                 >
-                  <span className="font-mono text-[11px] text-brass-dark">{a.tag}</span>
-                  <span className="mt-1.5 font-display text-sm leading-snug text-ink group-hover:text-brass-dark">
-                    {a.title}
-                  </span>
+                  <ArticleThumbnail tag={a.tag} slug={a.slug} className="h-14 w-20 flex-shrink-0 rounded-lg" />
+                  <div>
+                    <span className="font-mono text-[11px] text-brass-dark">{a.tag}</span>
+                    <span className="mt-1 block font-display text-sm leading-snug text-ink group-hover:text-brass-dark">
+                      {a.title}
+                    </span>
+                  </div>
                 </Link>
               ))}
             </div>

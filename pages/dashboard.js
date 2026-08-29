@@ -41,9 +41,16 @@ export async function getStaticProps() {
 }
 
 export default function Dashboard({ series, insights, error, futureSeries, futureInsights }) {
+  // タイトルに実際のデータ年を含めるため、最新データの年（例: 2026）を動的に抽出する
+  const latestYear = insights?.latest?.label?.match(/\d{4}/)?.[0];
+
   return (
     <>
-      <Seo title={`人口ダッシュボード｜${siteConfig.name}`} description="船橋市の常住人口データをもとに、月次推移・前月比・前年同月比を自動集計して可視化したダッシュボードです。" path="/dashboard" />
+      <Seo
+        title={`船橋市 人口ダッシュボード${latestYear ? `｜${latestYear}年最新データ` : ""}｜${siteConfig.name}`}
+        description={`船橋市の常住人口データ${latestYear ? `（${latestYear}年最新）` : ""}をもとに、月次推移・前月比・前年同月比を自動集計して可視化したダッシュボードです。`}
+        path="/dashboard"
+      />
 
       <section className="mx-auto max-w-5xl px-5 py-14">
         <p className="font-mono text-xs uppercase tracking-widest text-brass-dark">Dashboard</p>
@@ -257,7 +264,14 @@ export default function Dashboard({ series, insights, error, futureSeries, futur
         </p>
 
         <div className="mt-10">
-          <DashboardFooterLinks articleHref="/articles/population-data-guide" articleLabel="船橋市の常住人口、実は減っている？増えている？" />
+          <DashboardFooterLinks
+            articleHref="/articles/population-data-guide"
+            articleLabel="船橋市の常住人口、実は減っている？増えている？"
+            relatedLinks={[
+              { href: "/finance", label: "財政ダッシュボード" },
+              { href: "/rail-ridership", label: "鉄道駅別乗車人員ダッシュボード" }
+            ]}
+          />
           </div>
 
           <div className="mt-8">

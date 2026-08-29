@@ -104,7 +104,11 @@ export default function FoodBusinesses({
 }) {
   return (
     <>
-      <Seo title={`食品営業施設 ダッシュボード｜${siteConfig.name}`} description="船橋市内の食品営業施設の許可件数を、町丁目別の分布マップと業種別ランキングで可視化したダッシュボードです。" path="/food-businesses" />
+      <Seo
+        title={`船橋市 食品営業施設ダッシュボード${recordsTotal ? `｜登録${recordsTotal.toLocaleString("ja-JP")}件` : ""}の分布マップ｜${siteConfig.name}`}
+        description={`船橋市内の食品営業施設${recordsTotal ? `${recordsTotal.toLocaleString("ja-JP")}件` : ""}の許可件数を、町丁目別の分布マップ${insights ? `（最多は「${insights.top.label}」）` : ""}と業種別ランキングで可視化したダッシュボードです。`}
+        path="/food-businesses"
+      />
 
       <section className="mx-auto max-w-5xl px-5 py-14">
         <p className="font-mono text-xs uppercase tracking-widest text-brass-dark">Dashboard</p>

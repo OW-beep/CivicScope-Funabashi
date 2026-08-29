@@ -1,6 +1,7 @@
 import { Noto_Sans_JP, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import Header from "../components/Header";
+import CategoryTagBar from "../components/CategoryTagBar";
 import Footer from "../components/Footer";
 import "../styles/globals.css";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -49,6 +50,7 @@ export default function App({ Component, pageProps }) {
 
       <div className="flex min-h-screen flex-col bg-paper">
         <Header />
+        <CategoryTagBar />
         <main className="flex-1">
           <Component {...pageProps} />
         </main>

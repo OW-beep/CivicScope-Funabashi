@@ -39,14 +39,20 @@ export default function RailRidership({ ranking, combined, growth, totalSeries, 
 
   return (
     <>
-      <Seo title={`鉄道駅別乗車人員 ダッシュボード｜${siteConfig.name}`} description="船橋市内の鉄道駅別1日平均乗車人員のランキングと推移を可視化したダッシュボードです（船橋市統計書「I 都市基盤」より）。" path="/rail-ridership" />
+      <Seo
+        title={`鉄道駅別 乗車人員・乗降客数ランキング｜船橋市｜${siteConfig.name}`}
+        description="船橋駅をはじめ、船橋市内の鉄道駅別の1日平均乗車人員（乗降客数の目安）ランキングと推移を可視化したダッシュボードです（船橋市統計書「I 都市基盤」より）。"
+        path="/rail-ridership"
+      />
 
       <section className="mx-auto max-w-5xl px-5 py-14">
         <p className="font-mono text-xs uppercase tracking-widest text-brass-dark">Dashboard</p>
-        <h1 className="mt-2 font-display text-3xl text-ink md:text-4xl">鉄道駅別乗車人員 ダッシュボード</h1>
+        <h1 className="mt-2 font-display text-3xl text-ink md:text-4xl">
+          船橋市 鉄道駅別 乗車人員（乗降客数）ランキング
+        </h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft">
-          船橋市統計書「I 都市基盤」（資料：道路計画課）をもとに、市内35の駅×事業者について、
-          1日平均乗車人員の推移とランキングを可視化しています。
+          船橋市統計書「I 都市基盤」（資料：道路計画課）をもとに、船橋駅をはじめとする市内35の駅×事業者について、
+          1日平均乗車人員（乗降客数の目安となる指標）の推移とランキングを可視化しています。
         </p>
         <p className="mt-3 max-w-2xl text-xs text-ink-soft">
           出典：船橋市統計書「I 都市基盤」（
@@ -167,6 +173,10 @@ export default function RailRidership({ ranking, combined, growth, totalSeries, 
           <DashboardFooterLinks
             articleHref="/articles/rail-ridership-guide"
             articleLabel="船橋市内、一番利用者が多い駅はどこ？鉄道駅別乗車人員を徹底比較"
+            relatedLinks={[
+              { href: "/dashboard", label: "人口ダッシュボード" },
+              { href: "/finance", label: "財政ダッシュボード" }
+            ]}
           />
         </div>
 

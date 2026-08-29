@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "../data/siteConfig";
+import { CATEGORY_LIST, CATEGORY_CLASSES } from "../data/categories";
 
 const SITE_LINKS = [
   { href: "/dashboard", label: "人口ダッシュボード" },
@@ -32,6 +33,24 @@ export default function Footer() {
 
   return (
     <footer className="rounded-t-3xl border-t border-ink/10 bg-ink text-paper">
+      {/* Fukuoka Factsのフッターと同様、ヘッダー下のタグバーと同じカテゴリ一覧をここにも
+          繰り返し表示し、ページの最後まで読んだ人にも別カテゴリへの導線を用意する */}
+      <div className="flex flex-wrap justify-center gap-2 border-b border-paper/10 px-5 py-4">
+        {CATEGORY_LIST.map((cat) => {
+          const cls = CATEGORY_CLASSES[cat.key];
+          return (
+            <Link
+              key={cat.key}
+              href={`/#cat-${cat.key}`}
+              className={`inline-flex items-center gap-1.5 rounded-full ${cls.bgSoft} px-3 py-1 text-xs font-bold ${cls.text}`}
+            >
+              <span aria-hidden="true">{cat.emoji}</span>
+              {cat.label}
+            </Link>
+          );
+        })}
+      </div>
+
       <div className="mx-auto max-w-5xl px-5 py-12">
         <div className="grid gap-10 md:grid-cols-3">
           <div className="md:col-span-1">

@@ -65,11 +65,15 @@ export default function Finance({
 }) {
   return (
     <>
-      <Seo title={`財政ダッシュボード｜${siteConfig.name}`} description="船橋市の歳入・歳出・市債残高の推移を可視化し、月30万円の家計に例えて解説する財政ダッシュボードです（船橋市統計書「R 財政」より）。" path="/finance" />
+      <Seo
+        title={`船橋市の財政ダッシュボード｜歳入・歳出・市債残高｜${siteConfig.name}`}
+        description="船橋市の財政（歳入・歳出・市債残高）の推移を可視化し、月30万円の家計に例えて解説するダッシュボードです（船橋市統計書「R 財政」より）。"
+        path="/finance"
+      />
 
       <section className="mx-auto max-w-5xl px-5 py-14">
         <p className="font-mono text-xs uppercase tracking-widest text-brass-dark">Dashboard</p>
-        <h1 className="mt-2 font-display text-3xl text-ink md:text-4xl">財政 ダッシュボード</h1>
+        <h1 className="mt-2 font-display text-3xl text-ink md:text-4xl">船橋市 財政ダッシュボード</h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft">
           船橋市統計書「R 財政」（資料：財政課）をもとに、一般会計の歳入・歳出・市債残高の推移を可視化しています。
           後半では、令和6年度決算を「月30万円の家計」に例えるとどうなるかも紹介します。
@@ -321,6 +325,10 @@ export default function Finance({
           <DashboardFooterLinks
             articleHref="/articles/finance-household-budget-guide"
             articleLabel="船橋市の財政を「家計」に例えると"
+            relatedLinks={[
+              { href: "/dashboard", label: "人口ダッシュボード" },
+              { href: "/rail-ridership", label: "鉄道駅別乗車人員ダッシュボード" }
+            ]}
           />
         </div>
 
