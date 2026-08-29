@@ -7,6 +7,8 @@ import AdSlot from "../components/AdSlot";
 import FunabashiMapMotif from "../components/FunabashiMapMotif";
 import PearIcon from "../components/PearIcon";
 import ArticleThumbnail from "../components/ArticleThumbnail";
+import PickupCarousel from "../components/PickupCarousel";
+import CategoryIntroBoxes from "../components/CategoryIntroBoxes";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { CATEGORY_LIST, CATEGORY_CLASSES } from "../data/categories";
 import { getArticlesSortedByDate, getFeaturedArticles } from "../data/articles";
@@ -183,6 +185,7 @@ export async function getStaticProps() {
 export default function Home({ populationLatest, populationYoyRate, chokaiCount, orgDatasetCount }) {
   const latestArticles = getArticlesSortedByDate().slice(0, 3);
   const featuredArticles = getFeaturedArticles(3);
+  const pickupArticles = getFeaturedArticles(5);
   return (
     <>
       <Seo
@@ -259,6 +262,18 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* --- カテゴリ紹介ボックス（ヒーロー内のタグ一覧のすぐ下に表示） -------- */}
+      <CategoryIntroBoxes />
+
+      {/* --- ピックアップ記事（自動送りカルーセル） --------------------- */}
+      <section className="mx-auto max-w-5xl px-5 py-14">
+        <p className="font-mono text-xs uppercase tracking-widest text-brass-dark">Pick Up</p>
+        <h2 className="mt-2 font-display text-2xl font-bold text-ink">ピックアップ記事</h2>
+        <div className="mt-6">
+          <PickupCarousel articles={pickupArticles} />
         </div>
       </section>
 

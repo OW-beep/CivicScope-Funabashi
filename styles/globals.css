@@ -48,7 +48,21 @@ input:focus-visible {
   background-size: 18px 18px;
 }
 
-/* ヘッダーのダッシュボード・ドロップダウン（<details>）のデフォルトの三角マーカーを消す */
+/* ふわっと浮かぶアイコン用のアニメーション（カテゴリ紹介ボックスで使用）。
+   prefers-reduced-motion時は、上のグローバルルールでアニメーション時間が
+   強制的にごく短くなるため、自然に無効化される。 */
+@keyframes float-icon {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.animate-float-icon {
+  animation: float-icon 3s ease-in-out infinite;
+}
 summary {
   list-style: none;
 }

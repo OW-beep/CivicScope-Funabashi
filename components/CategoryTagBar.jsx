@@ -1,45 +1,53 @@
 import Link from "next/link";
-import { CATEGORY_LIST } from "../data/categories";
+import { CATEGORY_LIST, CATEGORY_CLASSES } from "../data/categories";
 
-// 全ページ共通のタグナビゲーションバー（Fukuoka Factsの「タグで見る」帯を参考にした構成）。
-// 「タグで見る」ラベル＋分野ごとに色分けされたタグを横一列に並べ、どのページからでも
-// トップページの該当カテゴリ（#cat-xxx）へ1タップで移動できるようにしている。
-// 背景色は各カテゴリのDEFAULT（濃い実色）を直接使用するため、
-// tailwind.config.jsのcategoryカラーをそのままクラス名で参照している。
-const BAR_ITEMS = [
-  { key: "life", bg: "bg-category-life", text: "text-white" },
-  { key: "kids", bg: "bg-category-kids", text: "text-ink" },
-  { key: "town", bg: "bg-category-town", text: "text-white" },
-  { key: "transit", bg: "bg-category-transit", text: "text-white" },
-  { key: "safety", bg: "bg-category-safety", text: "text-white" },
-  { key: "social", bg: "bg-category-social", text: "text-white" }
-];
-
+// 全ページ共通のカテゴリナビゲーション。
+// Fukuoka Factsの「タグで見る」帯（隙間なく並んだ単色の長方形）と機能は近いが、
+// 見た目がほぼ同じにならないよう、あえて別のデザイン言語にしている：
+//   ・隙間なく並ぶ「帯」ではなく、1つ1つ独立した丸ピル（チップ）
+//   ・単色の背景ではなく、白背景＋カテゴリカラーのアイコン丸バッジ＋下線アクセント
+//   ・帯の下端は東京湾の波を思わせる、ゆるい波形の縁取り
+// ラベルも「タグで見る」ではなく、ブランドのScopeMark（測量スコープ）モチーフを使った
+// 「カテゴリでさがす」にして、独自の見た目にしている。
 export default function CategoryTagBar() {
   return (
-    <nav aria-label="カテゴリで見る" className="w-full overflow-x-auto border-b border-ink/10 bg-brass">
-      <div className="flex min-w-max items-stretch text-xs font-bold sm:text-sm">
-        <span className="flex items-center gap-1 whitespace-nowrap px-4 py-2.5 text-white">
-          <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current" aria-hidden="true">
-            <path d="M2 9.5V4a2 2 0 0 1 2-2h5.5a2 2 0 0 1 1.41.59l6.5 6.5a2 2 0 0 1 0 2.82l-5.5 5.5a2 2 0 0 1-2.82 0l-6.5-6.5A2 2 0 0 1 2 9.5zM6 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
+    <nav aria-label="カテゴリでさがす" className="relative border-b border-ink/10 bg-paper-dark/60">
+      <div className="mx-auto flex max-w-5xl items-center gap-2 overflow-x-auto px-4 py-2.5 sm:gap-2.5">
+        <span className="flex flex-shrink-0 items-center gap-1.5 whitespace-nowrap pr-2 text-xs font-bold text-ink-soft sm:text-sm">
+          <svg viewBox="0 0 24 24" className="h-4 w-4 text-brass" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="2.5" />
+            <circle cx="12" cy="12" r="2.5" fill="currentColor" />
+            <line x1="12" y1="1.5" x2="12" y2="4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+            <line x1="12" y1="20" x2="12" y2="22.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
           </svg>
-          タグで見る
-          <span aria-hidden="true">▶</span>
+          カテゴリでさがす
         </span>
-        {BAR_ITEMS.map((item) => {
-          const cat = CATEGORY_LIST.find((c) => c.key === item.key);
+        <span className="h-5 w-px flex-shrink-0 bg-ink/10" aria-hidden="true" />
+        {CATEGORY_LIST.map((cat) => {
+          const cls = CATEGORY_CLASSES[cat.key];
           return (
             <Link
-              key={item.key}
-              href={`/#cat-${item.key}`}
-              className={`flex items-center gap-1.5 whitespace-nowrap px-4 py-2.5 ${item.bg} ${item.text} transition-opacity hover:opacity-90`}
+              key={cat.key}
+              href={`/#cat-${cat.key}`}
+              className="group flex flex-shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-ink/10 bg-white py-1.5 pl-1.5 pr-3 text-xs font-bold text-ink-soft shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-pop sm:text-sm"
             >
-              <span aria-hidden="true">{cat.emoji}</span>
-              {cat.label}
+              <span className={`flex h-6 w-6 items-center justify-center rounded-full ${cls.dot} text-sm`}>
+                {cat.emoji}
+              </span>
+              <span className={`transition-colors ${cls.groupHoverText}`}>{cat.label}</span>
             </Link>
           );
         })}
       </div>
+      {/* 帯の下端に、東京湾の波をイメージしたゆるい波線 */}
+      <svg
+        viewBox="0 0 400 8"
+        preserveAspectRatio="none"
+        className="block h-2 w-full text-bay/40"
+        aria-hidden="true"
+      >
+        <path d="M0 4 C 25 0, 75 8, 100 4 S 175 0, 200 4 S 275 8, 300 4 S 375 0, 400 4" fill="none" stroke="currentColor" strokeWidth="2" />
+      </svg>
     </nav>
   );
 }

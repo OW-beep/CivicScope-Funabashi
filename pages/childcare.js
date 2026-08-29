@@ -435,8 +435,11 @@ export default function Childcare({
 
         {/* --- 公立保育所マップ ------------------------------------------- */}
         {facilityMapPoints.length === 0 && (
-          <div className="mt-14 border border-ink/10 bg-white/60 p-5 text-sm text-ink-soft">
-            まだ地図データがありません。<code>node scripts/geocode-facilities.js</code> を実行して座標化してください。
+          <div className="mt-14 rounded-2xl border border-ink/10 bg-white/60 p-5 text-sm text-ink-soft">
+            現在、地図データを準備中です。しばらくしてから再度ご覧ください。
+            {/* 開発者向けメモ：data/geocoded/*.json が空の場合に表示されます。
+                手元のPCで `node scripts/geocode-facilities.js` を実行し、
+                生成された data/geocoded/ 以下の変更をコミットしてください。 */}
           </div>
         )}
 
