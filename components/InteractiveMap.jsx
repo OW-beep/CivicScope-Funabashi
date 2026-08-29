@@ -9,17 +9,17 @@ import maplibregl from "maplibre-gl";
 const BASE_STYLE_URL = "https://tiles.openfreemap.org/styles/liberty";
 
 const DEFAULT_COLORS = [
-  "#2F6F6E",
-  "#B8862F",
-  "#8F6A22",
+  "#2AA7A2",
+  "#E0932A",
+  "#B8721A",
   "#C0392B",
   "#3B6FA0",
   "#7B4B94",
-  "#4C8E8C"
+  "#6FC4C0"
 ];
 
 function colorForCategory(category, categoryColors, categoryOrder) {
-  if (!category) return "#1B2430";
+  if (!category) return "#26313B";
   if (categoryColors && categoryColors[category]) return categoryColors[category];
   const idx = categoryOrder.indexOf(category);
   return DEFAULT_COLORS[idx % DEFAULT_COLORS.length];
@@ -164,9 +164,9 @@ export default function InteractiveMap({
                 0,
                 "rgba(0,0,0,0)",
                 0.2,
-                "#2F6F6E",
+                "#2AA7A2",
                 0.4,
-                "#B8862F",
+                "#E0932A",
                 0.7,
                 "#C0392B",
                 1,
@@ -186,7 +186,7 @@ export default function InteractiveMap({
         el.style.width = "14px";
         el.style.height = "14px";
         el.style.borderRadius = "50%";
-        el.style.border = "2px solid #EDEBE4";
+        el.style.border = "2px solid #FFF8ED";
         el.style.boxShadow = "0 1px 3px rgba(0,0,0,0.4)";
         el.style.backgroundColor = colorForCategory(p.category, categoryColors, categoryOrder);
         el.style.cursor = "pointer";

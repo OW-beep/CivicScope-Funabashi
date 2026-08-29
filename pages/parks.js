@@ -12,7 +12,7 @@ import { plazaSummary } from "../data/parks";
 
 const InteractiveMap = dynamic(() => import("../components/InteractiveMap"), { ssr: false });
 
-const MAP_CATEGORY_COLORS = { 広場: "#2F6F6E", 公園: "#B8862F" };
+const MAP_CATEGORY_COLORS = { 広場: "#2AA7A2", 公園: "#E0932A" };
 
 export async function getStaticProps() {
   let plazaFields = [];

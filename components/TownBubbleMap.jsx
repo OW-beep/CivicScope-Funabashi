@@ -132,9 +132,9 @@ export default function TownBubbleMap({ points = [], boundary = [], unit = "件"
             <polygon
               key={i}
               points={ring.map((p) => `${p.x},${p.y}`).join(" ")}
-              fill="#1B2430"
+              fill="#26313B"
               fillOpacity="0.05"
-              stroke="#1B2430"
+              stroke="#26313B"
               strokeOpacity="0.35"
               strokeWidth="1"
             />
@@ -148,9 +148,9 @@ export default function TownBubbleMap({ points = [], boundary = [], unit = "件"
                 cx={p.x}
                 cy={p.y}
                 r={radiusFor(p.count)}
-                fill="#B8862F"
+                fill="#E0932A"
                 fillOpacity={isActive ? 0.85 : 0.45}
-                stroke="#8F6A22"
+                stroke="#B8721A"
                 strokeWidth={isActive ? 1.5 : 0.5}
                 className="cursor-pointer transition-opacity"
                 onClick={() => setSelected(p)}

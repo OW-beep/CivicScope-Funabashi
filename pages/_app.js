@@ -1,16 +1,13 @@
-import { Shippori_Mincho, Noto_Sans_JP, JetBrains_Mono } from "next/font/google";
+import { Noto_Sans_JP, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../styles/globals.css";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-const shippori = Shippori_Mincho({
-  subsets: ["latin"],
-  weight: ["500", "700"],
-  variable: "--font-shippori",
-  display: "swap"
-});
+// 見出し用の丸ゴシック体「M PLUS Rounded 1c」は、Next.jsのnext/font/google経由だと
+// ビルド環境によってフォントメトリクスの取得に失敗することがあるため、
+// pages/_document.js内で通常の<link>タグとして読み込んでいる（tailwind.config.jsのfont-displayを参照）。
 
 const noto = Noto_Sans_JP({
   subsets: ["latin"],
@@ -31,7 +28,7 @@ const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export default function App({ Component, pageProps }) {
   return (
-    <div className={`${shippori.variable} ${noto.variable} ${mono.variable} font-body`}>
+    <div className={`${noto.variable} ${mono.variable} font-body`}>
       {/* AdSenseの<script>タグは pages/_document.js のHead内に直接記述しています
           （AdSenseの確認・審査は初期HTMLを見るため、next/scriptでの遅延読み込みではなく
           常に静的HTMLに含まれる形にする必要があるため）。 */}

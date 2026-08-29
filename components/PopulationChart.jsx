@@ -12,24 +12,24 @@ export default function PopulationChart({ data, seriesLabel = "常住人口", un
     <div className="h-72 w-full md:h-96">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 10, right: 16, left: 4, bottom: 18 }}>
-          <CartesianGrid stroke="#1B2430" strokeOpacity={0.08} vertical={false} />
+          <CartesianGrid stroke="#26313B" strokeOpacity={0.08} vertical={false} />
           <XAxis
             dataKey="label"
             interval={tickInterval}
-            tick={{ fontSize: 11, fill: "#3E4B5C" }}
-            axisLine={{ stroke: "#1B2430", strokeOpacity: 0.15 }}
+            tick={{ fontSize: 11, fill: "#56636F" }}
+            axisLine={{ stroke: "#26313B", strokeOpacity: 0.15 }}
             tickLine={false}
             label={{
               value: `（${periodLabel}）`,
               position: "insideBottom",
               offset: -12,
               fontSize: 10,
-              fill: "#3E4B5C"
+              fill: "#56636F"
             }}
           />
           <YAxis
             width={64}
-            tick={{ fontSize: 11, fill: "#3E4B5C" }}
+            tick={{ fontSize: 11, fill: "#56636F" }}
             axisLine={false}
             tickLine={false}
             domain={["auto", "auto"]}
@@ -40,15 +40,15 @@ export default function PopulationChart({ data, seriesLabel = "常住人口", un
               position: "insideLeft",
               offset: 10,
               fontSize: 10,
-              fill: "#3E4B5C"
+              fill: "#56636F"
             }}
           />
           <Tooltip
             formatter={(value) => [`${Number(value).toLocaleString("ja-JP")} ${unit}`, seriesLabel]}
-            labelStyle={{ color: "#1B2430" }}
+            labelStyle={{ color: "#26313B" }}
             contentStyle={{ border: "1px solid rgba(27,36,48,0.15)", fontSize: 12 }}
           />
-          <Line type="monotone" dataKey="total" stroke="#B8862F" strokeWidth={2} dot={false} />
+          <Line type="monotone" dataKey="total" stroke="#E0932A" strokeWidth={2} dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </div>

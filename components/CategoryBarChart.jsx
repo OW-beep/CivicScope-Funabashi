@@ -11,11 +11,11 @@ export default function CategoryBarChart({ data, unit = "件", topN = 12 }) {
     <div style={{ height: Math.max(260, top.length * 34) }}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={top} layout="vertical" margin={{ top: 4, right: 24, left: 8, bottom: 20 }}>
-          <CartesianGrid stroke="#1B2430" strokeOpacity={0.08} horizontal={false} />
+          <CartesianGrid stroke="#26313B" strokeOpacity={0.08} horizontal={false} />
           <XAxis
             type="number"
             allowDecimals={false}
-            tick={{ fontSize: 11, fill: "#3E4B5C" }}
+            tick={{ fontSize: 11, fill: "#56636F" }}
             axisLine={false}
             tickLine={false}
             label={{
@@ -23,14 +23,14 @@ export default function CategoryBarChart({ data, unit = "件", topN = 12 }) {
               position: "insideBottom",
               offset: -12,
               fontSize: 10,
-              fill: "#3E4B5C"
+              fill: "#56636F"
             }}
           />
           <YAxis
             type="category"
             dataKey="label"
             width={150}
-            tick={{ fontSize: 11, fill: "#3E4B5C" }}
+            tick={{ fontSize: 11, fill: "#56636F" }}
             axisLine={false}
             tickLine={false}
           />
@@ -38,7 +38,7 @@ export default function CategoryBarChart({ data, unit = "件", topN = 12 }) {
             formatter={(v) => [`${Number(v).toLocaleString("ja-JP")} ${unit}`, "件数"]}
             contentStyle={{ fontSize: 12, border: "1px solid rgba(27,36,48,0.15)" }}
           />
-          <Bar dataKey="count" fill="#B8862F" radius={[0, 3, 3, 0]} />
+          <Bar dataKey="count" fill="#E0932A" radius={[0, 3, 3, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

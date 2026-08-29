@@ -31,11 +31,11 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-ink/10 bg-ink text-paper">
+    <footer className="rounded-t-3xl border-t border-ink/10 bg-ink text-paper">
       <div className="mx-auto max-w-5xl px-5 py-12">
         <div className="grid gap-10 md:grid-cols-3">
           <div className="md:col-span-1">
-            <p className="font-display text-lg">
+            <p className="font-display text-lg font-bold">
               Civic<span className="text-brass-light">Scope</span> 船橋
             </p>
             <p className="mt-3 text-sm leading-relaxed text-paper/70">

@@ -191,9 +191,9 @@ export default function FacilityMap({ layers = [], boundary = [], hazardOptions 
             <polygon
               key={i}
               points={ring.map((p) => `${p.x},${p.y}`).join(" ")}
-              fill="#1B2430"
+              fill="#26313B"
               fillOpacity="0.05"
-              stroke="#1B2430"
+              stroke="#26313B"
               strokeOpacity="0.35"
               strokeWidth="1"
             />
@@ -210,9 +210,9 @@ export default function FacilityMap({ layers = [], boundary = [], hazardOptions 
                       cx={p.x}
                       cy={p.y}
                       r={isActive ? 6.5 : matches ? 4.5 : 3}
-                      fill={matches ? l.color : "#3E4B5C"}
+                      fill={matches ? l.color : "#56636F"}
                       fillOpacity={isActive ? 0.95 : matches ? 0.75 : 0.15}
-                      stroke="#1B2430"
+                      stroke="#26313B"
                       strokeOpacity={isActive ? 0.6 : matches ? 0.2 : 0.1}
                       strokeWidth={isActive ? 1.2 : 0.6}
                       className="cursor-pointer"

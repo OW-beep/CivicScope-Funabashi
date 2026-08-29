@@ -83,9 +83,9 @@ function toXY(lat, lng, t) {
 // 3エリアの色とラベル。あくまで駅を中心にした「目安の丸」であり、
 // 行政上の正式な区割りではない（船橋市には公式な3分割の地区界はないため）。
 const AREA_STYLES = {
-  北習志野: { fill: "#DCEAE8", stroke: "#4C8E8C", title: "北習志野・習志野台エリア", sublabel: "新京成沿線 × 住宅地" },
-  西船橋: { fill: "#EAD9B8", stroke: "#B8862F", title: "船橋駅・西船橋駅エリア", sublabel: "都心近接 × 商業集積" },
-  南船橋: { fill: "#CFE3E2", stroke: "#2F6F6E", title: "南船橋・湾岸エリア", sublabel: "商業施設 × 三番瀬" }
+  北習志野: { fill: "#DCEAE8", stroke: "#6FC4C0", title: "北習志野・習志野台エリア", sublabel: "新京成沿線 × 住宅地" },
+  西船橋: { fill: "#EAD9B8", stroke: "#E0932A", title: "船橋駅・西船橋駅エリア", sublabel: "都心近接 × 商業集積" },
+  南船橋: { fill: "#CFE3E2", stroke: "#2AA7A2", title: "南船橋・湾岸エリア", sublabel: "商業施設 × 三番瀬" }
 };
 const AREA_RX = 150;
 const AREA_RY = 92;
@@ -132,10 +132,10 @@ export default function AreaMapIllustration({ stations = [], boundary = [] }) {
     <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="h-auto w-full" role="img" aria-label="船橋市の実際の行政境界をもとにしたエリアマップ">
       <defs>
         <pattern id="blueprint-grid" width="28" height="28" patternUnits="userSpaceOnUse">
-          <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#1B2430" strokeOpacity="0.05" strokeWidth="1" />
+          <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#26313B" strokeOpacity="0.05" strokeWidth="1" />
         </pattern>
       </defs>
-      <rect x="0" y="0" width={WIDTH} height={HEIGHT} fill="#EDEBE4" />
+      <rect x="0" y="0" width={WIDTH} height={HEIGHT} fill="#FFF8ED" />
       <rect x="0" y="0" width={WIDTH} height={HEIGHT} fill="url(#blueprint-grid)" />
 
       {/* 実際の行政境界（国土数値情報／国土交通省をもとにしたデータ） */}
@@ -145,7 +145,7 @@ export default function AreaMapIllustration({ stations = [], boundary = [] }) {
           points={ring.map((p) => `${p.x},${p.y}`).join(" ")}
           fill="#FFFFFF"
           fillOpacity="0.55"
-          stroke="#1B2430"
+          stroke="#26313B"
           strokeOpacity="0.5"
           strokeWidth="1.5"
         />
@@ -178,7 +178,7 @@ export default function AreaMapIllustration({ stations = [], boundary = [] }) {
               key={i}
               d={`M ${minamiFunabashi.x - 60 + i * 46} ${minamiFunabashi.y + 68 + i * 6} q 9 -6 18 0 q 9 6 18 0`}
               fill="none"
-              stroke="#2F6F6E"
+              stroke="#2AA7A2"
               strokeOpacity="0.5"
               strokeWidth="2"
             />
@@ -196,17 +196,17 @@ export default function AreaMapIllustration({ stations = [], boundary = [] }) {
             const by = kitaNarashino.y + t.dy;
             return (
               <g key={i}>
-                <line x1={bx} y1={by} x2={bx} y2={by - 16 * t.scale} stroke="#8F6A22" strokeWidth={3 * t.scale} />
-                <circle cx={bx} cy={by - 22 * t.scale} r={11 * t.scale} fill="#B8862F" opacity="0.9" />
-                <circle cx={bx - 5 * t.scale} cy={by - 18 * t.scale} r={7 * t.scale} fill="#D4A94F" opacity="0.85" />
+                <line x1={bx} y1={by} x2={bx} y2={by - 16 * t.scale} stroke="#B8721A" strokeWidth={3 * t.scale} />
+                <circle cx={bx} cy={by - 22 * t.scale} r={11 * t.scale} fill="#E0932A" opacity="0.9" />
+                <circle cx={bx - 5 * t.scale} cy={by - 18 * t.scale} r={7 * t.scale} fill="#F3BE6B" opacity="0.85" />
               </g>
             );
           })
         : null}
 
       {/* 鉄道路線（実データに基づく駅を結ぶ簡易ライン） */}
-      <path d={railPath} fill="none" stroke="#1B2430" strokeWidth="3" strokeOpacity="0.3" strokeDasharray="1 7" strokeLinecap="round" />
-      <path d={railPath} fill="none" stroke="#1B2430" strokeWidth="1" strokeOpacity="0.55" />
+      <path d={railPath} fill="none" stroke="#26313B" strokeWidth="3" strokeOpacity="0.3" strokeDasharray="1 7" strokeLinecap="round" />
+      <path d={railPath} fill="none" stroke="#26313B" strokeWidth="1" strokeOpacity="0.55" />
 
       {/* エリアラベル */}
       {projectedStations.map((s) => {
@@ -215,10 +215,10 @@ export default function AreaMapIllustration({ stations = [], boundary = [] }) {
         const labelY = s.y - AREA_RY + 22;
         return (
           <g key={`label-${s.name}`}>
-            <text x={s.x} y={labelY} textAnchor="middle" className="font-display" fontSize="16" fill="#1B2430">
+            <text x={s.x} y={labelY} textAnchor="middle" className="font-display" fontSize="16" fill="#26313B">
               {style.title}
             </text>
-            <text x={s.x} y={labelY + 18} textAnchor="middle" fontFamily="monospace" fontSize="10" fill="#3E4B5C">
+            <text x={s.x} y={labelY + 18} textAnchor="middle" fontFamily="monospace" fontSize="10" fill="#56636F">
               {style.sublabel}
             </text>
           </g>
@@ -230,9 +230,9 @@ export default function AreaMapIllustration({ stations = [], boundary = [] }) {
         const r = 4 + (s.count / maxCount) * 12;
         return (
           <g key={`station-${s.name}`}>
-            <circle cx={s.x} cy={s.y} r={r} fill="#EDEBE4" stroke="#1B2430" strokeWidth="1.5" />
-            <circle cx={s.x} cy={s.y} r={Math.max(r - 4, 2)} fill="#B8862F" />
-            <text x={s.x} y={s.y + r + 16} textAnchor="middle" fontFamily="monospace" fontSize="11" fill="#1B2430">
+            <circle cx={s.x} cy={s.y} r={r} fill="#FFF8ED" stroke="#26313B" strokeWidth="1.5" />
+            <circle cx={s.x} cy={s.y} r={Math.max(r - 4, 2)} fill="#E0932A" />
+            <text x={s.x} y={s.y + r + 16} textAnchor="middle" fontFamily="monospace" fontSize="11" fill="#26313B">
               {s.name}駅
             </text>
           </g>

@@ -1,5 +1,7 @@
-// 正確な行政境界データではなく、「湾岸の海岸線」「川」「観測点をつなぐ測量網」を
-// イメージした抽象的な装飾モチーフ。ヒーローセクションの背景にごく薄く敷く想定。
+// ヒーローセクションの背景に敷く、船橋らしいモチーフのイラスト。
+// 旧デザインは「測量網」を思わせる無彩色の細い線画だったが、
+// 東京湾の波・梨・鉄道路線・太陽をモチーフにした、色付きのポップなイラストに刷新。
+// currentColorではなく専用の色を使うため、呼び出し側では opacity のみ調整する想定。
 export default function FunabashiMapMotif({ className = "" }) {
   return (
     <svg
@@ -9,35 +11,49 @@ export default function FunabashiMapMotif({ className = "" }) {
       preserveAspectRatio="xMidYMid slice"
       aria-hidden="true"
     >
-      {/* 海岸線（東京湾沿岸をイメージした抽象曲線） */}
+      {/* 太陽 */}
+      <circle cx="690" cy="90" r="60" fill="#F5A623" />
+
+      {/* 東京湾・三番瀬をイメージした波（複数レイヤーのティール） */}
       <path
-        d="M0 360 C 90 330, 150 380, 230 350 S 380 300, 460 340 S 620 400, 720 360 S 800 330, 800 340 L 800 500 L 0 500 Z"
-        fill="currentColor"
-        opacity="0.5"
+        d="M0 380 C 90 350, 150 400, 230 370 S 380 320, 460 360 S 620 420, 720 380 S 800 350, 800 360 L 800 500 L 0 500 Z"
+        fill="#2AA7A2"
+        opacity="0.9"
       />
-      {/* 川（海老川をイメージした曲線） */}
       <path
-        d="M420 0 C 400 90, 440 150, 410 230 S 360 340, 380 420"
-        stroke="currentColor"
-        strokeWidth="3"
+        d="M0 420 C 100 400, 180 440, 260 420 S 420 380, 520 410 S 660 450, 800 420 L 800 500 L 0 500 Z"
+        fill="#1D7A76"
+        opacity="0.85"
+      />
+
+      {/* 海老川（湾へ注ぐ川） */}
+      <path
+        d="M430 0 C 410 90, 450 150, 420 230 S 370 340, 390 400"
+        stroke="#6FC4C0"
+        strokeWidth="6"
         fill="none"
-        opacity="0.6"
+        strokeLinecap="round"
+        opacity="0.7"
       />
-      {/* 観測点をつなぐ測量網 */}
-      <g stroke="currentColor" strokeWidth="1" opacity="0.5">
-        <line x1="120" y1="120" x2="300" y2="200" />
-        <line x1="300" y1="200" x2="500" y2="140" />
-        <line x1="500" y1="140" x2="660" y2="230" />
-        <line x1="300" y1="200" x2="360" y2="330" />
-        <line x1="500" y1="140" x2="470" y2="60" />
+
+      {/* 鉄道路線と駅（点をつなぐドット路線） */}
+      <g stroke="#2E74B5" strokeWidth="3" strokeDasharray="1 10" strokeLinecap="round" opacity="0.8">
+        <line x1="90" y1="150" x2="620" y2="230" />
       </g>
-      <g fill="currentColor" opacity="0.7">
-        <circle cx="120" cy="120" r="4" />
-        <circle cx="300" cy="200" r="5" />
-        <circle cx="500" cy="140" r="4" />
-        <circle cx="660" cy="230" r="4" />
-        <circle cx="360" cy="330" r="4" />
-        <circle cx="470" cy="60" r="3" />
+      <g fill="#2E74B5" opacity="0.9">
+        <circle cx="90" cy="150" r="7" />
+        <circle cx="260" cy="175" r="7" />
+        <circle cx="430" cy="200" r="9" />
+        <circle cx="620" cy="230" r="7" />
+      </g>
+
+      {/* 梨（船橋の特産品） */}
+      <g transform="translate(150 300)">
+        <path
+          d="M20 20c22 3 40 24 40 49 0 28-21 54-45 54s-45-26-45-54c0-19 9-35 23-44-5-8-8-17-5-27 3-10 11-18 20-20-2 6-1 13 3 18 4 5 8 8 9 24z"
+          fill="#F3BE6B"
+        />
+        <path d="M16 4c4-6 10-10 17-12" stroke="#B8721A" strokeWidth="3" strokeLinecap="round" fill="none" />
       </g>
     </svg>
   );

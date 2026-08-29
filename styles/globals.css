@@ -7,8 +7,8 @@ html {
 }
 
 body {
-  background-color: #EDEBE4;
-  color: #1B2430;
+  background-color: #FFF8ED;
+  color: #26313B;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -26,7 +26,7 @@ body {
 a:focus-visible,
 button:focus-visible,
 input:focus-visible {
-  outline: 2px solid #B8862F;
+  outline: 2px solid #E0932A;
   outline-offset: 2px;
 }
 
@@ -34,12 +34,18 @@ input:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 
-/* 罫線グリッド（統計帳票のイメージ） */
+/* 罫線グリッド（旧デザインの名残。地区マップなど「資料」感を出したい箇所で任意に使用） */
 .ledger-grid {
   background-image:
-    linear-gradient(rgba(27, 36, 48, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(27, 36, 48, 0.07) 1px, transparent 1px);
+    linear-gradient(rgba(38, 49, 59, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(38, 49, 59, 0.06) 1px, transparent 1px);
   background-size: 28px 28px;
+}
+
+/* 水玉パターン（ポップな見出し背景などに使用） */
+.dot-grid {
+  background-image: radial-gradient(currentColor 1.5px, transparent 1.5px);
+  background-size: 18px 18px;
 }
 
 /* ヘッダーのダッシュボード・ドロップダウン（<details>）のデフォルトの三角マーカーを消す */

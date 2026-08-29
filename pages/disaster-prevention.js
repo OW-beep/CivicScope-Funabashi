@@ -26,9 +26,9 @@ const CategoryBarChart = dynamic(() => import("../components/CategoryBarChart"),
 const CATEGORY_FIELD_PATTERNS = [/区分/, /種別/, /分類/, /type/i];
 
 const LAYER_COLORS = {
-  evacuationPlaces: "#2F6F6E",
-  evacuationShelters: "#B8862F",
-  strandedCommuterSupport: "#8F6A22",
+  evacuationPlaces: "#2AA7A2",
+  evacuationShelters: "#E0932A",
+  strandedCommuterSupport: "#B8721A",
   aed: "#C0392B",
   publicWirelessLan: "#3B6FA0"
 };
@@ -111,7 +111,7 @@ export async function getStaticProps() {
       .map((l) => ({
         key: l.key,
         label: l.label,
-        color: LAYER_COLORS[l.key] || "#3E4B5C",
+        color: LAYER_COLORS[l.key] || "#56636F",
         points: l.result.points
       }));
 
