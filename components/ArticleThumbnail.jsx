@@ -29,7 +29,7 @@ const CATEGORY_BG = {
 
 // カテゴリごとのイラストのプール（キーワード一致がない場合、この中からslugのハッシュで選ぶ）
 const CATEGORY_ILLUSTRATIONS = {
-  life: ["life-family", "life-houses", "life-budgeting", "life-dog", "life-reading-book", "life-voting", "life-apartment-rent", "life-chef"],
+  life: ["life-family", "life-houses", "life-budgeting", "life-dog", "life-reading-book", "life-voting", "life-apartment-rent", "life-chef", "life-global-team"],
   kids: ["kids-children", "kids-graduation", "kids-eating-together"],
   town: ["town-neighbors", "town-at-the-park", "town-farming", "town-fishing", "town-beach-day", "town-moving", "town-celebrating"],
   transit: ["transit-subway", "transit-bus-stop"],
@@ -42,6 +42,7 @@ const CATEGORY_ILLUSTRATIONS = {
 // 上から順に判定し、最初に一致したものを採用する。
 const CONTENT_OVERRIDES = [
   { test: /犬|狂犬病/, illustration: "life-dog" },
+  { test: /国籍|外国籍|外国人/, illustration: "life-global-team" },
   { test: /AED|救急|心肺/, illustration: "safety-medical-care" },
   { test: /詐欺|フィッシング|不審/, illustration: "safety-warning" },
   { test: /図書館|蔵書/, illustration: "life-reading-book" },
