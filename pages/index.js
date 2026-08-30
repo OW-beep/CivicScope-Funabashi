@@ -351,7 +351,7 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
               href={`/articles/${a.slug}`}
               className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-pop transition-transform hover:-translate-y-0.5"
             >
-              <ArticleThumbnail tag={a.tag} slug={a.slug} className="h-32 w-full" />
+              <ArticleThumbnail tag={a.tag} slug={a.slug} title={a.title} className="h-32 w-full" />
               <div className="flex flex-1 flex-col p-5">
                 <span className="w-fit rounded-full bg-brass/15 px-3 py-1 font-mono text-xs font-bold text-brass-dark">{a.tag}</span>
                 <h3 className="mt-3 font-display text-lg font-bold leading-snug text-ink group-hover:text-brass-dark">
@@ -380,7 +380,7 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
                   href={`/articles/${a.slug}`}
                   className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-pop transition-transform hover:-translate-y-0.5"
                 >
-                  <ArticleThumbnail tag={a.tag} slug={a.slug} className="h-32 w-full" />
+                  <ArticleThumbnail tag={a.tag} slug={a.slug} title={a.title} className="h-32 w-full" />
                   <div className="flex flex-1 flex-col p-5">
                     <span className="w-fit rounded-full bg-brass/15 px-3 py-1 font-mono text-xs font-bold text-brass-dark">{a.tag}</span>
                     <h3 className="mt-3 font-display text-lg font-bold leading-snug text-ink group-hover:text-brass-dark">

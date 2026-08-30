@@ -2,6 +2,7 @@ import Seo from "../components/Seo";
 import Link from "next/link";
 import { siteConfig } from "../data/siteConfig";
 import { getArticleBySlug } from "../data/articles";
+import ArticleThumbnail from "../components/ArticleThumbnail";
 
 // 目的別の読み方コレクション。既存記事を組み合わせているだけで、新しいコンテンツの
 // 作成は発生しない。読者が「自分の目的に近いページ」をすぐ見つけられるようにするための、
@@ -83,10 +84,13 @@ export default function Collections() {
                     <Link
                       key={a.slug}
                       href={`/articles/${a.slug}`}
-                      className="group border border-ink/10 bg-white/60 p-4 transition-colors hover:border-brass"
+                      className="group flex items-center gap-3 overflow-hidden rounded-xl border border-ink/10 bg-white/60 p-3 transition-colors hover:border-brass"
                     >
-                      <span className="font-mono text-[11px] text-brass-dark">{a.tag}</span>
-                      <p className="mt-1 font-display text-base text-ink group-hover:text-brass-dark">{a.title}</p>
+                      <ArticleThumbnail tag={a.tag} slug={a.slug} title={a.title} className="h-16 w-24 flex-shrink-0 rounded-lg" />
+                      <div>
+                        <span className="font-mono text-[11px] text-brass-dark">{a.tag}</span>
+                        <p className="mt-1 font-display text-base text-ink group-hover:text-brass-dark">{a.title}</p>
+                      </div>
                     </Link>
                   ))}
                 </div>

@@ -100,6 +100,21 @@ export default function Footer() {
             <p>データ出典：船橋市オープンデータカタログ（{siteConfig.bodik.license}）</p>
           </div>
         </div>
+
+        {/* 本サイトは船橋市の非公式メディアのため、公式サイトへの導線をひときわ
+            目立つボタンとして最下部に用意する（Fukuoka Factsのフッターにある
+            「福岡市のウェブサイト」導線を参考にした構成） */}
+        <div className="mt-8 flex justify-center border-t border-paper/10 pt-8">
+          <a
+            href={siteConfig.cityWebsiteUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-full bg-paper px-6 py-3 text-sm font-bold text-ink shadow-pop transition-transform hover:-translate-y-0.5"
+          >
+            🏛️ 船橋市公式ホームページはこちら
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
       </div>
     </footer>
   );

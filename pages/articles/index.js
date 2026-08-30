@@ -92,7 +92,7 @@ export default function ArticlesIndex() {
               href={`/articles/${a.slug}`}
               className="group flex flex-col gap-4 py-6 sm:flex-row sm:items-center"
             >
-              <ArticleThumbnail tag={a.tag} slug={a.slug} className="h-20 w-32 flex-shrink-0 rounded-xl" />
+              <ArticleThumbnail tag={a.tag} slug={a.slug} title={a.title} className="h-20 w-32 flex-shrink-0 rounded-xl" />
               <div className="flex flex-1 flex-col gap-2 md:flex-row md:items-baseline md:justify-between">
                 <div>
                   <span className="font-mono text-xs text-brass-dark">{a.tag}</span>

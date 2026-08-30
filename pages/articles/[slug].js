@@ -211,7 +211,7 @@ export default function ArticlePage({ article, relatedArticles }) {
         <h1 className="mt-2 font-display text-3xl leading-snug text-ink md:text-4xl">{article.title}</h1>
         <p className="mt-3 font-mono text-xs text-ink-soft">{article.date}</p>
 
-        <ArticleThumbnail tag={article.tag} slug={article.slug} className="mt-6 h-48 w-full rounded-2xl shadow-pop" />
+        <ArticleThumbnail tag={article.tag} slug={article.slug} title={article.title} className="mt-6 h-48 w-full rounded-2xl shadow-pop" />
 
         <ShareButtons title={article.title} url={`${siteConfig.url}/articles/${article.slug}`} className="mt-5" />
 
@@ -261,7 +261,7 @@ export default function ArticlePage({ article, relatedArticles }) {
                   href={`/articles/${a.slug}`}
                   className="group flex items-center gap-3 overflow-hidden rounded-xl border border-ink/10 bg-white/50 p-3 transition-colors hover:border-brass"
                 >
-                  <ArticleThumbnail tag={a.tag} slug={a.slug} className="h-14 w-20 flex-shrink-0 rounded-lg" />
+                  <ArticleThumbnail tag={a.tag} slug={a.slug} title={a.title} className="h-14 w-20 flex-shrink-0 rounded-lg" />
                   <div>
                     <span className="font-mono text-[11px] text-brass-dark">{a.tag}</span>
                     <span className="mt-1 block font-display text-sm leading-snug text-ink group-hover:text-brass-dark">

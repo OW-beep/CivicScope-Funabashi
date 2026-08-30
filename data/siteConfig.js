@@ -17,6 +17,7 @@ export const siteConfig = {
   twitter: "", // 運用するなら @xxxx を入れる
   city: "船橋市",
   prefecture: "千葉県",
+  cityWebsiteUrl: "https://www.city.funabashi.lg.jp/", // 船橋市公式ホームページ
   // BODIK ODCS（船橋市のオープンデータカタログ）関連
   bodik: {
     orgId: "122041",
