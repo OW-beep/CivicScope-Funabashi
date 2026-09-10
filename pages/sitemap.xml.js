@@ -24,6 +24,7 @@ const STATIC_PATHS = [
   "/life-sanitation",
   "/disaster-prevention",
   "/dog-registration",
+  "/recommended-disaster-goods",
   "/articles",
   "/collections",
   "/guide",

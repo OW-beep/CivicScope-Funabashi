@@ -149,6 +149,30 @@ export default function LifeSanitation({
               </div>
             ) : null}
 
+            <div className="mt-8 border-l-2 border-brass/60 bg-white/40 p-5 text-sm leading-relaxed text-ink-soft">
+              <p className="font-display text-base text-ink">読み解きメモ</p>
+              <p className="mt-2">
+                船橋市内には現在{records.length.toLocaleString("ja-JP")}件の生活衛生関係施設（美容所・理容所・
+                クリーニング所・旅館・ホテル・公衆浴場など）が登録されています。
+                {insights ? (
+                  <>
+                    {mapAvailable ? "分布で最も件数が多いのは" : "最も件数が多いのは"}
+                    「{insights.top.label}」で{insights.top.count.toLocaleString("ja-JP")}件、
+                    全体の{insights.topShare.toFixed(1)}%を占めています。
+                    {mapAvailable
+                      ? "生活衛生施設は駅前や商業地に集まりやすく、町丁目ごとの偏りは、そのエリアの商業集積度を映す一つの手がかりになります。"
+                      : "生活衛生施設は業種ごとに立地の傾向が異なり、業種別の内訳を見ることで、どのようなサービスが市内でどれだけ供給されているかがわかります。"}
+                  </>
+                ) : null}
+                これらの施設は保健所の許可・届出をもとに公開されているため、実際に利用する際の営業状況（営業時間・定休日・現在営業しているか）までは
+                保証するものではありません。お店を探す前の下調べや、地域の商業集積を知る参考としてご活用ください。詳しい読み方は
+                <a href="/articles/life-sanitation-facilities-guide" className="underline hover:text-brass-dark">
+                  解説記事
+                </a>
+                もご参照ください。
+              </p>
+            </div>
+
             <div className="mt-10">
               <SectionLabel code="TABLE">詳細一覧（補助・全件検索）</SectionLabel>
               <SearchableTable fields={fields} records={records} searchPlaceholder="施設名・住所・業種で検索" />

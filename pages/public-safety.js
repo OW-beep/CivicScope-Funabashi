@@ -161,7 +161,11 @@ export default function PublicSafety({
         </p>
 
         <div className="mt-10">
-          <DashboardFooterLinks articleHref="/articles/public-safety-dashboard-guide" articleLabel="刑法犯認知件数と救急出動件数、この5年の変化" />
+          <DashboardFooterLinks
+            articleHref="/articles/public-safety-dashboard-guide"
+            articleLabel="刑法犯認知件数と救急出動件数、この5年の変化"
+            relatedLinks={[{ href: "/articles/traffic-accident-trend-guide", label: "交通事故、10年で4割減の実態" }]}
+          />
           </div>
 
           <div className="mt-8">

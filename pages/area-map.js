@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import Seo from "../components/Seo";
 import SectionLabel from "../components/SectionLabel";
 import AdSlot from "../components/AdSlot";
+import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import { siteConfig } from "../data/siteConfig";
 import { combineByStationName } from "../data/railRidership";
 import { getFunabashiBoundaryRings } from "../lib/geoBoundary";
@@ -103,6 +104,15 @@ export default function AreaMap({ stations, boundary }) {
         </div>
 
         <div className="mt-10">
+          <DashboardFooterLinks
+            relatedLinks={[
+              { href: "/rail-ridership", label: "鉄道駅別乗車人員ダッシュボード" },
+              { href: "/district-explorer", label: "地区マップ" }
+            ]}
+          />
+        </div>
+
+        <div className="mt-8">
           <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_AREAMAP} className="h-24" />
         </div>
       </section>

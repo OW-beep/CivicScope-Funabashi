@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
 import AdSlot from "../components/AdSlot";
+import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import DataUnavailableNotice from "../components/DataUnavailableNotice";
 import { siteConfig, datasets } from "../data/siteConfig";
@@ -109,6 +110,17 @@ export default function DogRegistration({ series, insights, error }) {
         )}
 
         <div className="mt-10">
+          <DashboardFooterLinks
+            articleHref="/articles/dog-registration-guide"
+            articleLabel="犬の登録頭数と予防注射率からわかること"
+            relatedLinks={[
+              { href: "/public-safety", label: "治安・救急ダッシュボード" },
+              { href: "/life-sanitation", label: "生活衛生施設ダッシュボード" }
+            ]}
+          />
+        </div>
+
+        <div className="mt-8">
           <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_DOG} className="h-24" />
         </div>
       </section>

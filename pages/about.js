@@ -1,4 +1,5 @@
 import Seo from "../components/Seo";
+import Link from "next/link";
 import SectionLabel from "../components/SectionLabel";
 import { siteConfig } from "../data/siteConfig";
 
@@ -89,6 +90,19 @@ export default function About() {
               本サイトに掲載する情報の正確性・完全性・最新性については万全を期していますが、
               保証するものではありません。本サイトの情報を利用したことにより生じた損害について、
               運営者は一切の責任を負いかねます。重要な判断を行う際は、必ず一次情報をご確認ください。
+            </p>
+          </div>
+
+          <div>
+            <SectionLabel code="§6">広告・アフィリエイトについて</SectionLabel>
+            <p>
+              本サイトはGoogle AdSenseによる広告を掲載しています。また、一部のページ（
+              <Link href="/recommended-disaster-goods" className="underline hover:text-brass-dark">
+                防災グッズの選び方
+              </Link>
+              など）では、Amazonアソシエイト・プログラムを利用した商品リンクを掲載しています。
+              Amazonのアソシエイトとして、{siteConfig.nameJa}は適格販売により収入を得ています。
+              広告・商品リンクの掲載は、記事の内容や評価に影響を与えないよう努めています。
             </p>
           </div>
 

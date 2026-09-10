@@ -296,7 +296,11 @@ export default function DisasterPrevention({
         </p>
 
         <div className="mt-10">
-          <DashboardFooterLinks articleHref="/articles/evacuation-map-guide" articleLabel="避難場所・避難所マップの正しい使い方" />
+          <DashboardFooterLinks
+            articleHref="/articles/evacuation-map-guide"
+            articleLabel="避難場所・避難所マップの正しい使い方"
+            relatedLinks={[{ href: "/recommended-disaster-goods", label: "防災グッズの選び方" }]}
+          />
           </div>
 
           <div className="mt-8">

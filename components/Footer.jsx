@@ -83,6 +83,7 @@ export default function Footer() {
             <p className="mb-3 text-xs uppercase tracking-widest text-paper/50">運営情報</p>
             <ul className="space-y-2 text-sm text-paper/80">
               <li><Link href="/guide" className="hover:text-brass-light">ダッシュボードの使い方</Link></li>
+              <li><Link href="/recommended-disaster-goods" className="hover:text-brass-light">防災グッズの選び方</Link></li>
               <li><Link href="/data-methodology" className="hover:text-brass-light">データの取得・加工方法について</Link></li>
               <li><Link href="/contact" className="hover:text-brass-light">お問い合わせ</Link></li>
               <li><Link href="/privacy" className="hover:text-brass-light">プライバシーポリシー</Link></li>

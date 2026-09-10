@@ -4,14 +4,15 @@ import { siteConfig } from "../data/siteConfig";
 import { getArticleBySlug } from "../data/articles";
 import ArticleThumbnail from "../components/ArticleThumbnail";
 
-// 目的別の読み方コレクション。既存記事を組み合わせているだけで、新しいコンテンツの
-// 作成は発生しない。読者が「自分の目的に近いページ」をすぐ見つけられるようにするための、
-// タグ別一覧とは別の切り口。
+// 目的別の読み方コレクション。タグ別一覧とは別の切り口で、読者が「自分の目的に近い記事」を
+// まとめて見つけられるようにするためのページ。単なるリンク集にならないよう、各コレクションには
+// このページ独自の解説文（船橋市の実情に触れた導入）を書いている。
 const COLLECTIONS = [
   {
     key: "moving",
     title: "引っ越し・住まい探しの方へ",
-    description: "船橋市内のどのエリアが自分に合っているか、駅・地価・まちの雰囲気から検討したい方向けの記事です。",
+    description:
+      "船橋市は同じ市内でも、駅からの近さや沿線によって暮らしの雰囲気がかなり変わります。船橋駅・西船橋駅周辺は商業施設が集積した都心近接エリア、北習志野・習志野台は新京成沿線の落ち着いた住宅地、南船橋・湾岸は大型商業施設と三番瀬の自然が近いエリアです。地価は沿線ごとに数十万円単位で差があり、人口はこの数年で65万人を超えるペースで増え続けています。「駅・地価・まちの雰囲気」を数字とあわせて確認したい方は、下記の記事から読んでみてください。",
     slugs: [
       "why-funabashi-charm-guide",
       "area-guide-central-funabashi",
@@ -24,7 +25,8 @@ const COLLECTIONS = [
   {
     key: "childrearing",
     title: "子育て中・これから子育てする方へ",
-    description: "保育・教育・公園・図書館など、子育て環境を横断的に確認したい方向けの記事です。",
+    description:
+      "子育て環境は「保育園に入れるか」だけでは判断できません。保育の定員・待機状況、学校（生徒数の推移）、公園の数、学校給食の負担、図書館の利用状況など、複数のデータを横断して見ることで、初めて実態に近づきます。船橋市は少子化と宅地開発が同時に進んでいるため、地区によって子育て環境の実感がかなり異なるのも特徴です。以下の記事では、船橋市が「子育てしやすいまちか」を、データを起点に多面的に確認できます。",
     slugs: [
       "is-funabashi-good-for-child-rearing",
       "childcare-guide",
@@ -37,13 +39,21 @@ const COLLECTIONS = [
   {
     key: "safety",
     title: "防災・安全が気になる方へ",
-    description: "避難場所・治安・特殊詐欺・火災など、暮らしの安全に関わるデータをまとめました。",
-    slugs: ["evacuation-map-guide", "public-safety-dashboard-guide", "phone-fraud-damage-guide", "fire-statistics-guide"]
+    description:
+      "「安全なまちかどうか」は感覚だけでは判断しづらいテーマです。避難場所・避難所の位置、刑法犯認知件数や救急出動件数の推移、特殊詐欺の被害件数、火災の発生件数と発生しやすい時期など、船橋市が公開している一次データをもとに、実際の傾向を確認できる記事をまとめました。防災グッズを揃える前に、まず自分の住むエリアの避難場所を確認しておくことをおすすめします。",
+    slugs: [
+      "evacuation-map-guide",
+      "public-safety-dashboard-guide",
+      "phone-fraud-damage-guide",
+      "fire-statistics-guide",
+      "traffic-accident-trend-guide"
+    ]
   },
   {
     key: "culture",
     title: "船橋の暮らし・文化を知りたい方へ",
-    description: "梨・漁業・三番瀬・ホタル・町会など、船橋市の地域色が出るテーマの記事です。",
+    description:
+      "船橋市は「東京の隣のベッドタウン」というイメージが強いかもしれませんが、実際には梨の生産量が全国でも上位に入り、東京湾に面した三番瀬では今も漁業が営まれ、ホタルが見られる場所も残っています。町会・自治会の加入状況を見ると、地域によってコミュニティの結びつきの強さにも差があります。統計データだけでは見えにくい、船橋という土地の個性に触れたい方向けの記事です。",
     slugs: [
       "funabashi-nashi-pears-guide",
       "funabashi-agriculture-output-guide",
@@ -68,7 +78,8 @@ export default function Collections() {
         <p className="font-mono text-xs uppercase tracking-widest text-brass-dark">Collections</p>
         <h1 className="mt-2 font-display text-3xl text-ink md:text-4xl">目的別の読み方ガイド</h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft">
-          52本の記事の中から、目的に応じて読むと理解が深まる組み合わせをまとめました。
+          55本の記事の中から、目的に応じて読むと理解が深まる組み合わせをまとめました。単に記事を並べるのではなく、
+          それぞれのテーマについて船橋市の実情を踏まえた解説を添えています。
           タグ別の一覧は<Link href="/articles" className="underline hover:text-brass-dark">解説記事一覧</Link>からもご覧いただけます。
         </p>
 

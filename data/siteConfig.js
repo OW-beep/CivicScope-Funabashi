@@ -18,6 +18,7 @@ export const siteConfig = {
   city: "船橋市",
   prefecture: "千葉県",
   cityWebsiteUrl: "https://www.city.funabashi.lg.jp/", // 船橋市公式ホームページ
+  amazonAssociateTag: "civic-funa-22", // Amazonアソシエイト・トラッキングID
   // BODIK ODCS（船橋市のオープンデータカタログ）関連
   bodik: {
     orgId: "122041",
