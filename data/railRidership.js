@@ -131,3 +131,33 @@ export function buildTotalInsights() {
   const longTermRate = first.total ? ((latest.total - first.total) / first.total) * 100 : null;
   return { latest, previous, first, diff, rate, longTermRate };
 }
+
+// 「船橋駅 乗降客数」「西船橋駅 利用者数」のような駅名指定の検索で来た人が、
+// 記事を読まなくても即答を得られるようにするための早見表用データ。
+// 対象は船橋市内でとくに検索されやすい5駅（船橋・西船橋・新船橋・東船橋・南船橋）。
+// 西船橋・船橋は乗換駅（複数事業者が同名で乗り入れ）のため、事業者別と合算の両方を持たせる。
+export function getStationQuickAnswers() {
+  const latestIdx = YEARS.length - 1;
+  const prevIdx = YEARS.length - 2;
+
+  function operatorsOf(stationName) {
+    return railStations.filter((s) => s.station === stationName);
+  }
+
+  function buildEntry(stationName) {
+    const rows = operatorsOf(stationName);
+    const latestTotal = rows.reduce((sum, s) => sum + s.values[latestIdx][0], 0);
+    const prevTotal = rows.reduce((sum, s) => sum + s.values[prevIdx][0], 0);
+    const yoyRate = prevTotal ? ((latestTotal - prevTotal) / prevTotal) * 100 : null;
+    return {
+      station: stationName,
+      operators: rows.map((s) => s.operator),
+      isTransfer: rows.length > 1,
+      latest: latestTotal,
+      yoyRate,
+      byOperator: rows.map((s) => ({ operator: s.operator, latest: s.values[latestIdx][0] }))
+    };
+  }
+
+  return ["船橋", "西船橋", "新船橋", "東船橋", "南船橋"].map(buildEntry);
+}

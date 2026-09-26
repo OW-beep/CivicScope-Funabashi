@@ -11,7 +11,8 @@ import {
   combineByStationName,
   getGrowthRanking,
   getTotalSeries,
-  buildTotalInsights
+  buildTotalInsights,
+  getStationQuickAnswers
 } from "../data/railRidership";
 
 const PopulationChart = dynamic(() => import("../components/PopulationChart"), { ssr: false });
@@ -24,7 +25,8 @@ export async function getStaticProps() {
       combined: combineByStationName(10),
       growth: getGrowthRanking(10),
       totalSeries: getTotalSeries(),
-      insights: buildTotalInsights()
+      insights: buildTotalInsights(),
+      quickAnswers: getStationQuickAnswers()
     }
   };
 }
@@ -33,15 +35,15 @@ function fmt(n) {
   return n.toLocaleString("ja-JP");
 }
 
-export default function RailRidership({ ranking, combined, growth, totalSeries, insights }) {
+export default function RailRidership({ ranking, combined, growth, totalSeries, insights, quickAnswers }) {
   const rankingChartData = ranking.map((r) => ({ label: r.label, count: r.count }));
   const combinedChartData = combined.map((r) => ({ label: r.label, count: r.count }));
 
   return (
     <>
       <Seo
-        title={`鉄道駅別 乗車人員・乗降客数ランキング｜船橋市｜${siteConfig.name}`}
-        description="船橋駅をはじめ、船橋市内の鉄道駅別の1日平均乗車人員（乗降客数の目安）ランキングと推移を可視化したダッシュボードです（船橋市統計書「I 都市基盤」より）。"
+        title={`船橋駅・西船橋駅の乗降客数（乗車人員）は？駅別ランキング｜船橋市｜${siteConfig.name}`}
+        description="船橋駅・西船橋駅・新船橋駅・東船橋駅・南船橋駅など、船橋市内の鉄道駅別1日平均乗車人員（乗降客数の目安）を早見表とランキングで公開。船橋市統計書「I 都市基盤」データより。"
         path="/rail-ridership"
       />
 
@@ -54,6 +56,58 @@ export default function RailRidership({ ranking, combined, growth, totalSeries, 
           船橋市統計書「I 都市基盤」（資料：道路計画課）をもとに、船橋駅をはじめとする市内35の駅×事業者について、
           1日平均乗車人員（乗降客数の目安となる指標）の推移とランキングを可視化しています。
         </p>
+
+        <div className="mt-8 overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-pop">
+          <div className="border-b border-ink/10 bg-brass/10 px-5 py-3">
+            <p className="font-display text-base font-bold text-ink">
+              早見表：船橋駅・西船橋駅など主要駅の乗車人員（{insights.latest.label}）
+            </p>
+            <p className="mt-1 text-xs text-ink-soft">
+              「乗車人員」は改札を通って乗る人だけを数えた指標で、乗り降り両方を含む「乗降客数」「利用者数」とほぼ同じ意味で使われます。
+            </p>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b border-ink/10 text-xs uppercase tracking-wide text-ink-soft">
+                  <th className="px-5 py-3 font-bold">駅名</th>
+                  <th className="px-5 py-3 font-bold">事業者</th>
+                  <th className="px-5 py-3 font-bold text-right">1日平均乗車人員</th>
+                  <th className="px-5 py-3 font-bold text-right">前年度比</th>
+                </tr>
+              </thead>
+              <tbody>
+                {quickAnswers.map((q) => (
+                  <tr key={q.station} className="border-b border-ink/5">
+                    <td className="px-5 py-3 font-bold text-ink">
+                      {q.station}駅
+                      {q.isTransfer ? (
+                        <span className="ml-1.5 rounded-full bg-ink/10 px-2 py-0.5 text-[10px] font-normal text-ink-soft">
+                          乗換駅・合算
+                        </span>
+                      ) : null}
+                    </td>
+                    <td className="px-5 py-3 text-ink-soft">{q.operators.join("・")}</td>
+                    <td className="px-5 py-3 text-right font-mono font-bold tabular-nums text-ink">
+                      {fmt(q.latest)}人/日
+                    </td>
+                    <td
+                      className={`px-5 py-3 text-right font-mono tabular-nums ${
+                        q.yoyRate == null ? "text-ink-soft" : q.yoyRate >= 0 ? "text-bay-dark" : "text-brass-dark"
+                      }`}
+                    >
+                      {q.yoyRate == null ? "-" : `${q.yoyRate >= 0 ? "+" : ""}${q.yoyRate.toFixed(1)}%`}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="px-5 py-3 text-xs text-ink-soft">
+            西船橋駅（JR・東京メトロ・東葉高速鉄道）、船橋駅（JR・東武鉄道）は複数事業者の合算値です。事業者別の内訳は下の詳細ランキングでご覧いただけます。
+          </p>
+        </div>
+
         <p className="mt-3 max-w-2xl text-xs text-ink-soft">
           出典：船橋市統計書「I 都市基盤」（
           <a

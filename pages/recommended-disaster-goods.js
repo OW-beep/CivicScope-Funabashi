@@ -1,7 +1,9 @@
 import Seo from "../components/Seo";
 import Link from "next/link";
 import SectionLabel from "../components/SectionLabel";
+import RakutenProductCard from "../components/RakutenProductCard";
 import { siteConfig } from "../data/siteConfig";
+import { searchRakutenItems } from "../lib/rakuten";
 
 // Amazonの商品詳細ページへの直リンクは、掲載終了・ASIN変更で切れやすいため、
 // カテゴリ検索結果ページへのリンク（?k=キーワード&tag=アソシエイトID）にしている。
@@ -39,7 +41,22 @@ const ITEMS = [
   }
 ];
 
-export default function RecommendedDisasterGoods() {
+// RAKUTEN_APP_ID / RAKUTEN_ACCESS_KEY が未設定の間はrakutenItemが全件nullになるだけで、
+// Amazonリンクのみのページとして問題なく表示される（lib/rakuten.js参照）。
+// キー登録後は再デプロイ（または1日ごとのISR再生成）で自動的に楽天の商品カードが出るようになる。
+export async function getStaticProps() {
+  const rakutenItems = await Promise.all(ITEMS.map((item) => searchRakutenItems(item.keyword, 1)));
+  const itemsWithRakuten = ITEMS.map((item, i) => ({
+    ...item,
+    rakutenItem: rakutenItems[i]?.[0] ?? null
+  }));
+  return {
+    props: { itemsWithRakuten },
+    revalidate: 60 * 60 * 24 // 楽天側の価格・在庫情報を1日ごとに更新
+  };
+}
+
+export default function RecommendedDisasterGoods({ itemsWithRakuten }) {
   return (
     <>
       <Seo
@@ -55,7 +72,8 @@ export default function RecommendedDisasterGoods() {
         {/* Amazonアソシエイト・プログラム運営規約で定められた開示文言。
             読者がリンクをクリックする前に必ず目に入るよう、本文の直前に配置している。 */}
         <p className="mt-4 rounded-lg bg-ink/5 px-4 py-2.5 text-xs text-ink-soft">
-          Amazonのアソシエイトとして、{siteConfig.nameJa}は適格販売により収入を得ています。
+          Amazonのアソシエイトとして、{siteConfig.nameJa}は適格販売により収入を得ています。また、楽天アフィリエイトプログラムにも参加しており、
+          楽天市場の商品リンク経由の購入から紹介料を得ることがあります。
         </p>
 
         <p className="mt-6 max-w-2xl text-sm leading-relaxed text-ink-soft">
@@ -78,19 +96,25 @@ export default function RecommendedDisasterGoods() {
         </p>
 
         <div className="mt-10 space-y-10">
-          {ITEMS.map((item) => (
+          {itemsWithRakuten.map((item) => (
             <div key={item.keyword} className="border-t border-ink/10 pt-8">
               <SectionLabel category="safety">{item.title}</SectionLabel>
               <p className="max-w-2xl text-sm leading-relaxed text-ink-soft">{item.body}</p>
-              <a
-                href={amazonSearchUrl(item.keyword)}
-                target="_blank"
-                rel="noreferrer sponsored"
-                className="mt-4 inline-flex items-center gap-2 rounded-full bg-brass px-5 py-2.5 text-sm font-bold text-white shadow-pop-brass transition-transform hover:-translate-y-0.5"
-              >
-                Amazonで「{item.title}」を見る
-                <span aria-hidden="true">↗</span>
-              </a>
+              <div className="flex flex-wrap items-center gap-3">
+                <a
+                  href={amazonSearchUrl(item.keyword)}
+                  target="_blank"
+                  rel="noreferrer sponsored"
+                  className="mt-4 inline-flex items-center gap-2 rounded-full bg-brass px-5 py-2.5 text-sm font-bold text-white shadow-pop-brass transition-transform hover:-translate-y-0.5"
+                >
+                  Amazonで「{item.title}」を見る
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+              {/* rakutenItemがnull（キー未設定・0件）の間は何も表示されない */}
+              <div className="max-w-md">
+                <RakutenProductCard item={item.rakutenItem} />
+              </div>
             </div>
           ))}
         </div>
