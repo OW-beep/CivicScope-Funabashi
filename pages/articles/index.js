@@ -4,24 +4,18 @@ import Link from "next/link";
 import AdSlot from "../../components/AdSlot";
 import ArticleThumbnail from "../../components/ArticleThumbnail";
 import { siteConfig } from "../../data/siteConfig";
-import { getArticlesSortedByDate } from "../../data/articles";
+import { getArticlesSortedByDate, getAllTags, tagToSlug } from "../../data/articles";
 
 export default function ArticlesIndex() {
   const articles = getArticlesSortedByDate();
   const [query, setQuery] = useState("");
-  const [activeTag, setActiveTag] = useState(null);
 
   // タグの一覧は記事数の多い順（同数なら記事内の出現順）にして、主要なテーマから
   // 見つけやすくする。
-  const tags = useMemo(() => {
-    const counts = new Map();
-    for (const a of articles) counts.set(a.tag, (counts.get(a.tag) || 0) + 1);
-    return [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([tag]) => tag);
-  }, [articles]);
+  const tags = useMemo(() => getAllTags(), []);
 
   const filtered = useMemo(() => {
     let rows = articles;
-    if (activeTag) rows = rows.filter((a) => a.tag === activeTag);
     const q = query.trim().toLowerCase();
     if (q) {
       rows = rows.filter(
@@ -29,7 +23,7 @@ export default function ArticlesIndex() {
       );
     }
     return rows;
-  }, [articles, query, activeTag]);
+  }, [articles, query]);
 
   return (
     <>
@@ -59,26 +53,17 @@ export default function ArticlesIndex() {
             className="w-full max-w-md border border-ink/20 bg-white px-3 py-2 text-sm text-ink placeholder:text-ink-soft/60 focus:border-brass"
           />
           <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => setActiveTag(null)}
-              className={`border px-3 py-1 text-xs ${
-                activeTag === null ? "border-brass bg-brass text-white" : "border-ink/20 text-ink-soft hover:border-brass-dark"
-              }`}
-            >
+            <span className="border border-brass bg-brass px-3 py-1 text-xs text-white">
               すべて（{articles.length}）
-            </button>
-            {tags.map((tag) => (
-              <button
+            </span>
+            {tags.map(({ tag, count }) => (
+              <Link
                 key={tag}
-                type="button"
-                onClick={() => setActiveTag(tag === activeTag ? null : tag)}
-                className={`border px-3 py-1 text-xs ${
-                  activeTag === tag ? "border-brass bg-brass text-white" : "border-ink/20 text-ink-soft hover:border-brass-dark"
-                }`}
+                href={`/articles/tag/${tagToSlug(tag)}`}
+                className="border border-ink/20 px-3 py-1 text-xs text-ink-soft hover:border-brass-dark"
               >
-                {tag}
-              </button>
+                {tag}（{count}）
+              </Link>
             ))}
           </div>
         </div>

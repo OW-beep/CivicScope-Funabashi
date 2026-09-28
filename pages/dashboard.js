@@ -54,7 +54,9 @@ export default function Dashboard({ series, insights, error, futureSeries, futur
 
       <section className="mx-auto max-w-5xl px-5 py-14">
         <p className="font-mono text-xs uppercase tracking-widest text-brass-dark">Dashboard</p>
-        <h1 className="mt-2 font-display text-3xl text-ink md:text-4xl">船橋市 人口ダッシュボード</h1>
+        <h1 className="mt-2 font-display text-3xl text-ink md:text-4xl">
+          船橋市 人口ダッシュボード{latestYear ? `（${latestYear}年最新データ）` : ""}
+        </h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft">
           船橋市オープンデータカタログが公開する「{datasets.population.label}」を自動取得し、
           推移のグラフ化と、前月比・前年同月比などの指標を算出しています。
@@ -64,6 +66,11 @@ export default function Dashboard({ series, insights, error, futureSeries, futur
           </a>
           をご確認ください。
         </p>
+        {insights ? (
+          <p className="mt-2 max-w-2xl text-sm font-bold text-ink">
+            {insights.latest.label}時点の船橋市の常住人口は{insights.latest.total.toLocaleString("ja-JP")}人です。
+          </p>
+        ) : null}
 
         {error ? (
           <DataUnavailableNotice

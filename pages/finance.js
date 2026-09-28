@@ -91,6 +91,13 @@ export default function Finance({
           ）。本データはBODIK ODCSではなく船橋市公式サイトが公開するPDFから作成した静的データです。
           令和7年度のみ決算が確定していないため「予算額」です。単位：千円（元データのまま）。
         </p>
+        {expenditureInsights && revenueInsights ? (
+          <p className="mt-2 max-w-2xl text-sm font-bold text-ink">
+            船橋市の財政規模は、{expenditureInsights.previous.label}決算（一般会計）で歳出総額
+            {oku(expenditureInsights.previous.total)}、歳入総額{oku(revenueInsights.previous.total)}です
+            （{expenditureInsights.latest.label}は決算が未確定のため予算額）。
+          </p>
+        ) : null}
 
         {expenditureInsights && revenueInsights && debtInsights ? (
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

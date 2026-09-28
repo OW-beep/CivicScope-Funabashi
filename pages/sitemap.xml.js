@@ -1,5 +1,5 @@
 import { siteConfig } from "../data/siteConfig";
-import { articles } from "../data/articles";
+import { articles, getAllTags, tagToSlug } from "../data/articles";
 
 const STATIC_PATHS = [
   "",
@@ -41,7 +41,10 @@ function generateSitemap() {
     loc: `${siteConfig.url}/articles/${a.slug}`,
     lastmod: a.date
   }));
-  const urls = [...staticUrls, ...articleUrls];
+  const tagUrls = getAllTags().map(({ tag }) => ({
+    loc: `${siteConfig.url}/articles/tag/${tagToSlug(tag)}`
+  }));
+  const urls = [...staticUrls, ...articleUrls, ...tagUrls];
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
