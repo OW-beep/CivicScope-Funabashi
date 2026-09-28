@@ -6,7 +6,10 @@ import DashboardFooterLinks from "../../components/DashboardFooterLinks";
 import ShareButtons from "../../components/ShareButtons";
 import ArticleThumbnail from "../../components/ArticleThumbnail";
 import { siteConfig } from "../../data/siteConfig";
+import ArticleAffiliate from "../../components/ArticleAffiliate";
 import { articles, getArticleBySlug, getRelatedArticles } from "../../data/articles";
+import { getArticleAffiliate } from "../../data/articleAffiliates";
+import { searchRakutenItems } from "../../lib/rakuten";
 
 const CategoryBarChart = dynamic(() => import("../../components/CategoryBarChart"), { ssr: false });
 const InteractiveMap = dynamic(() => import("../../components/InteractiveMap"), { ssr: false });
@@ -22,7 +25,17 @@ export async function getStaticProps({ params }) {
   const article = getArticleBySlug(params.slug);
   if (!article) return { notFound: true };
   const relatedArticles = getRelatedArticles(params.slug, 2);
-  return { props: { article, relatedArticles } };
+  // 記事末尾の関連グッズ枠。楽天キー未設定・0件のときは rakutenItem が null になり、Amazonリンクのみ表示される。
+  const affiliate = getArticleAffiliate(article.slug, article.tag);
+  const rakutenItems = await searchRakutenItems(affiliate.keyword, 1);
+  return {
+    props: {
+      article,
+      relatedArticles,
+      affiliate: { ...affiliate, rakutenItem: rakutenItems?.[0] ?? null }
+    },
+    revalidate: 60 * 60 * 24
+  };
 }
 
 function renderInline(text, keyPrefix) {
@@ -164,7 +177,7 @@ function renderBody(body, charts, maps) {
     });
 }
 
-export default function ArticlePage({ article, relatedArticles }) {
+export default function ArticlePage({ article, relatedArticles, affiliate }) {
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -216,6 +229,12 @@ export default function ArticlePage({ article, relatedArticles }) {
         <ShareButtons title={article.title} url={`${siteConfig.url}/articles/${article.slug}`} className="mt-5" />
 
         <div className="mt-10">{renderBody(article.body, article.charts, article.maps)}</div>
+
+        <ArticleAffiliate
+          heading={affiliate.heading}
+          keyword={affiliate.keyword}
+          rakutenItem={affiliate.rakutenItem}
+        />
 
         {article.relatedDashboard ? (
           <div className="mt-10 border-t border-ink/10 pt-8">

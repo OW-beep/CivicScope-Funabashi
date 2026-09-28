@@ -5,6 +5,9 @@ const nextConfig = {
   // 1回目の地図をすぐ破棄して2回目を作る際に、地図が真っ白のまま止まることがある。
   // これは開発モード特有の現象で、本番ビルド(next build / Vercel)では発生しない。
   reactStrictMode: false,
+  // 記事ページのビルド時に楽天APIをQPS制限に配慮して直列で呼ぶため、
+  // 1ページあたりの静的生成の待ち時間を長めにしておく（既定は60秒）。
+  staticPageGenerationTimeout: 600,
   images: {
     // BODIK/CKANのオープンデータサイトから画像を読み込む可能性に備えて許可
     remotePatterns: [

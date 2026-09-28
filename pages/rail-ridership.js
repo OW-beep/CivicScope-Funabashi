@@ -1,4 +1,5 @@
 import Seo from "../components/Seo";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 import SectionLabel from "../components/SectionLabel";
 import StatCard from "../components/StatCard";
@@ -12,7 +13,8 @@ import {
   getGrowthRanking,
   getTotalSeries,
   buildTotalInsights,
-  getStationQuickAnswers
+  getStationQuickAnswers,
+  getTeikiRatioRanking
 } from "../data/railRidership";
 
 const PopulationChart = dynamic(() => import("../components/PopulationChart"), { ssr: false });
@@ -26,7 +28,8 @@ export async function getStaticProps() {
       growth: getGrowthRanking(10),
       totalSeries: getTotalSeries(),
       insights: buildTotalInsights(),
-      quickAnswers: getStationQuickAnswers()
+      quickAnswers: getStationQuickAnswers(),
+      teikiRatio: getTeikiRatioRanking(6)
     }
   };
 }
@@ -35,7 +38,7 @@ function fmt(n) {
   return n.toLocaleString("ja-JP");
 }
 
-export default function RailRidership({ ranking, combined, growth, totalSeries, insights, quickAnswers }) {
+export default function RailRidership({ ranking, combined, growth, totalSeries, insights, quickAnswers, teikiRatio }) {
   const rankingChartData = ranking.map((r) => ({ label: r.label, count: r.count }));
   const combinedChartData = combined.map((r) => ({ label: r.label, count: r.count }));
 
@@ -193,6 +196,54 @@ export default function RailRidership({ ranking, combined, growth, totalSeries, 
           </ChartErrorBoundary>
         </div>
 
+        <div className="mt-10">
+          <SectionLabel code="FIG.5">定期券利用率ランキング（令和6年度）</SectionLabel>
+          <p className="mb-3 max-w-2xl text-xs text-ink-soft">
+            定期券利用者の割合が高い駅ほど通勤・通学利用が中心、低い駅ほどレジャー・不定期利用が多い傾向にあります。
+          </p>
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-pop">
+              <div className="border-b border-ink/10 bg-bay/10 px-5 py-3">
+                <p className="font-display text-sm font-bold text-ink">定期券利用率が高い駅 TOP6</p>
+              </div>
+              <ul className="divide-y divide-ink/5">
+                {teikiRatio.top.map((s, i) => (
+                  <li key={s.label} className="flex items-center justify-between px-5 py-2.5 text-sm">
+                    <span className="text-ink-soft">
+                      <span className="mr-2 font-mono text-xs text-bay-dark">{i + 1}</span>
+                      {s.label}
+                    </span>
+                    <span className="font-mono font-bold tabular-nums text-ink">{s.ratio.toFixed(1)}%</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-pop">
+              <div className="border-b border-ink/10 bg-brass/10 px-5 py-3">
+                <p className="font-display text-sm font-bold text-ink">定期券利用率が低い駅 TOP6</p>
+              </div>
+              <ul className="divide-y divide-ink/5">
+                {teikiRatio.bottom.map((s, i) => (
+                  <li key={s.label} className="flex items-center justify-between px-5 py-2.5 text-sm">
+                    <span className="text-ink-soft">
+                      <span className="mr-2 font-mono text-xs text-brass-dark">{i + 1}</span>
+                      {s.label}
+                    </span>
+                    <span className="font-mono font-bold tabular-nums text-ink">{s.ratio.toFixed(1)}%</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <p className="mt-3 max-w-2xl text-xs text-ink-soft">
+            市内35駅×事業者の全体平均は{teikiRatio.overallRatio.toFixed(1)}%です。詳しくは
+            <Link href="/articles/teiki-commuter-ratio-guide" className="ml-1 underline hover:text-brass-dark">
+              解説記事「通勤・通学利用の濃さがわかる定期券利用率ランキング」
+            </Link>
+            をご覧ください。
+          </p>
+        </div>
+
         {insights ? (
           <div className="mt-10 border-l-2 border-brass/60 bg-white/40 p-5 text-sm leading-relaxed text-ink-soft">
             <p className="font-display text-base text-ink">読み解きメモ</p>
@@ -228,6 +279,7 @@ export default function RailRidership({ ranking, combined, growth, totalSeries, 
             articleHref="/articles/rail-ridership-guide"
             articleLabel="船橋市内、一番利用者が多い駅はどこ？鉄道駅別乗車人員を徹底比較"
             relatedLinks={[
+              { href: "/articles/teiki-commuter-ratio-guide", label: "定期券利用率ランキング（通勤・通学利用の濃さ）" },
               { href: "/dashboard", label: "人口ダッシュボード" },
               { href: "/finance", label: "財政ダッシュボード" }
             ]}

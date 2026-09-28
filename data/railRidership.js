@@ -132,6 +132,32 @@ export function buildTotalInsights() {
   return { latest, previous, first, diff, rate, longTermRate };
 }
 
+// 「〇〇駅 乗降客数」だけを見て来た人向けの早見表用データ（既存）に加えて、
+// これまで未活用だった「定期／定期外」の内訳（teiki）を使い、駅ごとの
+// 「定期券利用率＝通勤・通学利用の濃さ」を算出する。観光・レジャー利用が多い駅ほど
+// この率は低くなる傾向がある（船橋競馬場駅などで確認済み）。
+export function getTeikiRatioRanking(count = 8) {
+  const latestIdx = YEARS.length - 1;
+  const rows = railStations.map((s) => {
+    const [total, teiki] = s.values[latestIdx];
+    return {
+      label: `${s.station}（${s.operator}）`,
+      station: s.station,
+      operator: s.operator,
+      total,
+      teiki,
+      ratio: total ? (teiki / total) * 100 : null
+    };
+  });
+  const sorted = [...rows].sort((a, b) => b.ratio - a.ratio);
+  return {
+    top: sorted.slice(0, count),
+    bottom: sorted.slice(-count).reverse(),
+    overallRatio:
+      (rows.reduce((sum, r) => sum + r.teiki, 0) / rows.reduce((sum, r) => sum + r.total, 0)) * 100
+  };
+}
+
 // 「船橋駅 乗降客数」「西船橋駅 利用者数」のような駅名指定の検索で来た人が、
 // 記事を読まなくても即答を得られるようにするための早見表用データ。
 // 対象は船橋市内でとくに検索されやすい5駅（船橋・西船橋・新船橋・東船橋・南船橋）。
