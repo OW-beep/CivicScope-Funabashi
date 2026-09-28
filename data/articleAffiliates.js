@@ -19,6 +19,7 @@ const bySlug = {
   "funabashi-faq-guide": STATS_BOOK,
   "what-is-open-data-funabashi": { heading: "データ活用を始めたい方に", keyword: "データ分析 入門 Excel" },
   "how-to-use-estat-guide": { heading: "データ活用を始めたい方に", keyword: "データ分析 入門 Excel" },
+  "chokai-membership-guide": { heading: "地域の防犯・防災の備えに", keyword: "防犯 グッズ 家庭用" },
   "chokai-directory-guide": { heading: "地域の集まりに", keyword: "町内会 回覧板" },
   "food-business-directory-guide": { heading: "船橋のおいしいものをお取り寄せ", keyword: "千葉 グルメ お取り寄せ" },
   "dog-registration-guide": { heading: "愛犬の迷子対策に", keyword: "犬 迷子札" },
