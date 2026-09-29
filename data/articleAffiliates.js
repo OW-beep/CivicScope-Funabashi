@@ -40,6 +40,7 @@ const bySlug = {
   "centenarians-guide": { heading: "敬老の日の贈り物に", keyword: "敬老の日 プレゼント" },
   "welfare-households-guide": KAKEIBO,
   "welfare-application-flow-guide": KAKEIBO,
+  "protection-rate-comparison-guide": KAKEIBO,
   "finance-household-budget-guide": KAKEIBO,
   "average-income-guide": KAKEIBO,
   "furusato-nozei-outflow-guide": { heading: "ふるさと納税の基本を知る", keyword: "ふるさと納税 本" },

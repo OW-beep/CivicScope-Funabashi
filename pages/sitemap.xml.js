@@ -27,6 +27,7 @@ const STATIC_PATHS = [
   "/recommended-disaster-goods",
   "/articles",
   "/collections",
+  "/advertise",
   "/guide",
   "/data-methodology",
   "/about",

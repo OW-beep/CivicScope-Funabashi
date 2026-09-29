@@ -70,8 +70,18 @@ const DASHBOARD_GROUPS = [
 const NAV_SECONDARY = [
   { href: "/articles", label: "解説記事" },
   { href: "/collections", label: "目的別ガイド" },
-  { href: "/about", label: "About" }
+  { href: "/about", label: "About" },
+  { href: "/advertise", label: "広告掲載" }
 ];
+
+function SearchIcon({ className = "h-4 w-4" }) {
+  return (
+    <svg viewBox="0 0 20 20" className={className} fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="9" cy="9" r="6" stroke="currentColor" strokeWidth="2" />
+      <path d="M17 17L13.5 13.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 function ChevronIcon({ className = "h-3.5 w-3.5" }) {
   return (
@@ -149,6 +159,14 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
+          <Link
+            href="/search"
+            aria-label="サイト内検索"
+            className="flex items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1.5 text-sm text-ink-soft transition-colors hover:border-brass-dark hover:text-brass-dark"
+          >
+            <SearchIcon />
+            検索
+          </Link>
         </nav>
 
         <button
@@ -198,6 +216,14 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
+          <Link
+            href="/search"
+            className="flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm text-ink-soft hover:bg-ink/5"
+            onClick={() => setOpen(false)}
+          >
+            <SearchIcon />
+            サイト内検索
+          </Link>
         </nav>
       ) : null}
     </header>

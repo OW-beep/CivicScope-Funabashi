@@ -7,7 +7,7 @@ import { siteConfig } from "../data/siteConfig";
 // - path: "/dashboard" のようにドメインを含まないパス（ルート相対）
 // - image: OGP画像の絶対パス省略時はサイト共通のog-image.pngを使用
 // - jsonLd: 追加のJSON-LD構造化データ（オブジェクトまたは配列）。記事ページのArticleなど。
-export default function Seo({ title, description, path = "", image, type = "website", jsonLd }) {
+export default function Seo({ title, description, path = "", image, type = "website", jsonLd, noindex = false }) {
   const url = `${siteConfig.url}${path}`;
   const ogImage = image || `${siteConfig.url}/og-image.png`;
   const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
@@ -17,6 +17,7 @@ export default function Seo({ title, description, path = "", image, type = "webs
       <title>{title}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={url} />
+      {noindex ? <meta name="robots" content="noindex,follow" /> : null}
 
       {/* Open Graph */}
       <meta property="og:type" content={type} />

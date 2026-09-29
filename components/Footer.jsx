@@ -25,7 +25,8 @@ const SITE_LINKS = [
   { href: "/disaster-prevention", label: "防災ダッシュボード" },
   { href: "/dog-registration", label: "犬の登録ダッシュボード" },
   { href: "/articles", label: "解説記事" },
-  { href: "/about", label: "About / データについて" }
+  { href: "/about", label: "About / データについて" },
+  { href: "/advertise", label: "広告掲載・スポンサーのご案内" }
 ];
 
 export default function Footer() {

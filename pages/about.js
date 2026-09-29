@@ -96,13 +96,29 @@ export default function About() {
           <div>
             <SectionLabel code="§6">広告・アフィリエイトについて</SectionLabel>
             <p>
-              本サイトはGoogle AdSenseによる広告を掲載しています。また、一部のページ（
-              <Link href="/recommended-disaster-goods" className="underline hover:text-brass-dark">
-                防災グッズの選び方
-              </Link>
-              など）では、Amazonアソシエイト・プログラムを利用した商品リンクを掲載しています。
+              本サイトはGoogle AdSenseによる広告を掲載しています。また、解説記事の末尾では、
+              Amazonアソシエイト・プログラムおよび楽天アフィリエイトを利用した商品リンクを掲載しています。
               Amazonのアソシエイトとして、{siteConfig.nameJa}は適格販売により収入を得ています。
+              楽天市場の商品リンクも、購入時に紹介料を得ることがあります。
               広告・商品リンクの掲載は、記事の内容や評価に影響を与えないよう努めています。
+              地域の店舗・事業者様向けの広告掲載については、
+              <Link href="/advertise" className="underline hover:text-brass-dark">
+                広告掲載のご案内
+              </Link>
+              をご覧ください。
+            </p>
+          </div>
+
+          <div>
+            <SectionLabel code="§7">データ分析・可視化のご相談</SectionLabel>
+            <p>
+              運営者は、データサイエンティストとして企業・自治体のデータ分析・可視化による意思決定支援に
+              携わっています。本サイトと同様の考え方で、社内データの可視化やダッシュボード構築、
+              オープンデータを活用した分析等のご相談を承ることも可能です。ご興味のある方は、
+              <Link href="/contact" className="underline hover:text-brass-dark">
+                お問い合わせページ
+              </Link>
+              よりご連絡ください。
             </p>
           </div>
 
