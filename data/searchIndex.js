@@ -15,6 +15,7 @@ export const DASHBOARDS = [
   { href: "/schools", label: "学校ダッシュボード", keywords: "学校 中学校 生徒数" },
   { href: "/childcare", label: "保育園ダッシュボード", keywords: "保育園 保育施設 待機児童" },
   { href: "/parks", label: "公園・広場ダッシュボード", keywords: "公園 広場 いきいきふれあいマップ" },
+  { href: "/library", label: "図書館ダッシュボード", keywords: "図書館 蔵書数 貸出冊数 西図書館 中央図書館 東図書館 北図書館" },
   { href: "/area-map", label: "エリアマップ", keywords: "エリア 地域 地図" },
   { href: "/district-explorer", label: "地区マップ", keywords: "町丁 地区 人口 世帯数" },
   { href: "/chokai", label: "町会・自治会ダッシュボード", keywords: "町会 自治会 一覧 マップ" },

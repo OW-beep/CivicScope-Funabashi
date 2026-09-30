@@ -36,7 +36,8 @@ const DASHBOARD_GROUPS = [
       { href: "/area-map", label: "エリアマップ" },
       { href: "/district-explorer", label: "地区マップ" },
       { href: "/chokai", label: "町会・自治会" },
-      { href: "/dog-registration", label: "犬の登録" }
+      { href: "/dog-registration", label: "犬の登録" },
+      { href: "/library", label: "図書館" }
     ]
   },
   {

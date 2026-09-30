@@ -14,6 +14,7 @@ const STATIC_PATHS = [
   "/employment",
   "/citizen-consultation",
   "/parks",
+  "/library",
   "/area-map",
   "/district-explorer",
   "/rail-ridership",
