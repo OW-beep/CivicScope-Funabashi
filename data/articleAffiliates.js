@@ -80,6 +80,8 @@ const bySlug = {
   "area-guide-central-funabashi": { heading: "街歩きのお供に", keyword: "街歩き ガイドブック 千葉" },
   "area-guide-north-narashinodai": { heading: "街歩きのお供に", keyword: "街歩き ガイドブック 千葉" },
   "why-funabashi-charm-guide": LOCAL_GIFT,
+  "funabashi-trivia-quiz": LOCAL_GIFT,
+  "funabashi-daijingu-hatsumode-guide": { heading: "初詣・お正月の装いに", keyword: "巾着 御朱印帳" },
   "funabashi-daijingu-lighthouse-guide": { heading: "初詣・参拝のお供に", keyword: "御朱印帳" },
   "citizens-festival-station-data-guide": { heading: "船橋といえば", keyword: "ふなっしー グッズ" },
   "funabashi-nashi-pears-guide": { heading: "船橋の梨をお取り寄せ", keyword: "船橋 梨" },
