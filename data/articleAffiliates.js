@@ -48,6 +48,7 @@ const bySlug = {
   "protection-rate-comparison-guide": KAKEIBO,
   "aging-protection-rate-cross-guide": KAKEIBO,
   "finance-household-budget-guide": KAKEIBO,
+  "expenditure-category-shift-guide": KAKEIBO,
   "average-income-guide": KAKEIBO,
   "furusato-nozei-outflow-guide": { heading: "ふるさと納税の基本を知る", keyword: "ふるさと納税 本" },
   "employment-guide": { heading: "働き方・キャリアを考える", keyword: "キャリア 仕事 本" },
