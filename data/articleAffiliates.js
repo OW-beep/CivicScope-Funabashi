@@ -61,6 +61,7 @@ const bySlug = {
   "rail-ridership-guide": PASS_CASE,
   "bus-ridership-guide": PASS_CASE,
   "teiki-commuter-ratio-guide": PASS_CASE,
+  "funabashi-keiba-record-guide": LOCAL_GIFT,
   "teiki-recovery-guide": PASS_CASE,
   "job-offers-vs-placements-guide": { heading: "仕事探し・転職の準備に", keyword: "転職 面接 本" },
   "finance-peer-comparison-guide": { heading: "お金の基本を学ぶ", keyword: "家計 資産形成 入門 本" },
