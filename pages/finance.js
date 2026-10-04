@@ -7,6 +7,7 @@ import AdSlot from "../components/AdSlot";
 import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import { siteConfig } from "../data/siteConfig";
+import { buildDatasetJsonLd } from "../lib/datasetSchema";
 import {
   getExpenditureTotalSeries,
   getExpenditureComposition,
@@ -69,6 +70,13 @@ export default function Finance({
         title={`船橋市の財政ダッシュボード｜歳入・歳出・市債残高｜${siteConfig.name}`}
         description="船橋市の財政（歳入・歳出・市債残高）の推移を可視化し、月30万円の家計に例えて解説するダッシュボードです（船橋市統計書「R 財政」より）。"
         path="/finance"
+        jsonLd={buildDatasetJsonLd({
+          name: "船橋市 一般会計 歳入・歳出・市債残高",
+          description: "船橋市統計書「R 財政」に掲載の、一般会計の歳入・歳出（目的別内訳）・市債残高の推移データ。",
+          path: "/finance",
+          sourceUrl: "https://www.city.funabashi.lg.jp/shisei/toukei/002/index.html",
+          keywords: ["財政", "歳出", "歳入", "市債"]
+        })}
       />
 
       <section className="mx-auto max-w-5xl px-5 py-14">

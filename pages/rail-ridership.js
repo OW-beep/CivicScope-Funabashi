@@ -7,6 +7,7 @@ import AdSlot from "../components/AdSlot";
 import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import { siteConfig } from "../data/siteConfig";
+import { buildDatasetJsonLd } from "../lib/datasetSchema";
 import {
   getLatestRanking,
   combineByStationName,
@@ -48,6 +49,13 @@ export default function RailRidership({ ranking, combined, growth, totalSeries, 
         title={`船橋駅・西船橋駅の乗降客数（乗車人員）は？駅別ランキング｜船橋市｜${siteConfig.name}`}
         description="船橋駅・西船橋駅・新船橋駅・東船橋駅・南船橋駅など、船橋市内の鉄道駅別1日平均乗車人員（乗降客数の目安）を早見表とランキングで公開。船橋市統計書「I 都市基盤」データより。"
         path="/rail-ridership"
+        jsonLd={buildDatasetJsonLd({
+          name: "船橋市内 鉄道駅別1日平均乗車人員",
+          description: "船橋市統計書「I 都市基盤」に掲載の、市内35駅×事業者の1日平均乗車人員（定期・定期外）の推移データ。",
+          path: "/rail-ridership",
+          sourceUrl: "https://www.city.funabashi.lg.jp/shisei/toukei/002/index.html",
+          keywords: ["鉄道", "乗車人員", "乗降客数", "駅"]
+        })}
       />
 
       <section className="mx-auto max-w-5xl px-5 py-14">

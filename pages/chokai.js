@@ -19,6 +19,7 @@ import {
 } from "../lib/geo";
 import { getFunabashiBoundaryRings } from "../lib/geoBoundary";
 import { getChokaiHouseholdSeries, buildChokaiTrendInsights } from "../data/chokaiTrend";
+import { buildDatasetJsonLd } from "../lib/datasetSchema";
 
 const TownBubbleMap = dynamic(() => import("../components/TownBubbleMap"), { ssr: false });
 const CategoryBarChart = dynamic(() => import("../components/CategoryBarChart"), { ssr: false });
@@ -112,7 +113,18 @@ export default function Chokai({
 
   return (
     <>
-      <Seo title={`町会・自治会 ダッシュボード｜${siteConfig.name}`} description="船橋市内の町会・自治会一覧を、町丁目別の分布マップとランキングで可視化したダッシュボードです。" path="/chokai" />
+      <Seo
+        title={`町会・自治会 ダッシュボード｜${siteConfig.name}`}
+        description="船橋市内の町会・自治会一覧を、町丁目別の分布マップとランキングで可視化したダッシュボードです。"
+        path="/chokai"
+        jsonLd={buildDatasetJsonLd({
+          name: datasets.chokai.label,
+          description: datasets.chokai.description,
+          path: "/chokai",
+          sourceUrl: datasets.chokai.sourceUrl,
+          keywords: ["町会", "自治会", "地域コミュニティ"]
+        })}
+      />
 
       <section className="mx-auto max-w-5xl px-5 py-14">
         <p className="font-mono text-xs uppercase tracking-widest text-brass-dark">Dashboard</p>

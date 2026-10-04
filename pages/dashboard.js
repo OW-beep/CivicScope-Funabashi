@@ -10,6 +10,7 @@ import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords, normalizePopulationSeries, buildPopulationInsights } from "../lib/bodik";
 import { populationGrowthRankHistory, populationDensityComparison2020 } from "../data/populationComparison";
 import { getFuturePopulationSeries, buildFuturePopulationInsights, futurePopulationByAgeGroup } from "../data/futurePopulation";
+import { buildDatasetJsonLd } from "../lib/datasetSchema";
 
 // Rechartsはブラウザ専用APIに依存するためSSRを無効化して読み込む
 const PopulationChart = dynamic(() => import("../components/PopulationChart"), { ssr: false });
@@ -50,6 +51,13 @@ export default function Dashboard({ series, insights, error, futureSeries, futur
         title={`船橋市 人口ダッシュボード${latestYear ? `｜${latestYear}年最新データ` : ""}｜${siteConfig.name}`}
         description={`船橋市の常住人口データ${latestYear ? `（${latestYear}年最新）` : ""}をもとに、月次推移・前月比・前年同月比を自動集計して可視化したダッシュボードです。`}
         path="/dashboard"
+        jsonLd={buildDatasetJsonLd({
+          name: datasets.population.label,
+          description: datasets.population.description,
+          path: "/dashboard",
+          sourceUrl: datasets.population.sourceUrl,
+          keywords: ["人口", "常住人口", "世帯"]
+        })}
       />
 
       <section className="mx-auto max-w-5xl px-5 py-14">

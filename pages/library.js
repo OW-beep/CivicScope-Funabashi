@@ -5,6 +5,7 @@ import DashboardFooterLinks from "../components/DashboardFooterLinks";
 import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import AdSlot from "../components/AdSlot";
 import { siteConfig } from "../data/siteConfig";
+import { buildDatasetJsonLd } from "../lib/datasetSchema";
 import { libraryBranches, getLibraryTotals } from "../data/library";
 
 const CategoryBarChart = dynamic(() => import("../components/CategoryBarChart"), { ssr: false });
@@ -33,6 +34,13 @@ export default function Library({ branches, totals }) {
         title={`船橋市 図書館ダッシュボード｜西・中央・東・北の蔵書数・貸出冊数｜${siteConfig.name}`}
         description="船橋市立図書館（西・中央・東・北）の蔵書数・貸出冊数を館別に比較。船橋市図書館「図書館要覧」のデータをもとにしています。"
         path="/library"
+        jsonLd={buildDatasetJsonLd({
+          name: "船橋市立図書館 館別蔵書数・貸出冊数",
+          description: "船橋市図書館「図書館要覧」に掲載の、西・中央・東・北4館の蔵書数・貸出冊数データ。",
+          path: "/library",
+          sourceUrl: "https://www.lib.city.funabashi.lg.jp/viewer/info.html?id=49&idSubTop=0",
+          keywords: ["図書館", "蔵書数", "貸出冊数"]
+        })}
       />
 
       <section className="mx-auto max-w-5xl px-5 py-14">

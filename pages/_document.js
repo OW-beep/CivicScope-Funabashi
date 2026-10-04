@@ -26,6 +26,7 @@ export default function Document() {
         <meta charSet="utf-8" />
         <meta name="google-site-verification" content={siteConfig.googleSiteVerification} />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="alternate" type="application/rss+xml" title={siteConfig.name} href="/feed.xml" />
         {/* 見出し用の丸ゴシック体「M PLUS Rounded 1c」。next/font/google経由だと
             Next.jsのバージョンによってはフォントメトリクス取得に失敗しビルドエラーになることが
             あるため、通常の<link>タグで読み込んでいる（tailwind.config.jsのfont-displayが参照）。 */}

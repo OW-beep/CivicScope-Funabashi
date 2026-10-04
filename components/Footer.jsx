@@ -26,7 +26,8 @@ const SITE_LINKS = [
   { href: "/dog-registration", label: "犬の登録ダッシュボード" },
   { href: "/articles", label: "解説記事" },
   { href: "/about", label: "About / データについて" },
-  { href: "/advertise", label: "広告掲載・スポンサーのご案内" }
+  { href: "/advertise", label: "広告掲載・スポンサーのご案内" },
+  { href: "/feed.xml", label: "新着記事RSS" }
 ];
 
 export default function Footer() {
