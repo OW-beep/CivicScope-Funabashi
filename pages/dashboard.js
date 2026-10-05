@@ -48,8 +48,8 @@ export default function Dashboard({ series, insights, error, futureSeries, futur
   return (
     <>
       <Seo
-        title={`船橋市 人口ダッシュボード${latestYear ? `｜${latestYear}年最新データ` : ""}｜${siteConfig.name}`}
-        description={`船橋市の常住人口データ${latestYear ? `（${latestYear}年最新）` : ""}をもとに、月次推移・前月比・前年同月比を自動集計して可視化したダッシュボードです。`}
+        title={`船橋市の人口は${insights ? `${insights.latest.total.toLocaleString("ja-JP")}人` : "今どれくらい？"}｜人口ダッシュボード${latestYear ? `（${latestYear}年最新）` : ""}｜${siteConfig.name}`}
+        description={`船橋市の常住人口は${insights ? `${insights.latest.total.toLocaleString("ja-JP")}人（${insights.latest.label}時点）` : "ここで確認できます"}。月次推移・前月比・前年同月比を自動集計して可視化したダッシュボードです。`}
         path="/dashboard"
         jsonLd={buildDatasetJsonLd({
           name: datasets.population.label,

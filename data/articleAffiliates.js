@@ -12,6 +12,8 @@ const KAKEIBO = { heading: "家計の見直しに", keyword: "家計簿" };
 const LOCAL_GIFT = { heading: "船橋・千葉のご当地もの", keyword: "千葉 ご当地 お土産" };
 
 const bySlug = {
+  "funassyi-profile-guide": { heading: "船橋といえば", keyword: "ふなっしー グッズ" },
+  "funabashi-3min-primer": LOCAL_GIFT,
   "population-data-guide": STATS_BOOK,
   "population-growth-comparison-guide": STATS_BOOK,
   "population-650k-milestone-guide": STATS_BOOK,
