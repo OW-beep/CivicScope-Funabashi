@@ -59,6 +59,7 @@ const bySlug = {
   "e-post-requests-guide": { heading: "暮らしの法律を知る", keyword: "暮らしの法律 入門" },
   "citizen-consultation-guide": { heading: "暮らしの法律を知る", keyword: "暮らしの法律 入門" },
   "gender-participation-guide": { heading: "共働き・家事分担を考える", keyword: "共働き 家事 本" },
+  "city-council-vacancy-guide": { heading: "政治・選挙を知る", keyword: "政治 入門 選挙" },
   "gender-center-usage-guide": { heading: "自分の時間・学びに", keyword: "自己啓発 講座 本" },
   "voter-turnout-guide": { heading: "政治・選挙を知る", keyword: "政治 入門 選挙" },
   "rail-ridership-guide": PASS_CASE,
