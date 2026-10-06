@@ -49,6 +49,7 @@ const bySlug = {
   "welfare-application-flow-guide": KAKEIBO,
   "protection-rate-comparison-guide": KAKEIBO,
   "aging-protection-rate-cross-guide": KAKEIBO,
+  "three-indicator-cross-analysis-guide": KAKEIBO,
   "finance-household-budget-guide": KAKEIBO,
   "expenditure-category-shift-guide": KAKEIBO,
   "average-income-guide": KAKEIBO,
