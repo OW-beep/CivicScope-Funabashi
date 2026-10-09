@@ -12,6 +12,9 @@ const KAKEIBO = { heading: "家計の見直しに", keyword: "家計簿" };
 const LOCAL_GIFT = { heading: "船橋・千葉のご当地もの", keyword: "千葉 ご当地 お土産" };
 
 const bySlug = {
+  "after-school-room-guide": { heading: "子どもの帰り道の安心に", keyword: "防犯ブザー 小学生" },
+  "school-cost-support-guide": KAKEIBO,
+  "hazard-map-guide": BOUSAI,
   "funabashi-must-know-facts-guide": LOCAL_GIFT,
   "funassyi-profile-guide": { heading: "船橋といえば", keyword: "ふなっしー グッズ" },
   "funabashi-3min-primer": LOCAL_GIFT,
@@ -56,6 +59,7 @@ const bySlug = {
   "average-income-guide": KAKEIBO,
   "furusato-nozei-outflow-guide": { heading: "ふるさと納税の基本を知る", keyword: "ふるさと納税 本" },
   "employment-guide": { heading: "働き方・キャリアを考える", keyword: "キャリア 仕事 本" },
+  "establishment-size-daytime-cross-guide": { heading: "仕事・キャリアを考える", keyword: "ビジネス 入門 本" },
   "economic-census-guide": { heading: "地域経済を学ぶ", keyword: "地域経済 入門 本" },
   "e-post-requests-guide": { heading: "暮らしの法律を知る", keyword: "暮らしの法律 入門" },
   "citizen-consultation-guide": { heading: "暮らしの法律を知る", keyword: "暮らしの法律 入門" },
