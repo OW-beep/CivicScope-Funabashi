@@ -97,6 +97,9 @@ const bySlug = {
   "funabashi-nashi-pears-guide": { heading: "船橋の梨をお取り寄せ", keyword: "船橋 梨" },
   "funabashi-agriculture-output-guide": { heading: "千葉の野菜をお取り寄せ", keyword: "千葉 野菜 お取り寄せ" },
   "funabashi-fishery-guide": { heading: "東京湾の恵みをお取り寄せ", keyword: "千葉 あさり 海苔" },
+  "elementary-school-students-guide": { heading: "小学生の学びに", keyword: "小学生 ドリル" },
+  "disaster-info-registration-guide": BOUSAI,
+  "funabashi-hot-days-guide": { heading: "暑さ対策に", keyword: "ネッククーラー 熱中症対策" },
   "sanbanze-tidal-flat-guide": { heading: "潮干狩り・干潟観察に", keyword: "潮干狩り 道具" },
   "funabashi-firefly-viewing-guide": { heading: "夏の夜のお出かけに", keyword: "虫よけ アウトドア" }
 };
