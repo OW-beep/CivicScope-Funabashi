@@ -12,6 +12,7 @@ import CategoryIntroBoxes from "../components/CategoryIntroBoxes";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { CATEGORY_LIST, CATEGORY_CLASSES } from "../data/categories";
 import { getArticlesSortedByDate, getFeaturedArticles } from "../data/articles";
+import OperatorNote from "../components/OperatorNote";
 import {
   getDatasetRecords,
   normalizePopulationSeries,
@@ -234,6 +235,9 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
             </Link>
             ）
           </p>
+          <div className="mt-3 max-w-xl">
+            <OperatorNote tone="light" />
+          </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
@@ -246,7 +250,7 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
               href="/chokai"
               className="rounded-full border-2 border-ink/15 bg-white px-5 py-3 text-sm font-bold text-ink transition-colors hover:border-brass hover:text-brass-dark"
             >
-              町会・自治会の分布を見る
+              町会・自治会の一覧・マップを見る
             </Link>
             <Link
               href="/food-businesses"

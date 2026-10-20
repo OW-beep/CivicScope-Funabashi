@@ -111,11 +111,23 @@ export default function Chokai({
 }) {
   const hasCategoryFallback = !mapAvailable && categoryData.length > 0;
 
+  // 検索では「町会 一覧」「自治会 マップ」で探されることが多いため、
+  // タイトル・説明文・見出しに「一覧」「マップ」を含める。
+  // ただし地図は位置情報が十分に特定できたときだけ表示されるため、
+  // 地図が出ない場合は「マップ」と書かず、地区別ランキングの説明に切り替える。
+  const countText = records.length ? `${records.length.toLocaleString("ja-JP")}件の` : "";
+  const seoTitle = mapAvailable
+    ? `船橋市の町会・自治会 一覧とマップ｜町会名・地区名で検索｜${siteConfig.name}`
+    : `船橋市の町会・自治会 一覧｜町会名・地区名で検索｜${siteConfig.name}`;
+  const seoDescription = `船橋市内の${countText}町会・自治会を、一覧表（町会名・地区名で検索）と${
+    mapAvailable ? "町丁目別の分布マップ" : "地区別のランキング"
+  }で確認できます。船橋市オープンデータをもとに、原則24時間ごとに自動更新しています。`;
+
   return (
     <>
       <Seo
-        title={`町会・自治会 ダッシュボード｜${siteConfig.name}`}
-        description="船橋市内の町会・自治会一覧を、町丁目別の分布マップとランキングで可視化したダッシュボードです。"
+        title={seoTitle}
+        description={seoDescription}
         path="/chokai"
         jsonLd={buildDatasetJsonLd({
           name: datasets.chokai.label,
@@ -128,7 +140,7 @@ export default function Chokai({
 
       <section className="mx-auto max-w-5xl px-5 py-14">
         <p className="font-mono text-xs uppercase tracking-widest text-brass-dark">Dashboard</p>
-        <h1 className="mt-2 font-display text-3xl text-ink md:text-4xl">町会・自治会 ダッシュボード</h1>
+        <h1 className="mt-2 font-display text-3xl text-ink md:text-4xl">船橋市の町会・自治会 一覧{mapAvailable ? "・マップ" : ""}</h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft">
           船橋市オープンデータカタログの「{datasets.chokai.label}」をもとに、地域ごとの分布を地図とランキングで可視化しています。
           {datasets.chokai.description}
