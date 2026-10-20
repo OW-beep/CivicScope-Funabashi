@@ -12,6 +12,7 @@ import { getArticleAffiliate } from "../../data/articleAffiliates";
 import { searchRakutenItems } from "../../lib/rakuten";
 
 const CategoryBarChart = dynamic(() => import("../../components/CategoryBarChart"), { ssr: false });
+const ArticleLineChart = dynamic(() => import("../../components/ArticleLineChart"), { ssr: false });
 const InteractiveMap = dynamic(() => import("../../components/InteractiveMap"), { ssr: false });
 
 export async function getStaticPaths() {
@@ -88,7 +89,11 @@ function renderBody(body, charts, maps) {
         return (
           <div key={i} className="mb-6 border border-ink/10 bg-white/60 p-5">
             {chart.title ? <p className="mb-3 text-xs text-ink-soft">{chart.title}</p> : null}
-            <CategoryBarChart data={chartData} unit={chart.unit || ""} topN={chartData.length} />
+            {chart.type === "line" ? (
+              <ArticleLineChart data={chart.data || []} unit={chart.unit || ""} yMin={chart.yMin} />
+            ) : (
+              <CategoryBarChart data={chartData} unit={chart.unit || ""} topN={chartData.length} />
+            )}
             {chart.source ? <p className="mt-3 text-[11px] text-ink-soft">出典：{chart.source}</p> : null}
           </div>
         );
