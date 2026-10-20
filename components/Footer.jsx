@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { siteConfig } from "../data/siteConfig";
 import { CATEGORY_LIST, CATEGORY_CLASSES } from "../data/categories";
+import OperatorNote from "./OperatorNote";
 
 const SITE_LINKS = [
   { href: "/dashboard", label: "人口ダッシュボード" },
@@ -51,6 +52,13 @@ export default function Footer() {
             </Link>
           );
         })}
+      </div>
+
+      {/* 運営者の紹介への導線。フッター最上部に一行で置き、誰が運営しているかをすぐ分かるようにする */}
+      <div className="border-b border-paper/10 px-5 py-5">
+        <div className="mx-auto max-w-5xl">
+          <OperatorNote tone="dark" />
+        </div>
       </div>
 
       <div className="mx-auto max-w-5xl px-5 py-12">

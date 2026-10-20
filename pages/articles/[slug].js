@@ -13,6 +13,7 @@ import { searchRakutenItems } from "../../lib/rakuten";
 
 const CategoryBarChart = dynamic(() => import("../../components/CategoryBarChart"), { ssr: false });
 const ArticleLineChart = dynamic(() => import("../../components/ArticleLineChart"), { ssr: false });
+import OperatorNote from "../../components/OperatorNote";
 const InteractiveMap = dynamic(() => import("../../components/InteractiveMap"), { ssr: false });
 
 export async function getStaticPaths() {
@@ -240,6 +241,10 @@ export default function ArticlePage({ article, relatedArticles, affiliate }) {
           keyword={affiliate.keyword}
           rakutenItem={affiliate.rakutenItem}
         />
+
+        <div className="mt-10 rounded-xl border border-ink/10 bg-white/60 px-5 py-4">
+          <OperatorNote tone="light" />
+        </div>
 
         {article.relatedDashboard ? (
           <div className="mt-10 border-t border-ink/10 pt-8">

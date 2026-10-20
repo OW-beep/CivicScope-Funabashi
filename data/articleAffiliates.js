@@ -102,6 +102,7 @@ const bySlug = {
   "funabashi-hot-days-guide": { heading: "暑さ対策に", keyword: "ネッククーラー 熱中症対策" },
   "funabashi-oversized-waste-guide": { heading: "片づけ・引っ越しの準備に", keyword: "収納ケース 引っ越し 片づけ" },
   "funabashi-child-medical-subsidy-guide": { heading: "子どもの受診の備えに", keyword: "体温計 子ども 救急セット" },
+  "funabashi-child-allowance-guide": { heading: "家計の見直しに", keyword: "家計簿 ノート" },
   "sanbanze-tidal-flat-guide": { heading: "潮干狩り・干潟観察に", keyword: "潮干狩り 道具" },
   "funabashi-firefly-viewing-guide": { heading: "夏の夜のお出かけに", keyword: "虫よけ アウトドア" }
 };

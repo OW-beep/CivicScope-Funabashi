@@ -27,7 +27,7 @@ export default function About() {
             </p>
           </div>
 
-          <div>
+          <div id="operator" className="scroll-mt-24">
             <SectionLabel code="§2">運営者について</SectionLabel>
             <p>
               運営者は、かつて地方自治体の職員として行政のDX推進やオープンデータの利活用推進に携わっていました。
