@@ -150,6 +150,7 @@ const FUN_FACTS = [
 export async function getStaticProps() {
   let populationLatest = null;
   let populationYoyRate = null;
+  let populationLatestLabel = null;
   let chokaiCount = null;
   let orgDatasetCount = null;
 
@@ -161,6 +162,7 @@ export async function getStaticProps() {
     if (insights) {
       populationLatest = insights.latest.total;
       populationYoyRate = insights.yoyRate;
+      populationLatestLabel = insights.latest.label || null;
     }
   } catch (e) {
     // ビルド時にAPIが一時的に落ちていてもサイト全体は壊さない
@@ -180,12 +182,12 @@ export async function getStaticProps() {
   }
 
   return {
-    props: { populationLatest, populationYoyRate, chokaiCount, orgDatasetCount },
+    props: { populationLatest, populationYoyRate, populationLatestLabel, chokaiCount, orgDatasetCount },
     revalidate: 60 * 60 * 12
   };
 }
 
-export default function Home({ populationLatest, populationYoyRate, chokaiCount, orgDatasetCount }) {
+export default function Home({ populationLatest, populationYoyRate, populationLatestLabel, chokaiCount, orgDatasetCount }) {
   const latestArticles = getArticlesSortedByDate().slice(0, 3);
   const featuredArticles = getFeaturedArticles(3);
   const pickupArticles = getFeaturedArticles(5);
@@ -299,7 +301,7 @@ export default function Home({ populationLatest, populationYoyRate, chokaiCount,
         <SectionLabel code="01" category="life">いまの船橋市</SectionLabel>
         <div className="grid gap-4 sm:grid-cols-3">
           <StatCard
-            label="常住人口（最新月）"
+            label={populationLatestLabel ? `常住人口（${populationLatestLabel}現在）` : "常住人口（最新月）"}
             value={populationLatest ? populationLatest.toLocaleString("ja-JP") : "―"}
             unit="人"
             delta={
