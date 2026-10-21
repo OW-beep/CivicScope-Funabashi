@@ -107,6 +107,7 @@ const bySlug = {
   "funabashi-station-passengers-guide": { heading: "通勤・通学のお供に", keyword: "通勤 ワイヤレスイヤホン" },
   "funabashi-population-latest-guide": { heading: "住まい探しの参考に", keyword: "住まい 間取り 本" },
   "funabashi-evacuation-place-by-town-guide": BOUSAI,
+  "funabashi-dog-registration-procedure-guide": { heading: "愛犬の迷子対策に", keyword: "犬 迷子札 首輪" },
   "sanbanze-tidal-flat-guide": { heading: "潮干狩り・干潟観察に", keyword: "潮干狩り 道具" },
   "funabashi-firefly-viewing-guide": { heading: "夏の夜のお出かけに", keyword: "虫よけ アウトドア" }
 };
