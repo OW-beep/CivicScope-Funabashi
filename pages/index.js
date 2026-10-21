@@ -13,6 +13,7 @@ import { siteConfig, datasets } from "../data/siteConfig";
 import { CATEGORY_LIST, CATEGORY_CLASSES } from "../data/categories";
 import { getArticlesSortedByDate, getFeaturedArticles } from "../data/articles";
 import OperatorNote from "../components/OperatorNote";
+import { mergeRebasedPopulation } from "../lib/populationRebased";
 import {
   getDatasetRecords,
   normalizePopulationSeries,
@@ -154,7 +155,8 @@ export async function getStaticProps() {
 
   try {
     const popData = await getDatasetRecords(datasets.population.id);
-    const normalized = normalizePopulationSeries(popData);
+    // BODIKの「毎月常住人口情報」は令和7年9月分で止まっているため、令和7年10月分以降を補う
+    const { normalized } = mergeRebasedPopulation(normalizePopulationSeries(popData));
     const insights = buildPopulationInsights(normalized);
     if (insights) {
       populationLatest = insights.latest.total;

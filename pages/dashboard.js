@@ -8,6 +8,7 @@ import ChartErrorBoundary from "../components/ChartErrorBoundary";
 import DataUnavailableNotice from "../components/DataUnavailableNotice";
 import { siteConfig, datasets } from "../data/siteConfig";
 import { getDatasetRecords, normalizePopulationSeries, buildPopulationInsights } from "../lib/bodik";
+import { mergeRebasedPopulation, populationRebasedSource } from "../lib/populationRebased";
 import { populationGrowthRankHistory, populationDensityComparison2020 } from "../data/populationComparison";
 import { getFuturePopulationSeries, buildFuturePopulationInsights, futurePopulationByAgeGroup } from "../data/futurePopulation";
 import { buildDatasetJsonLd } from "../lib/datasetSchema";
@@ -20,10 +21,15 @@ export async function getStaticProps() {
   let normalized = null;
   let insights = null;
   let error = null;
+  let rebasedFrom = null;
 
   try {
     const popData = await getDatasetRecords(datasets.population.id);
-    normalized = normalizePopulationSeries(popData);
+    // BODIKの「毎月常住人口情報」は令和7年9月分で止まっているため、
+    // 市のホームページで公開されている令和7年10月分以降を補う
+    const merged = mergeRebasedPopulation(normalizePopulationSeries(popData));
+    normalized = merged.normalized;
+    rebasedFrom = merged.rebasedFrom;
     insights = buildPopulationInsights(normalized);
   } catch (e) {
     error = "データの取得に失敗しました。しばらくしてから再度お試しください。";
@@ -33,6 +39,7 @@ export async function getStaticProps() {
     props: {
       series: normalized?.series || [],
       insights: insights || null,
+      rebasedFrom,
       error,
       futureSeries: getFuturePopulationSeries(),
       futureInsights: buildFuturePopulationInsights()
@@ -41,7 +48,7 @@ export async function getStaticProps() {
   };
 }
 
-export default function Dashboard({ series, insights, error, futureSeries, futureInsights }) {
+export default function Dashboard({ series, insights, rebasedFrom, error, futureSeries, futureInsights }) {
   // タイトルに実際のデータ年を含めるため、最新データの年（例: 2026）を動的に抽出する
   const latestYear = insights?.latest?.label?.match(/\d{4}/)?.[0];
 
@@ -126,6 +133,21 @@ export default function Dashboard({ series, insights, error, futureSeries, futur
               <ChartErrorBoundary>
                 <PopulationChart data={series} />
               </ChartErrorBoundary>
+              {rebasedFrom ? (
+                <p className="mt-3 text-xs leading-relaxed text-ink-soft">
+                  {rebasedFrom}分から、基準が「令和7年国勢調査」に切り替わったため、この月の前後で数値に段差があります。
+                  {rebasedFrom}以降は、船橋市ホームページ「
+                  <a
+                    href={populationRebasedSource.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-brass-dark"
+                  >
+                    {populationRebasedSource.label.replace(/[「」]/g, "")}
+                  </a>
+                  」の数字です。
+                </p>
+              ) : null}
             </div>
 
             {insights ? (
