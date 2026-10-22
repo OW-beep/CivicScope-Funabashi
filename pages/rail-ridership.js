@@ -46,26 +46,26 @@ export default function RailRidership({ ranking, combined, growth, totalSeries, 
   return (
     <>
       <Seo
-        title={`船橋駅・西船橋駅の乗降客数（乗車人員）は？駅別ランキング｜船橋市｜${siteConfig.name}`}
-        description="船橋駅・西船橋駅・新船橋駅・東船橋駅・南船橋駅など、船橋市内の鉄道駅別1日平均乗車人員（乗降客数の目安）を早見表とランキングで公開。船橋市統計書「I 都市基盤」データより。"
+        title={`船橋市 鉄道駅別 乗車人員（利用者数）ランキング｜船橋駅・西船橋駅ほか｜${siteConfig.name}`}
+        description="船橋駅・西船橋駅・新船橋駅・東船橋駅・南船橋駅など、船橋市内の鉄道駅別1日平均乗車人員（乗る人の数）を早見表とランキングで公開。乗降客数（乗る人＋降りる人）は、おおむねこの2倍です。船橋市統計書「I 都市基盤」データより。"
         path="/rail-ridership"
         jsonLd={buildDatasetJsonLd({
           name: "船橋市内 鉄道駅別1日平均乗車人員",
           description: "船橋市統計書「I 都市基盤」に掲載の、市内35駅×事業者の1日平均乗車人員（定期・定期外）の推移データ。",
           path: "/rail-ridership",
           sourceUrl: "https://www.city.funabashi.lg.jp/shisei/toukei/002/index.html",
-          keywords: ["鉄道", "乗車人員", "乗降客数", "駅"]
+          keywords: ["鉄道", "乗車人員", "利用者数", "駅"]
         })}
       />
 
       <section className="mx-auto max-w-5xl px-5 py-14">
         <p className="font-mono text-xs uppercase tracking-widest text-brass-dark">Dashboard</p>
         <h1 className="mt-2 font-display text-3xl text-ink md:text-4xl">
-          船橋市 鉄道駅別 乗車人員（乗降客数）ランキング
+          船橋市 鉄道駅別 乗車人員（利用者数）ランキング
         </h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft">
           船橋市統計書「I 都市基盤」（資料：道路計画課）をもとに、船橋駅をはじめとする市内35の駅×事業者について、
-          1日平均乗車人員（乗降客数の目安となる指標）の推移とランキングを可視化しています。
+          1日平均乗車人員（駅で乗る人の数）の推移とランキングを可視化しています。
         </p>
 
         <div className="mt-8 overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-pop">
@@ -74,7 +74,7 @@ export default function RailRidership({ ranking, combined, growth, totalSeries, 
               早見表：船橋駅・西船橋駅など主要駅の乗車人員（{insights.latest.label}）
             </p>
             <p className="mt-1 text-xs text-ink-soft">
-              「乗車人員」は改札を通って乗る人だけを数えた指標で、乗り降り両方を含む「乗降客数」「利用者数」とほぼ同じ意味で使われます。
+              「乗車人員」は改札を通って乗る人だけを数えた指標です。乗った人と降りた人を合わせた「乗降客数」は、おおむねこの2倍になります（国土交通省のデータは、「船橋市内の駅別『乗降客数』ランキング」の記事へ）。
             </p>
           </div>
           <div className="overflow-x-auto">
