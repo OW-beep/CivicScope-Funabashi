@@ -14,12 +14,15 @@ const COLLECTIONS = [
     description:
       "船橋市は同じ市内でも、駅からの近さや沿線によって暮らしの雰囲気がかなり変わります。船橋駅・西船橋駅周辺は商業施設が集積した都心近接エリア、北習志野・習志野台は新京成沿線の落ち着いた住宅地、南船橋・湾岸は大型商業施設と三番瀬の自然が近いエリアです。地価は沿線ごとに数十万円単位で差があり、人口はこの数年で65万人を超えるペースで増え続けています。「駅・地価・まちの雰囲気」を数字とあわせて確認したい方は、下記の記事から読んでみてください。",
     slugs: [
+      "funabashi-moving-in-checklist",
+      "funabashi-population-latest-guide",
       "why-funabashi-charm-guide",
       "area-guide-central-funabashi",
       "area-guide-north-narashinodai",
-      "area-guide-minamifunabashi-coast",
       "land-price-by-railway-line-guide",
-      "population-650k-milestone-guide"
+      "funabashi-station-passengers-guide",
+      "rail-ridership-guide",
+      "vacant-homes-guide"
     ]
   },
   {
@@ -29,11 +32,14 @@ const COLLECTIONS = [
       "子育て環境は「保育園に入れるか」だけでは判断できません。保育の定員・待機状況、学校（生徒数の推移）、公園の数、学校給食の負担、図書館の利用状況など、複数のデータを横断して見ることで、初めて実態に近づきます。船橋市は少子化と宅地開発が同時に進んでいるため、地区によって子育て環境の実感がかなり異なるのも特徴です。以下の記事では、船橋市が「子育てしやすいまちか」を、データを起点に多面的に確認できます。",
     slugs: [
       "is-funabashi-good-for-child-rearing",
+      "funabashi-child-allowance-guide",
+      "funabashi-child-medical-subsidy-guide",
+      "after-school-room-guide",
       "childcare-guide",
-      "fertility-and-aging-guide",
       "school-lunch-fee-free-guide",
+      "elementary-school-students-guide",
       "parks-guide",
-      "library-collection-usage-guide"
+      "library-branches-guide"
     ]
   },
   {
@@ -42,11 +48,30 @@ const COLLECTIONS = [
     description:
       "「安全なまちかどうか」は感覚だけでは判断しづらいテーマです。避難場所・避難所の位置、刑法犯認知件数や救急出動件数の推移、特殊詐欺の被害件数、火災の発生件数と発生しやすい時期など、船橋市が公開している一次データをもとに、実際の傾向を確認できる記事をまとめました。防災グッズを揃える前に、まず自分の住むエリアの避難場所を確認しておくことをおすすめします。",
     slugs: [
+      "funabashi-evacuation-place-by-town-guide",
       "evacuation-map-guide",
-      "public-safety-dashboard-guide",
-      "phone-fraud-damage-guide",
+      "hazard-map-guide",
+      "disaster-info-registration-guide",
+      "aed-locations-guide",
+      "funabashi-hot-days-guide",
       "fire-statistics-guide",
       "traffic-accident-trend-guide"
+    ]
+  },
+  {
+    key: "money",
+    title: "税金・お金のことを知りたい方へ",
+    description:
+      "船橋市の税収は、令和7年度に1,158.5億円と、10年間で最高になりました。ただ、増えた分の約4分の3は個人市民税の1つで、前の年に減った分の戻りという面もあります。ふるさと納税による控除額（令和7年度は35.5億円）、1人あたりの税負担、土地や車にかかる税金の10年の変化など、市の公式資料から数字を拾い直し、「市のお金は、どこから入って、何に使われているのか」を確かめられる記事をまとめました。",
+    slugs: [
+      "funabashi-city-tax-revenue-guide",
+      "funabashi-individual-resident-tax-guide",
+      "furusato-nozei-outflow-guide",
+      "finance-household-budget-guide",
+      "finance-peer-comparison-guide",
+      "average-income-guide",
+      "funabashi-land-use-tax-data-guide",
+      "funabashi-light-vehicle-count-guide"
     ]
   },
   {

@@ -96,7 +96,7 @@ export default function About() {
           <div>
             <SectionLabel code="§6">広告・アフィリエイトについて</SectionLabel>
             <p>
-              本サイトはGoogle AdSenseによる広告を掲載しています。また、解説記事の末尾では、
+              本サイトはGoogle AdSenseによる広告を掲載することがあります。また、解説記事の末尾では、
               Amazonアソシエイト・プログラムおよび楽天アフィリエイトを利用した商品リンクを掲載しています。
               Amazonのアソシエイトとして、{siteConfig.nameJa}は適格販売により収入を得ています。
               楽天市場の商品リンクも、購入時に紹介料を得ることがあります。
@@ -120,6 +120,40 @@ export default function About() {
               </Link>
               よりご連絡ください。
             </p>
+          </div>
+
+          <div id="policy" className="scroll-mt-24">
+            <SectionLabel code="§8">編集方針と訂正について</SectionLabel>
+            <ul className="list-disc space-y-2 pl-5">
+              <li>
+                <span className="font-bold text-ink">一次情報を優先します。</span>
+                船橋市・国・県など、公的機関が公表している資料を、数字の根拠にします。出典は、各記事の末尾に、リンクつきで記載します。
+              </li>
+              <li>
+                <span className="font-bold text-ink">事実・計算・見解を、分けて書きます。</span>
+                公表された数字と、運営者が計算した数字（「筆者が計算」と明記）、運営者の見解（「筆者の見解」「筆者の体験と考え」と明記）を、区別して書きます。
+              </li>
+              <li>
+                <span className="font-bold text-ink">制度・手続きの記事は、公式の更新日を示します。</span>
+                手数料や期限は変わることがあるため、実際の手続きの前に、公式サイトで最新の情報を確認していただくよう、記事にも書いています。
+              </li>
+              <li>
+                <span className="font-bold text-ink">誤りは訂正します。</span>
+                誤りに気づいた場合、または、ご指摘をいただいた場合は、本文を訂正し、重要な訂正は、記事の末尾に書き添えます。ご連絡は、
+                <Link href="/contact" className="underline hover:text-brass-dark">
+                  お問い合わせページ
+                </Link>
+                からお願いします。
+              </li>
+              <li>
+                <span className="font-bold text-ink">広告・アフィリエイトから独立して書きます。</span>
+                広告主やアフィリエイト先の意向で、記事の内容や数字を変えることはありません。
+              </li>
+              <li>
+                <span className="font-bold text-ink">個別の専門的な助言ではありません。</span>
+                医療・法律・税務などの個別の判断は、専門家や、公式の窓口にご相談ください。
+              </li>
+            </ul>
           </div>
 
           {/* カテゴリカラーの由来は、目立たせる情報ではないため、ページ末尾に小さく補足として記載 */}

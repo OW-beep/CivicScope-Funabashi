@@ -1,5 +1,15 @@
 /** @type {import('next').NextConfig} */
+// 非公開にした記事のURLを、対応するページへ恒久リダイレクトする（data/draftArticles.json）
+const draftArticles = require("./data/draftArticles.json");
+
 const nextConfig = {
+  async redirects() {
+    return Object.entries(draftArticles).map(([slug, destination]) => ({
+      source: `/articles/${slug}`,
+      destination,
+      permanent: true
+    }));
+  },
   // 開発モード(npm run dev)のReact Strict Modeは、初期化処理を意図的に2回連続実行する。
   // MapLibre GL(WebGLで実際に描画するライブラリ)はこの2回連続実行と相性が悪く、
   // 1回目の地図をすぐ破棄して2回目を作る際に、地図が真っ白のまま止まることがある。

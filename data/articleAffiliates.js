@@ -109,6 +109,9 @@ const bySlug = {
   "funabashi-evacuation-place-by-town-guide": BOUSAI,
   "funabashi-dog-registration-procedure-guide": { heading: "愛犬の迷子対策に", keyword: "犬 迷子札 首輪" },
   "funabashi-city-tax-revenue-guide": { heading: "税金のしくみを学ぶ", keyword: "税金 しくみ 本" },
+  "funabashi-individual-resident-tax-guide": { heading: "税金のしくみを学ぶ", keyword: "住民税 しくみ 本" },
+  "funabashi-land-use-tax-data-guide": { heading: "住まい・土地の勉強に", keyword: "固定資産税 本" },
+  "funabashi-light-vehicle-count-guide": { heading: "車のある暮らしに", keyword: "軽自動車 カー用品" },
   "sanbanze-tidal-flat-guide": { heading: "潮干狩り・干潟観察に", keyword: "潮干狩り 道具" },
   "funabashi-firefly-viewing-guide": { heading: "夏の夜のお出かけに", keyword: "虫よけ アウトドア" }
 };

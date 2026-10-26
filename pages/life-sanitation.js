@@ -165,11 +165,7 @@ export default function LifeSanitation({
                   </>
                 ) : null}
                 これらの施設は保健所の許可・届出をもとに公開されているため、実際に利用する際の営業状況（営業時間・定休日・現在営業しているか）までは
-                保証するものではありません。お店を探す前の下調べや、地域の商業集積を知る参考としてご活用ください。詳しい読み方は
-                <a href="/articles/life-sanitation-facilities-guide" className="underline hover:text-brass-dark">
-                  解説記事
-                </a>
-                もご参照ください。
+                保証するものではありません。お店を探す前の下調べや、地域の商業集積を知る参考としてご活用ください。
               </p>
             </div>
 

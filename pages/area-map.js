@@ -47,7 +47,7 @@ const AREAS = [
   {
     title: "南船橋・湾岸エリア",
     tagline: "商業施設 × 三番瀬",
-    href: "/articles/area-guide-minamifunabashi-coast",
+    href: "/articles/sanbanze-tidal-flat-guide",
     color: "border-ink/30"
   }
 ];

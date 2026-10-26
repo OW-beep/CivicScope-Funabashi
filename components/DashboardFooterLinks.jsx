@@ -1,5 +1,7 @@
 import Link from "next/link";
 import ShareButtons from "./ShareButtons";
+import draftArticles from "../data/draftArticles.json";
+import DashboardExplainer from "./DashboardExplainer";
 
 // ダッシュボードページの末尾に置く、回遊導線用のCTAブロック。
 // articleHref/articleLabel を渡すと「この数字の読み方」記事への導線を表示し、
@@ -8,9 +10,13 @@ import ShareButtons from "./ShareButtons";
 // リンクも並べて表示できる（内部リンクによる回遊性向上のため）。
 // シェアボタンもここにまとめて表示することで、個々のダッシュボードページを
 // 編集しなくても全ページにシェア導線が付く。
-export default function DashboardFooterLinks({ articleHref, articleLabel, relatedLinks }) {
+export default function DashboardFooterLinks({ articleHref: rawArticleHref, articleLabel, relatedLinks }) {
+  // 非公開にした記事（data/draftArticles.json）へは、導線を出さない
+  const draftSlug = rawArticleHref ? rawArticleHref.replace(/^\/articles\//, "") : "";
+  const articleHref = draftSlug && draftSlug in draftArticles ? null : rawArticleHref;
   return (
     <div className="mt-8 space-y-5">
+      <DashboardExplainer />
       <ShareButtons />
       <div className="grid gap-3 sm:grid-cols-2">
         {articleHref ? (

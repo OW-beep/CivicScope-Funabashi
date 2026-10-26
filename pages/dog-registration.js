@@ -100,9 +100,9 @@ export default function DogRegistration({ series, insights, error }) {
                   うち予防注射を実施したのは{insights.latest.vaccinated.toLocaleString("ja-JP")}頭で、
                   登録頭数に対する割合は{insights.latest.rate !== null ? insights.latest.rate.toFixed(1) : "―"}%でした。
                   この割合は実際の接種率そのものではなく、登録済みの頭数のうち届出ベースで注射が確認できた割合の目安である点にご留意ください。
-                  詳しい読み方は
-                  <a href="/articles/dog-registration-guide" className="underline hover:text-brass-dark">解説記事</a>
-                  もご参照ください。
+                  登録や注射の手続きについては、
+                  <a href="/articles/funabashi-dog-registration-procedure-guide" className="underline hover:text-brass-dark">手続きガイド</a>
+                  をご覧ください。
                 </p>
               </div>
             ) : null}
