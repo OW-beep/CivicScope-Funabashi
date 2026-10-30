@@ -12,6 +12,7 @@ const KAKEIBO = { heading: "家計の見直しに", keyword: "家計簿" };
 const LOCAL_GIFT = { heading: "船橋・千葉のご当地もの", keyword: "千葉 ご当地 お土産" };
 
 const bySlug = {
+  "funabashi-school-entrance-flow-guide": { heading: "母子手帳・書類をまとめるのに", keyword: "母子手帳ケース 大判" },
   "after-school-room-guide": { heading: "子どもの帰り道の安心に", keyword: "防犯ブザー 小学生" },
   "school-cost-support-guide": KAKEIBO,
   "hazard-map-guide": BOUSAI,
@@ -121,6 +122,7 @@ const bySlug = {
 // 人口・財政・政治・統計の記事のように、商品が自然に結びつかない記事には出さない。
 // 広告が主役の「薄いページ」に見えないようにするための方針です。
 const ENABLED_SLUGS = new Set([
+  "funabashi-school-entrance-flow-guide",
   "after-school-room-guide",
   "hazard-map-guide",
   "evacuation-map-guide",
