@@ -39,16 +39,59 @@ function renderInline(text, keyPrefix) {
   return nodes;
 }
 
+// 「**見出し**」だけの独立した1行を、見出し（h2）として扱う。
+// 記事本文は元々この書き方で小見出しを表現しているので、既存の原稿を書き換えずに、
+// 検索エンジン・読み上げソフトに「見出し構造」が伝わるようにするための処理。
+const HEADING_RE = /^\*\*([^*\n]{2,60})\*\*$/;
+
+// 太字1行のうち、「Q. ～」（よくある質問の質問文）と、文末が「。」の太字（結論の強調文）は、
+// 見出しではなく本文の強調として扱う。
+function matchHeading(block) {
+  const m = block.match(HEADING_RE);
+  if (!m) return null;
+  const text = m[1].trim();
+  if (/^Q[.．:：]/.test(text) || /[。]$/.test(text)) return null;
+  return text;
+}
+
+function splitBlocks(body) {
+  return body
+    .split(/\n\s*\n/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+}
+
+// 目次（TableOfContents）用。renderBody と同じブロック番号でidを付けるので、リンクがずれない。
+export function extractHeadings(body) {
+  if (!body) return [];
+  const out = [];
+  splitBlocks(body).forEach((block, i) => {
+    const text = matchHeading(block);
+    if (text) out.push({ id: `sec-${i}`, text });
+  });
+  return out;
+}
+
 export function renderBody(body, charts, maps) {
   // シンプルな段落・太字（**text**）・箇条書き（- item）記法に加えて、
   // 独立した行の [[CHART:id]] は article.charts[id] に対応するグラフに、
   // [[MAP:id]] は article.maps[id] に対応するインタラクティブ地図に置き換える。
   // charts・maps が無い記事には一切影響しない、後方互換な拡張。
-  return body
-    .split(/\n\s*\n/)
-    .map((block) => block.trim())
-    .filter(Boolean)
+  return splitBlocks(body)
     .map((block, i) => {
+      const headingText = matchHeading(block);
+      if (headingText) {
+        return (
+          <h2
+            key={i}
+            id={`sec-${i}`}
+            className="mb-4 mt-10 scroll-mt-20 border-l-4 border-brass pl-3 font-display text-xl leading-snug text-ink"
+          >
+            {headingText}
+          </h2>
+        );
+      }
+
       const chartMatch = block.match(/^\[\[CHART:([\w-]+)\]\]$/);
       if (chartMatch && charts && charts[chartMatch[1]]) {
         const chart = charts[chartMatch[1]];

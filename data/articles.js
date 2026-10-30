@@ -1,4 +1,5 @@
 import draftArticles from "./draftArticles.json";
+import { articleExtras } from "./articleExtras";
 // ここに記事を追加していくだけで /articles 一覧・詳細ページに反映されます。
 // AdSense審査では「独自性のある十分な量のテキストコンテンツ」が重視されるため、
 // 単なるデータの転記ではなく、読み解き方・使い方の解説を中心に書いています。
@@ -7371,7 +7372,10 @@ LINEは、ふだんから使っているアプリなので、通知に気づき�
 // next.config.js のリダイレクトで、対応するダッシュボード等へ転送する。
 // 記事を充実させたら、draftArticles.json から該当の行を消すと、再び公開される。
 export const draftRedirects = draftArticles;
-export const articles = allArticles.filter((a) => !(a.slug in draftArticles));
+// data/articleExtras.js の追加情報（タイトル差し替え・更新日・要点など）を、原稿に重ねて公開用の記事にする。
+export const articles = allArticles
+  .filter((a) => !(a.slug in draftArticles))
+  .map((a) => (articleExtras[a.slug] ? { ...a, ...articleExtras[a.slug] } : a));
 // 非公開にした記事の本文は、対応するダッシュボードの解説欄に移している（data/dashboardExplainers.json）。
 // 再生成するときに使う。
 export const getDraftArticles = () => allArticles.filter((a) => a.slug in draftArticles);

@@ -194,8 +194,8 @@ export default function Home({ populationLatest, populationYoyRate, populationLa
   return (
     <>
       <Seo
-        title={`${siteConfig.name}｜${siteConfig.tagline}`}
-        description={siteConfig.description}
+        title={`船橋市の人口・駅の乗降客数・町会一覧｜${siteConfig.name}`}
+        description="船橋市の人口、駅別の乗降客数、町会・自治会、学童、給食費など、暮らしに関わるオープンデータをグラフと解説記事で読み解く、非公式の市民向けデータメディアです。"
         path=""
         jsonLd={{
           "@context": "https://schema.org",

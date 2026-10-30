@@ -116,16 +116,46 @@ const bySlug = {
   "funabashi-firefly-viewing-guide": { heading: "夏の夜のお出かけに", keyword: "虫よけ アウトドア" }
 };
 
-const byTag = {
-  "人口・世帯": STATS_BOOK,
-  "地域・コミュニティ": LOCAL_GIFT,
-  "暮らし・安全": BOUSAI,
-  "教育・子育て": { heading: "子育て・学びに", keyword: "育児 便利グッズ" },
-  "行政・財政": KAKEIBO,
-  "防災・安全": BOUSAI,
-  "サイト案内": { heading: "データ活用を始めたい方に", keyword: "データ分析 入門 Excel" }
-};
+// 「関連グッズ（PR）」を出すのは、記事の話題と商品が自然につながる記事だけ。
+// （防災・防犯・お取り寄せ・引っ越し・子どもの備え・データの学び直し など）
+// 人口・財政・政治・統計の記事のように、商品が自然に結びつかない記事には出さない。
+// 広告が主役の「薄いページ」に見えないようにするための方針です。
+const ENABLED_SLUGS = new Set([
+  "after-school-room-guide",
+  "hazard-map-guide",
+  "evacuation-map-guide",
+  "disaster-info-registration-guide",
+  "funabashi-evacuation-place-by-town-guide",
+  "aed-locations-guide",
+  "fire-statistics-guide",
+  "ambulance-dispatch-guide",
+  "phone-fraud-damage-guide",
+  "traffic-accident-trend-guide",
+  "funabashi-nashi-pears-guide",
+  "funabashi-agriculture-output-guide",
+  "funabashi-fishery-guide",
+  "sanbanze-tidal-flat-guide",
+  "funabashi-firefly-viewing-guide",
+  "funabashi-hot-days-guide",
+  "funabashi-oversized-waste-guide",
+  "waste-recycling-guide",
+  "funabashi-child-medical-subsidy-guide",
+  "funabashi-moving-in-checklist",
+  "funabashi-dog-registration-procedure-guide",
+  "dog-registration-guide",
+  "parks-guide",
+  "funabashi-daijingu-hatsumode-guide",
+  "funabashi-daijingu-lighthouse-guide",
+  "funassyi-profile-guide",
+  "what-is-open-data-funabashi",
+  "how-to-use-estat-guide",
+  "childcare-guide",
+  "birth-childcare-support-guide",
+  "senior-housing-guide",
+  "vacant-homes-guide"
+]);
 
-export function getArticleAffiliate(slug, tag) {
-  return bySlug[slug] || byTag[tag] || LOCAL_GIFT;
+// 該当しない記事は null を返す（記事ページ側で、PR枠を表示しない）。
+export function getArticleAffiliate(slug) {
+  return ENABLED_SLUGS.has(slug) ? bySlug[slug] || null : null;
 }

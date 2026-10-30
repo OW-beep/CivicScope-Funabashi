@@ -32,6 +32,8 @@ const STATIC_PATHS = [
   "/guide",
   "/data-methodology",
   "/about",
+  "/editorial-policy",
+  "/sitemap",
   "/contact",
   "/privacy",
   "/terms"
@@ -41,7 +43,7 @@ function generateSitemap() {
   const staticUrls = STATIC_PATHS.map((p) => ({ loc: `${siteConfig.url}${p}` }));
   const articleUrls = articles.map((a) => ({
     loc: `${siteConfig.url}/articles/${a.slug}`,
-    lastmod: a.date
+    lastmod: a.updated || a.date
   }));
   const tagUrls = getAllTags().map(({ tag }) => ({
     loc: `${siteConfig.url}/articles/tag/${tagToSlug(tag)}`

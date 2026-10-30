@@ -95,6 +95,8 @@ export default function Footer() {
               <li><Link href="/guide" className="hover:text-brass-light">ダッシュボードの使い方</Link></li>
               <li><Link href="/recommended-disaster-goods" className="hover:text-brass-light">防災グッズの選び方</Link></li>
               <li><Link href="/data-methodology" className="hover:text-brass-light">データの取得・加工方法について</Link></li>
+              <li><Link href="/editorial-policy" className="hover:text-brass-light">編集方針</Link></li>
+              <li><Link href="/sitemap" className="hover:text-brass-light">サイトマップ</Link></li>
               <li><Link href="/contact" className="hover:text-brass-light">お問い合わせ</Link></li>
               <li><Link href="/privacy" className="hover:text-brass-light">プライバシーポリシー</Link></li>
               <li><Link href="/terms" className="hover:text-brass-light">利用規約・データの出典</Link></li>
