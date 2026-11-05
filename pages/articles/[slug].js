@@ -14,6 +14,7 @@ import { searchRakutenItems } from "../../lib/rakuten";
 import OperatorNote from "../../components/OperatorNote";
 import ArticleBody, { extractHeadings } from "../../components/ArticleBody";
 import Breadcrumbs, { buildBreadcrumbJsonLd } from "../../components/Breadcrumbs";
+import { noindexArticles } from "../../data/noindexArticles";
 import ArticleByline from "../../components/ArticleByline";
 import KeyPoints from "../../components/KeyPoints";
 import TableOfContents from "../../components/TableOfContents";
@@ -87,6 +88,7 @@ export default function ArticlePage({ article, relatedArticles, affiliate }) {
     <>
       <Seo
         title={seoTitle}
+        noindex={article.slug in noindexArticles}
         description={article.excerpt}
         path={`/articles/${article.slug}`}
         type="article"
@@ -112,7 +114,9 @@ export default function ArticlePage({ article, relatedArticles, affiliate }) {
         {article.operatorComment ? (
           <aside className="mt-10 rounded-2xl border border-ink/10 bg-white/60 px-5 py-4">
             <p className="font-mono text-xs uppercase tracking-widest text-brass-dark">運営者のひとこと</p>
-            <p className="mt-2 text-[15px] leading-[1.9] text-ink">{article.operatorComment}</p>
+            {article.operatorComment.split("\n\n").map((para, i) => (
+              <p key={i} className="mt-2 text-[15px] leading-[1.9] text-ink">{para}</p>
+            ))}
           </aside>
         ) : null}
 

@@ -1,5 +1,6 @@
 import { siteConfig } from "../data/siteConfig";
 import { articles, getAllTags, tagToSlug } from "../data/articles";
+import { noindexArticles } from "../data/noindexArticles";
 
 const STATIC_PATHS = [
   "",
@@ -41,7 +42,7 @@ const STATIC_PATHS = [
 
 function generateSitemap() {
   const staticUrls = STATIC_PATHS.map((p) => ({ loc: `${siteConfig.url}${p}` }));
-  const articleUrls = articles.map((a) => ({
+  const articleUrls = articles.filter((a) => !(a.slug in noindexArticles)).map((a) => ({
     loc: `${siteConfig.url}/articles/${a.slug}`,
     lastmod: a.updated || a.date
   }));
