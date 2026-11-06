@@ -12,6 +12,7 @@ const KAKEIBO = { heading: "家計の見直しに", keyword: "家計簿" };
 const LOCAL_GIFT = { heading: "船橋・千葉のご当地もの", keyword: "千葉 ご当地 お土産" };
 
 const bySlug = {
+  "funabashi-night-holiday-clinic-guide": { heading: "家に備えておきたい", keyword: "家庭用 救急セット 救急箱" },
   "funabashi-nursery-application-r9-guide": { heading: "申込書類をそろえるのに", keyword: "書類 整理 ファイルケース 子ども プリント" },
   "funabashi-garbage-rules-guide": { heading: "分別をラクにする", keyword: "分別 ゴミ箱 キッチン" },
   "funabashi-wooden-house-earthquake-subsidy-guide": { heading: "家の中の地震対策に", keyword: "家具転倒防止 突っ張り棒 耐震" },
@@ -126,6 +127,7 @@ const bySlug = {
 // 人口・財政・政治・統計の記事のように、商品が自然に結びつかない記事には出さない。
 // 広告が主役の「薄いページ」に見えないようにするための方針です。
 const ENABLED_SLUGS = new Set([
+  "funabashi-night-holiday-clinic-guide",
   "funabashi-nursery-application-r9-guide",
   "funabashi-garbage-rules-guide",
   "funabashi-wooden-house-earthquake-subsidy-guide",
