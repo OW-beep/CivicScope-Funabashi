@@ -70,7 +70,7 @@ const DASHBOARD_GROUPS = [
 
 const NAV_SECONDARY = [
   { href: "/articles", label: "解説記事" },
-  { href: "/collections", label: "目的別ガイド" },
+  { href: "/collections", label: "暮らしの手続き" },
   { href: "/about", label: "About" },
   { href: "/advertise", label: "広告掲載" }
 ];

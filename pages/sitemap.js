@@ -32,6 +32,7 @@ const DASHBOARDS = [
 ];
 
 const ABOUT = [
+  { href: "/collections", label: "暮らしの手続きガイド" },
   { href: "/about", label: "運営者について" },
   { href: "/editorial-policy", label: "編集方針" },
   { href: "/data-methodology", label: "データの扱い方" },
