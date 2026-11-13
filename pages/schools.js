@@ -51,7 +51,7 @@ export async function getStaticProps() {
 export default function Schools({ series, insights, peak, trough, error }) {
   return (
     <>
-      <Seo title={`学校（中学校生徒数） ダッシュボード｜${siteConfig.name}`} description="船橋市立中学校の生徒数（市内合計）の年度推移を可視化したダッシュボードです。" path="/schools" />
+      <Seo title={`学校（中学校生徒数） ダッシュボード｜${siteConfig.name}`} description="船橋市立中学校の生徒数（市内合計）の年度推移を可視化したダッシュボードです。" path="/schools" noindex />
 
       <section className="mx-auto max-w-5xl px-5 py-14">
         <p className="font-mono text-xs uppercase tracking-widest text-brass-dark">Dashboard</p>
