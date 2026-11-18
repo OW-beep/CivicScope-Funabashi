@@ -118,7 +118,7 @@ export function renderBody(body, charts, maps) {
             <InteractiveMap points={map.points || []} categoryColors={map.categoryColors} height={map.height || 360} />
             <p className="mt-3 text-[11px] text-ink-soft">
               地図データ：© OpenStreetMap contributors（OpenFreeMap経由で配信）
-              {map.source ? `／${map.source}` : ""}
+              {map.source ? <>／{renderInline(map.source, `map-${i}-src`)}</> : ""}
             </p>
           </div>
         );

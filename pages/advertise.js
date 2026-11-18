@@ -2,8 +2,8 @@ import Seo from "../components/Seo";
 import SectionLabel from "../components/SectionLabel";
 import { siteConfig } from "../data/siteConfig";
 
-// スポンサー広告・記事広告のご案内ページ。数値（月間PV・料金）はダミーのプレースホルダーで、
-// 運営者が実際のSearch Console/アクセス解析の数字に置き換えて使うことを前提にしている。
+// スポンサー広告・記事広告のご案内ページ。月間PV・料金などの数値はこのページには載せず、
+// お問い合わせいただいた方に個別に案内する運用にしています（数字を載せる場合は実測値のみ）。
 export default function Advertise() {
   const mailto = `mailto:${siteConfig.contactEmail}?subject=${encodeURIComponent("【CivicScope船橋】広告掲載について")}`;
 

@@ -195,6 +195,7 @@ export default function InteractiveMap({
           `<div style="font-family:inherit;font-size:13px;line-height:1.5;">
              <strong>${escapeHtml(p.label || "地点")}</strong>
              ${p.category ? `<br/><span style="color:#666">${escapeHtml(p.category)}</span>` : ""}
+             ${p.note ? `<br/><span style="color:#666;font-size:12px">${escapeHtml(p.note).replace(/\n/g, "<br/>")}</span>` : ""}
            </div>`
         );
 
