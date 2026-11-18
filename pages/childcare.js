@@ -450,13 +450,15 @@ export default function Childcare({
               施設名でOpenStreetMap（Nominatim）を検索して座標化できた公立保育所を、実際の地図上に
               表示しています。このデータセットには住所欄が無いため施設名だけを頼りに検索しており、
               国土地理院の住所検索より一致率が低く、位置がずれる場合がある点はご留意ください。
+              施設名で見つからなかった保育所は、施設名に含まれる町名を国土地理院の住所検索APIで
+              座標化し、町名までの位置として表示しています（ピンをクリックすると、その旨が表示されます）。
               ※このサイトの地図は簡易的なもので、実際の位置と多少ずれる場合があります。訪問前には各施設の情報を原典データでご確認ください。
             </p>
             <div className="mt-4">
               <InteractiveMap points={facilityMapPoints} enable3dBuildings showSidebar height={460} />
             </div>
             <p className="mt-3 text-xs text-ink-soft">
-              {facilityMapStats.total}箇所中{facilityMapStats.matched}箇所を地図に表示（住所から座標を特定できたもののみ）
+              {facilityMapStats.total}箇所中{facilityMapStats.matched}箇所を地図に表示（施設名で特定できたものと、施設名に含まれる町名で特定したもの）
             </p>
           </div>
         )}

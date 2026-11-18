@@ -25,6 +25,15 @@ function colorForCategory(category, categoryColors, categoryOrder) {
   return DEFAULT_COLORS[idx % DEFAULT_COLORS.length];
 }
 
+// escapeHtml はファイル末尾に既にあるものを使う。
+function popupHtml(p) {
+  return `<div style="font-family:inherit;font-size:13px;line-height:1.5;">
+     <strong>${escapeHtml(p.label || "地点")}</strong>
+     ${p.category ? `<br/><span style="color:#666">${escapeHtml(p.category)}</span>` : ""}
+     ${p.note ? `<br/><span style="color:#666;font-size:12px">${escapeHtml(p.note).replace(/\n/g, "<br/>")}</span>` : ""}
+   </div>`;
+}
+
 /**
  * points: [{ lat, lng, label, category }]
  * categoryColors: { カテゴリ名: "#rrggbb" }（省略可、自動で色割り当て）
@@ -39,7 +48,12 @@ export default function InteractiveMap({
   height = 420,
   enable3dBuildings = false,
   showSidebar = false,
-  enableHeatmap = false
+  enableHeatmap = false,
+  // dense: true のとき、地点数が多い地図（防災行政無線185か所など）を
+  // 1地点1つのDOMピンではなく、GeoJSONの円レイヤー1枚で描く。
+  // DOMピン185個はモバイルの描画・スクロールを重くするため、軽量化が目的。
+  // クリックでポップアップ（名称・住所・注記）が出る点は変わらない。
+  dense = false
 }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
@@ -181,7 +195,65 @@ export default function InteractiveMap({
         }
       }
 
+      if (dense) {
+        // 密集モード：全地点を1つのGeoJSONソース＋円レイヤーで描画する。
+        // DOMピンを作らないので、地点数が多くてもブラウザ負荷はほぼ変わらない。
+        try {
+          map.addSource("dense-points", {
+            type: "geojson",
+            data: {
+              type: "FeatureCollection",
+              features: safePoints.map((p) => ({
+                type: "Feature",
+                properties: {
+                  label: p.label || "地点",
+                  category: p.category || "",
+                  note: p.note || "",
+                  color: colorForCategory(p.category, categoryColors, categoryOrder)
+                },
+                geometry: { type: "Point", coordinates: [p.lng, p.lat] }
+              }))
+            }
+          });
+          map.addLayer({
+            id: "dense-points-layer",
+            type: "circle",
+            source: "dense-points",
+            paint: {
+              "circle-radius": 6,
+              "circle-color": ["get", "color"],
+              "circle-stroke-width": 2,
+              "circle-stroke-color": "#FFF8ED"
+            }
+          });
+          map.on("click", "dense-points-layer", (e) => {
+            const f = e.features && e.features[0];
+            if (!f) return;
+            const props = f.properties || {};
+            new maplibregl.Popup({ offset: 12, closeButton: true })
+              .setLngLat(f.geometry.coordinates)
+              .setHTML(
+                popupHtml({
+                  label: props.label,
+                  category: props.category,
+                  note: props.note
+                })
+              )
+              .addTo(map);
+          });
+          map.on("mouseenter", "dense-points-layer", () => {
+            map.getCanvas().style.cursor = "pointer";
+          });
+          map.on("mouseleave", "dense-points-layer", () => {
+            map.getCanvas().style.cursor = "";
+          });
+        } catch (e) {
+          console.warn("Dense layer unavailable:", e);
+        }
+      }
+
       safePoints.forEach((p, i) => {
+        if (dense) return; // 密集モードではDOMピンを作らない
         const el = document.createElement("div");
         el.style.width = "14px";
         el.style.height = "14px";
@@ -191,13 +263,7 @@ export default function InteractiveMap({
         el.style.backgroundColor = colorForCategory(p.category, categoryColors, categoryOrder);
         el.style.cursor = "pointer";
 
-        const popup = new maplibregl.Popup({ offset: 12, closeButton: true }).setHTML(
-          `<div style="font-family:inherit;font-size:13px;line-height:1.5;">
-             <strong>${escapeHtml(p.label || "地点")}</strong>
-             ${p.category ? `<br/><span style="color:#666">${escapeHtml(p.category)}</span>` : ""}
-             ${p.note ? `<br/><span style="color:#666;font-size:12px">${escapeHtml(p.note).replace(/\n/g, "<br/>")}</span>` : ""}
-           </div>`
-        );
+        const popup = new maplibregl.Popup({ offset: 12, closeButton: true }).setHTML(popupHtml(p));
 
         const marker = new maplibregl.Marker({ element: el }).setLngLat([p.lng, p.lat]).setPopup(popup).addTo(map);
 
@@ -232,6 +298,10 @@ export default function InteractiveMap({
       if (map.getLayer("heat-layer")) {
         map.setLayoutProperty("heat-layer", "visibility", heatmapOn ? "visible" : "none");
       }
+      // 密集モードでは円レイヤーもヒートマップ表示中は隠す。
+      if (map.getLayer("dense-points-layer")) {
+        map.setLayoutProperty("dense-points-layer", "visibility", heatmapOn ? "none" : "visible");
+      }
       markersRef.current.forEach((m) => {
         m.marker.getElement().style.display = heatmapOn ? "none" : "";
       });
@@ -242,8 +312,21 @@ export default function InteractiveMap({
   }, [heatmapOn, enableHeatmap]);
 
   function flyToIndex(i) {
+    if (!mapRef.current) return;
+    // 密集モードではDOMマーカーが無いので、地点データから直接flyTo＋ポップアップを開く。
+    if (dense) {
+      const p = safePoints[i];
+      if (!p) return;
+      mapRef.current.flyTo({ center: [p.lng, p.lat], zoom: 15.5, duration: 900 });
+      new maplibregl.Popup({ offset: 12, closeButton: true })
+        .setLngLat([p.lng, p.lat])
+        .setHTML(popupHtml(p))
+        .addTo(mapRef.current);
+      setActiveIndex(i);
+      return;
+    }
     const entry = markersRef.current[i];
-    if (!entry || !mapRef.current) return;
+    if (!entry) return;
 
     mapRef.current.flyTo({ center: [entry.point.lng, entry.point.lat], zoom: 15.5, duration: 900 });
 

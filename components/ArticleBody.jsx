@@ -115,7 +115,7 @@ export function renderBody(body, charts, maps) {
         return (
           <div key={i} className="mb-6 border border-ink/10 bg-white/60 p-5">
             {map.title ? <p className="mb-3 text-xs text-ink-soft">{map.title}</p> : null}
-            <InteractiveMap points={map.points || []} categoryColors={map.categoryColors} height={map.height || 360} />
+            <InteractiveMap points={map.points || []} categoryColors={map.categoryColors} height={map.height || 360} dense={map.dense || false} />
             <p className="mt-3 text-[11px] text-ink-soft">
               地図データ：© OpenStreetMap contributors（OpenFreeMap経由で配信）
               {map.source ? <>／{renderInline(map.source, `map-${i}-src`)}</> : ""}
