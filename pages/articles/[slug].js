@@ -9,6 +9,7 @@ import { siteConfig } from "../../data/siteConfig";
 import ArticleAffiliate from "../../components/ArticleAffiliate";
 import { articles, getArticleBySlug, getRelatedArticles } from "../../data/articles";
 import { getArticleAffiliate } from "../../data/articleAffiliates";
+import a8Banners from "../../data/a8Banners";
 import { searchRakutenItems } from "../../lib/rakuten";
 
 import OperatorNote from "../../components/OperatorNote";
@@ -109,7 +110,7 @@ export default function ArticlePage({ article, relatedArticles, affiliate }) {
         <KeyPoints points={article.tldr} className="mt-8" />
         <TableOfContents headings={headings} className="mt-6" />
 
-        <div className="mt-10"><ArticleBody body={article.body} charts={article.charts} maps={article.maps} /></div>
+        <div className="mt-10"><ArticleBody body={article.body} charts={article.charts} maps={article.maps} a8Banners={a8Banners} /></div>
 
         {article.operatorComment ? (
           <aside className="mt-10 rounded-2xl border border-ink/10 bg-white/60 px-5 py-4">

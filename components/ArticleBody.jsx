@@ -72,11 +72,12 @@ export function extractHeadings(body) {
   return out;
 }
 
-export function renderBody(body, charts, maps) {
+export function renderBody(body, charts, maps, a8Banners) {
   // シンプルな段落・太字（**text**）・箇条書き（- item）記法に加えて、
   // 独立した行の [[CHART:id]] は article.charts[id] に対応するグラフに、
-  // [[MAP:id]] は article.maps[id] に対応するインタラクティブ地図に置き換える。
-  // charts・maps が無い記事には一切影響しない、後方互換な拡張。
+  // [[MAP:id]] は article.maps[id] に対応するインタラクティブ地図に、
+  // [[A8:id]] は data/a8Banners.js のA8.netバナー広告に置き換える。
+  // charts・maps・a8Banners が無い記事には一切影響しない、後方互換な拡張。
   return splitBlocks(body)
     .map((block, i) => {
       const headingText = matchHeading(block);
@@ -89,6 +90,20 @@ export function renderBody(body, charts, maps) {
           >
             {headingText}
           </h2>
+        );
+      }
+
+      const a8Match = block.match(/^\[\[A8:([\w-]+)\]\]$/);
+      if (a8Match && a8Banners && a8Banners[a8Match[1]]) {
+        const banner = a8Banners[a8Match[1]];
+        return (
+          <aside key={i} className="mb-6 rounded-2xl border border-ink/10 bg-white/60 p-5">
+            <p className="mb-3 font-mono text-xs uppercase tracking-widest text-ink-soft">広告</p>
+            <div className="flex justify-center" dangerouslySetInnerHTML={{ __html: banner.html }} />
+            <p className="mt-3 text-[11px] leading-relaxed text-ink-soft">
+              ※ この広告はアフィリエイト広告です。リンク先での成約・契約により、当サイトが紹介料を得ることがあります。
+            </p>
+          </aside>
         );
       }
 
@@ -193,6 +208,6 @@ export function renderBody(body, charts, maps) {
 }
 
 
-export default function ArticleBody({ body, charts, maps }) {
-  return <>{renderBody(body, charts, maps)}</>;
+export default function ArticleBody({ body, charts, maps, a8Banners }) {
+  return <>{renderBody(body, charts, maps, a8Banners)}</>;
 }
