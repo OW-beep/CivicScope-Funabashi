@@ -284,6 +284,42 @@ export default function Home({ populationLatest, populationYoyRate, populationLa
         </div>
       </section>
 
+      {/* --- 運営者ライン（ヒーロー直下） ------------------------------- */}
+      <p className="mx-auto max-w-5xl px-5 pt-8 text-xs text-ink-soft">
+        運営者：元自治体職員・データサイエンティスト（
+        <Link href="/about#operator" className="underline hover:text-brass-dark">運営者について →</Link>
+        ）
+      </p>
+
+      {/* --- 新着記事 ------------------------------------------------- */}
+      <section className="mx-auto max-w-5xl px-5 py-14">
+        <div className="flex items-baseline justify-between">
+          <SectionLabel code="01" category="kids">新着記事</SectionLabel>
+          <Link href="/articles" className="font-mono text-xs text-brass-dark hover:underline">
+            すべての記事を見る →
+          </Link>
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {latestArticles.map((a) => (
+            <Link
+              key={a.slug}
+              href={`/articles/${a.slug}`}
+              className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-pop transition-transform hover:-translate-y-0.5"
+            >
+              <ArticleThumbnail tag={a.tag} slug={a.slug} title={a.title} className="h-32 w-full" />
+              <div className="flex flex-1 flex-col p-5">
+                <span className="w-fit rounded-full bg-brass/15 px-3 py-1 font-mono text-xs font-bold text-brass-dark">{a.tag}</span>
+                <h3 className="mt-3 font-display text-lg font-bold leading-snug text-ink group-hover:text-brass-dark">
+                  {a.title}
+                </h3>
+                <p className="mt-2 line-clamp-3 text-sm text-ink-soft">{a.excerpt}</p>
+                <span className="mt-4 text-xs font-bold text-brass-dark">続きを読む →</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* --- カテゴリ紹介ボックス（ヒーロー内のタグ一覧のすぐ下に表示） -------- */}
       <CategoryIntroBoxes />
 
@@ -298,7 +334,7 @@ export default function Home({ populationLatest, populationYoyRate, populationLa
 
       {/* --- 現在地スナップショット ------------------------------------ */}
       <section className="mx-auto max-w-5xl px-5 py-14">
-        <SectionLabel code="01" category="life">いまの船橋市</SectionLabel>
+        <SectionLabel code="02" category="life">いまの船橋市</SectionLabel>
         <div className="grid gap-4 sm:grid-cols-3">
           <StatCard
             label={populationLatestLabel ? `常住人口（${populationLatestLabel}現在）` : "常住人口（最新月）"}
@@ -353,35 +389,6 @@ export default function Home({ populationLatest, populationYoyRate, populationLa
 
       <section className="mx-auto max-w-5xl px-5 pb-6">
         <AdSlot slotId={process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME} className="h-24" />
-      </section>
-
-      {/* --- 新着記事 ------------------------------------------------- */}
-      <section className="mx-auto max-w-5xl px-5 py-14">
-        <div className="flex items-baseline justify-between">
-          <SectionLabel code="02" category="kids">新着記事</SectionLabel>
-          <Link href="/articles" className="font-mono text-xs text-brass-dark hover:underline">
-            すべての記事を見る →
-          </Link>
-        </div>
-        <div className="grid gap-6 md:grid-cols-3">
-          {latestArticles.map((a) => (
-            <Link
-              key={a.slug}
-              href={`/articles/${a.slug}`}
-              className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-pop transition-transform hover:-translate-y-0.5"
-            >
-              <ArticleThumbnail tag={a.tag} slug={a.slug} title={a.title} className="h-32 w-full" />
-              <div className="flex flex-1 flex-col p-5">
-                <span className="w-fit rounded-full bg-brass/15 px-3 py-1 font-mono text-xs font-bold text-brass-dark">{a.tag}</span>
-                <h3 className="mt-3 font-display text-lg font-bold leading-snug text-ink group-hover:text-brass-dark">
-                  {a.title}
-                </h3>
-                <p className="mt-2 line-clamp-3 text-sm text-ink-soft">{a.excerpt}</p>
-                <span className="mt-4 text-xs font-bold text-brass-dark">続きを読む →</span>
-              </div>
-            </Link>
-          ))}
-        </div>
       </section>
 
       {/* --- よく読まれている記事（編集部おすすめ） --------------------- */}
